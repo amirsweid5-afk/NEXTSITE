@@ -1,0 +1,23 @@
+---
+description: Forms, Zod, error boundaries, and XSS-safe rendering
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Forms and Validation
+
+- Validate with Zod schemas
+- Use React Hook Form for form state
+- Show clear, field-level error messages
+
+# Error Boundaries
+
+- Catch render errors with route `error.tsx` and component error boundaries
+- Log to an external service (e.g. Sentry)
+- Show a user-friendly fallback; do not blank the whole app
+
+# Security
+
+- Sanitize untrusted input; never `dangerouslySetInnerHTML` with raw user HTML
+- Sanitize HTML with DOMPurify when HTML must be rendered
+- Use the app’s proper auth flow; do not invent insecure shortcuts

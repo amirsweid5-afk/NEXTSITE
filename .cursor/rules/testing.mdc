@@ -1,0 +1,30 @@
+---
+description: Jest and React Testing Library unit and integration tests
+globs: **/*.{test,spec}.{ts,tsx}
+alwaysApply: false
+---
+
+# Testing
+
+## Unit
+
+- Test functions and components in isolation
+- Jest + React Testing Library
+- Arrange–Act–Assert
+- Mock network and other externals
+
+## Integration
+
+- Test user workflows, not implementation details
+- Isolate tests with proper setup/teardown
+- Use snapshots sparingly
+- Query with `screen` (roles, labels, text)
+
+```tsx
+it('submits the form', async () => {
+	render(<SignupForm />)
+	await userEvent.type(screen.getByLabelText('Email'), 'a@b.com')
+	await userEvent.click(screen.getByRole('button', { name: 'Sign up' }))
+	expect(await screen.findByText('Check your inbox')).toBeInTheDocument()
+})
+```

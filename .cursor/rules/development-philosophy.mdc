@@ -1,0 +1,21 @@
+---
+description: Core development philosophy and planning for this Next.js app
+alwaysApply: true
+---
+
+# Development Philosophy
+
+- Write clean, maintainable, scalable code
+- Follow SOLID principles
+- Prefer functional and declarative patterns over imperative
+- Emphasize type safety and static analysis
+- Practice component-driven development
+
+# Planning (non-trivial work)
+
+- Outline steps, architecture, and data flow before coding
+- Consider edge cases and error paths
+- Do not skip planning for new features, refactors, or unfamiliar APIs
+
+Before writing Next.js code, read the relevant guide in
+`node_modules/next/dist/docs/` (this app uses Next 16; APIs differ from older docs).

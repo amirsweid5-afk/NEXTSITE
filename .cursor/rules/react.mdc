@@ -1,0 +1,34 @@
+---
+description: React component architecture and performance
+globs: **/*.{tsx,jsx}
+alwaysApply: false
+---
+
+# React
+
+- Functional components with TypeScript interfaces for props
+- Declare components with the `function` keyword (not arrow components)
+- Extract reusable logic into custom hooks (`use*`)
+- Prefer composition over prop drilling
+- Use `React.memo()` only when profiling shows benefit
+- Clean up subscriptions, timers, and listeners in `useEffect`
+
+# Performance
+
+- `useCallback` for stable callbacks passed to memoized children
+- `useMemo` only for expensive computations
+- Avoid inline function/object literals in JSX when they cause extra renders
+- Code-split with dynamic `import()`
+- List keys must be stable IDs — never array index
+
+```tsx
+export function ProductList ({ items }: ProductListProps) {
+	return (
+		<ul>
+			{items.map((item) => (
+				<li key={item.id}>{item.name}</li>
+			))}
+		</ul>
+	)
+}
+```

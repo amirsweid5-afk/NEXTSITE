@@ -1,0 +1,33 @@
+---
+description: Local React state and Redux Toolkit global state
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Local State
+
+- `useState` for simple component state
+- `useReducer` for complex or related state transitions
+- `useContext` for shared UI state that is not global app data
+- Initialize state explicitly; avoid undefined half-states
+
+# Redux Toolkit (global)
+
+- Use Redux Toolkit, not hand-rolled Redux
+- Define state, reducers, and actions with `createSlice`
+- Avoid `createReducer` / `createAction` unless necessary
+- Normalize collections; do not nest deeply
+- Encapsulate reads in selectors
+- One slice per feature — no catch-all store slice
+
+```ts
+const usersSlice = createSlice({
+	name: 'users',
+	initialState,
+	reducers: {
+		userAdded (state, action: PayloadAction<User>) {
+			usersAdapter.addOne(state, action.payload)
+		},
+	},
+})
+```

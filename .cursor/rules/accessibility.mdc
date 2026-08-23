@@ -1,0 +1,21 @@
+---
+description: Accessibility requirements for UI and interactive components
+globs: **/*.{tsx,jsx,css}
+alwaysApply: false
+---
+
+# Accessibility (a11y)
+
+- Semantic HTML (`button`, `nav`, `main`, `label`, headings)
+- ARIA only when native semantics are not enough
+- Full keyboard support; visible focus; logical tab order
+- WCAG contrast for text and controls
+- Heading levels in order (`h1` then `h2`, no skipped levels)
+- Every interactive control must be reachable and named
+- Errors announced accessibly (associated with fields, not only color)
+
+```tsx
+<label htmlFor="email">Email</label>
+<input id="email" type="email" aria-invalid={hasError} aria-describedby="email-err" />
+{hasError ? <p id="email-err">Enter a valid email.</p> : null}
+```

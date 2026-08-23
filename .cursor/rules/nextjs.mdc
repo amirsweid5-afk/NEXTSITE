@@ -1,0 +1,32 @@
+---
+description: Next.js App Router, Server Components, and built-in components
+globs: app/**/*.{ts,tsx}, next.config.ts
+alwaysApply: false
+---
+
+# Next.js (App Router)
+
+Read `node_modules/next/dist/docs/` before using APIs. Heed deprecations.
+
+- Default to Server Components
+- Add `'use client'` only for event listeners, browser APIs, state, or client-only libs
+- Fetch and cache with the current App Router APIs (not Pages Router)
+- Drive server state with URL search params when it fits the UI
+- Export `metadata` / `generateMetadata` — do not use `next/head`
+- Use `next/image`, `next/link`, and `next/script`
+- Provide `loading.tsx` / loading UI and `error.tsx` error boundaries
+- Prefer streaming and proper cache tags/revalidation over ad-hoc client fetches
+
+```tsx
+// ✅ Server Component (no 'use client')
+import Link from 'next/link'
+import Image from 'next/image'
+
+export default function Page () {
+	return (
+		<Link href="/about">
+			<Image src="/hero.png" alt="Hero" width={800} height={400} />
+		</Link>
+	)
+}
+```

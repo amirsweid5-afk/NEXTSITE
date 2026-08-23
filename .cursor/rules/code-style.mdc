@@ -1,0 +1,30 @@
+---
+description: JavaScript and TypeScript formatting and code style
+globs: **/*.{ts,tsx,js,jsx}
+alwaysApply: false
+---
+
+# Code Style
+
+- Indent with tabs
+- Single quotes for strings (double quotes only to avoid escaping)
+- Omit semicolons unless required for disambiguation
+- No unused variables
+- Space after keywords; space before function declaration parentheses
+- Always `===` / `!==`, never `==` / `!=`
+- Space infix operators; space after commas
+- `else` on the same line as the closing `}`
+- Curly braces for multi-line `if` statements
+- Always handle error parameters in callbacks
+- Max line length 80 characters
+- Trailing commas in multiline object/array literals
+
+```ts
+function fetchUser (id: string) {
+	if (id === '') {
+		throw new Error('id required')
+	} else {
+		return api.get(`/users/${id}`)
+	}
+}
+```

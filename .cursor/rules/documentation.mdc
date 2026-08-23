@@ -1,0 +1,24 @@
+---
+description: JSDoc and markdown documentation standards
+globs: **/*.{ts,tsx,md}
+alwaysApply: false
+---
+
+# Documentation
+
+- JSDoc on public functions, classes, methods, and interfaces
+- Complete sentences and punctuation
+- Clear, concise descriptions; examples when they help
+- Markdown: headings, lists, fenced code, and real links
+
+```ts
+/**
+ * Loads a user by id.
+ *
+ * @example
+ * const user = await getUser('abc')
+ */
+export async function getUser (id: string): Promise<User> {
+	return api.get(`/users/${id}`)
+}
+```

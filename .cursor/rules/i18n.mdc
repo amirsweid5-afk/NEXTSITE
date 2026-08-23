@@ -1,0 +1,19 @@
+---
+description: Internationalization, locales, RTL, and number formatting
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Internationalization
+
+- Use next-i18next (or the App Router equivalent in this stack) for copy
+- Detect locale correctly; do not hard-code user-facing strings in components
+- Format numbers, dates, and currency with locale-aware APIs
+- Support RTL layouts (`dir="rtl"`, logical CSS / Tailwind logical utilities)
+
+```ts
+new Intl.NumberFormat(locale, {
+	style: 'currency',
+	currency: 'USD',
+}).format(amount)
+```

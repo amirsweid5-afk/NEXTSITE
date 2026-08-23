@@ -1,0 +1,28 @@
+---
+description: File, folder, component, and identifier naming conventions
+alwaysApply: true
+---
+
+# Naming Conventions
+
+**PascalCase:** components, types, interfaces
+
+**kebab-case:** directories (`components/auth-wizard`) and files (`user-profile.tsx`)
+
+**camelCase:** variables, functions, methods, hooks, properties, props
+
+**UPPERCASE:** environment variables, constants, global config
+
+# Patterns
+
+- Event handlers: `handleClick`, `handleSubmit`
+- Booleans: `isLoading`, `hasError`, `canSubmit`
+- Custom hooks: `useAuth`, `useForm`
+- Prefer full words. Allowed abbreviations: `err`, `req`, `res`, `props`, `ref`
+
+```tsx
+// ✅ user-profile.tsx
+export function UserProfile ({ isLoading }: UserProfileProps) {
+	function handleSubmit () {}
+}
+```

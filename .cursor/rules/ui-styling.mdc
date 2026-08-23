@@ -1,0 +1,25 @@
+---
+description: Shadcn, Radix, Tailwind, theming, and responsive UI
+globs: **/*.{tsx,css}
+alwaysApply: false
+---
+
+# UI and Styling
+
+- Use Shadcn UI for consistent, accessible components
+- Use Radix primitives when building custom accessible controls
+- Compose small pieces rather than one mega-component
+- Style with Tailwind CSS (utility-first)
+- Mobile-first responsive layouts
+- Dark mode via CSS variables and Tailwind `dark:`
+- Meet WCAG contrast for text and interactive states
+- Consistent spacing scale; theme colors and spacing as CSS variables
+
+```tsx
+<button
+	type="button"
+	className="rounded-md bg-primary px-4 py-2 text-primary-foreground"
+>
+	Save
+</button>
+```
