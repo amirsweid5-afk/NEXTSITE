@@ -1,34 +1,177 @@
 @import 'tailwindcss';
 
 :root {
-	--background: #f4efe6;
-	--foreground: #1c1712;
-	--muted: #5c5348;
-	--accent: #b54a24;
-	--line: #d9cfc0;
-	--wash: rgba(28, 23, 18, 0.06);
+	--ink: #010203;
+	--surface: #1d1d1f;
+	--stone: #3b3130;
+	--gold: #b16c04;
+	--highlight: #d3ac2c;
+	--orange: #e87812;
+	--white: #f7f4ef;
+	--background: var(--ink);
+	--foreground: var(--highlight);
+	--muted: var(--gold);
+	--accent: var(--highlight);
+	--line: var(--stone);
+	--wash: color-mix(in srgb, var(--highlight) 12%, transparent);
 }
 
 @theme inline {
+	--color-ink: var(--ink);
+	--color-surface: var(--surface);
+	--color-stone: var(--stone);
+	--color-gold: var(--gold);
+	--color-highlight: var(--highlight);
+	--color-orange: var(--orange);
+	--color-white: var(--white);
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
+	--color-muted: var(--muted);
+	--color-accent: var(--accent);
+	--color-line: var(--line);
+	--color-wash: var(--wash);
 	--font-sans: var(--font-geist-sans);
 	--font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-	:root {
-		--background: #14110e;
-		--foreground: #f3ece3;
-		--muted: #c4b8a8;
-		--accent: #e07a4c;
-		--line: #2c261f;
-		--wash: rgba(243, 236, 227, 0.06);
-	}
+html {
+	color-scheme: dark;
 }
 
 body {
 	background: var(--background);
 	color: var(--foreground);
 	font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+::selection {
+	background: var(--gold);
+	color: var(--ink);
+}
+
+:focus-visible {
+	outline-color: var(--highlight);
+}
+
+/* About hero motion */
+@keyframes about-fade-up {
+	from {
+		opacity: 0;
+		transform: translateY(1.25rem);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes about-float {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-10px);
+	}
+}
+
+@keyframes about-float-soft {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-6px);
+	}
+}
+
+@keyframes about-glow {
+	0%,
+	100% {
+		opacity: 0.45;
+		transform: scale(1);
+	}
+	50% {
+		opacity: 0.8;
+		transform: scale(1.06);
+	}
+}
+
+@keyframes about-drift {
+	0% {
+		transform: translate3d(0, 0, 0);
+	}
+	50% {
+		transform: translate3d(12px, -18px, 0);
+	}
+	100% {
+		transform: translate3d(0, 0, 0);
+	}
+}
+
+@keyframes about-pulse-line {
+	0%,
+	100% {
+		stroke-dashoffset: 0;
+		opacity: 0.35;
+	}
+	50% {
+		stroke-dashoffset: 24;
+		opacity: 0.7;
+	}
+}
+
+.about-hero-animate {
+	animation: about-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.about-hero-delay-1 {
+	animation-delay: 0.1s;
+}
+
+.about-hero-delay-2 {
+	animation-delay: 0.2s;
+}
+
+.about-hero-delay-3 {
+	animation-delay: 0.35s;
+}
+
+.about-hero-delay-4 {
+	animation-delay: 0.5s;
+}
+
+.about-hero-delay-5 {
+	animation-delay: 0.65s;
+}
+
+.about-hero-float {
+	animation: about-float 6s ease-in-out infinite;
+}
+
+.about-hero-float-soft {
+	animation: about-float-soft 5.5s ease-in-out infinite;
+}
+
+.about-hero-glow {
+	animation: about-glow 5s ease-in-out infinite;
+}
+
+.about-hero-drift {
+	animation: about-drift 14s ease-in-out infinite;
+}
+
+.about-hero-line {
+	animation: about-pulse-line 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.about-hero-animate,
+	.about-hero-float,
+	.about-hero-float-soft,
+	.about-hero-glow,
+	.about-hero-drift,
+	.about-hero-line {
+		animation: none !important;
+	}
 }

@@ -3,17 +3,19 @@ import { HeroSection } from '@/components/hero-section'
 export const metadata = {
 	title: 'Home',
 	description:
-		'A calm place to land — explore the story and reserve a visit.',
+		'Choose a date and time that works for you and book your appointment in seconds.',
 }
 
 export default function HomePage () {
 	return (
 		<HeroSection
-			eyebrow="01 Stay"
-			title="Rooms that hold the quiet between days."
-			description="Lumen is a small house for long breakfasts, late light, and unhurried plans. Come as you are; leave with time that feels wider."
-			ctaLabel="Reserve a stay"
+			eyebrow="Your Time. Your Schedule. Your Booking."
+			title="Book Your Appointment Easily"
+			description="Choose a date and time that works for you and book your appointment in seconds. No phone tag, no waiting — pick a slot and you are done."
+			ctaLabel="Book Now"
 			ctaHref="/booking"
+			backgroundSrc="/hero-appointment.png"
+			backgroundAlt="A quiet reception desk with an appointment book and gold light"
 		/>
 	)
 }

@@ -28,7 +28,7 @@ export default function RootLayout ({
 	return (
 		<html
 			lang="en"
-			className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+			className={`${geistSans.variable} ${geistMono.variable} h-full bg-background text-foreground antialiased`}
 		>
 			<body className="flex min-h-full flex-col font-sans">
 				<a
@@ -37,9 +37,9 @@ export default function RootLayout ({
 						'sr-only focus:not-sr-only',
 						'focus:absolute focus:left-4',
 						'focus:top-4 focus:z-[60]',
-						'focus:bg-[color:var(--foreground)]',
+						'focus:bg-highlight',
 						'focus:px-3 focus:py-2',
-						'focus:text-[color:var(--background)]',
+						'focus:text-ink',
 					].join(' ')}
 				>
 					Skip to content

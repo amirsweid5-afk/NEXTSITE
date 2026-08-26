@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 
 interface HeroSectionProps {
@@ -6,6 +7,8 @@ interface HeroSectionProps {
 	description: string
 	ctaLabel?: string
 	ctaHref?: string
+	backgroundSrc?: string
+	backgroundAlt?: string
 }
 
 /**
@@ -17,6 +20,8 @@ export function HeroSection ({
 	description,
 	ctaLabel,
 	ctaHref,
+	backgroundSrc,
+	backgroundAlt = '',
 }: HeroSectionProps) {
 	return (
 		<section
@@ -27,24 +32,44 @@ export function HeroSection ({
 				'lg:px-16',
 			].join(' ')}
 		>
-			<p
-				aria-hidden="true"
-				className={[
-					'pointer-events-none absolute',
-					'right-[-0.1em] top-8 select-none',
-					'text-[min(42vw,18rem)] font-semibold',
-					'leading-none tracking-tighter',
-					'text-[color:var(--wash)]',
-				].join(' ')}
-			>
-				{eyebrow}
-			</p>
+			{backgroundSrc ? (
+				<>
+					<Image
+						src={backgroundSrc}
+						alt={backgroundAlt}
+						fill
+						preload
+						sizes="100vw"
+						className="object-cover object-center"
+					/>
+					<div
+						aria-hidden="true"
+						className={[
+							'absolute inset-0 bg-linear-to-t',
+							'from-ink via-ink/80 to-ink/40',
+						].join(' ')}
+					/>
+				</>
+			) : (
+				<p
+					aria-hidden="true"
+					className={[
+						'pointer-events-none absolute',
+						'right-[-0.1em] top-8 select-none',
+						'text-[min(42vw,18rem)] font-semibold',
+						'leading-none tracking-tighter',
+						'text-wash',
+					].join(' ')}
+				>
+					{eyebrow}
+				</p>
+			)}
 			<div className="relative z-10 mx-auto w-full max-w-6xl">
 				<p
 					className={[
 						'mb-4 text-xs font-medium',
 						'uppercase tracking-[0.28em]',
-						'text-[color:var(--accent)]',
+						'text-gold',
 					].join(' ')}
 				>
 					{eyebrow}
@@ -53,7 +78,8 @@ export function HeroSection ({
 					className={[
 						'max-w-3xl text-4xl font-semibold',
 						'leading-[1.05] tracking-tight',
-						'sm:text-6xl lg:text-7xl',
+						'text-highlight sm:text-6xl',
+						'lg:text-7xl',
 					].join(' ')}
 				>
 					{title}
@@ -61,7 +87,7 @@ export function HeroSection ({
 				<p
 					className={[
 						'mt-6 max-w-xl text-base',
-						'leading-7 text-[color:var(--muted)]',
+						'leading-7 text-gold',
 						'sm:text-lg sm:leading-8',
 					].join(' ')}
 				>
@@ -71,12 +97,11 @@ export function HeroSection ({
 					<Link
 						href={ctaHref}
 						className={[
-							'mt-10 inline-flex min-h-12',
+							'mt-10 inline-flex min-h-14',
 							'items-center rounded-full',
-							'bg-[color:var(--foreground)]',
-							'px-6 text-sm font-medium',
-							'tracking-wide',
-							'text-[color:var(--background)]',
+							'bg-highlight px-10 text-base',
+							'font-semibold uppercase',
+							'tracking-[0.22em] text-ink',
 							'focus-visible:outline-2',
 							'focus-visible:outline-offset-4',
 						].join(' ')}

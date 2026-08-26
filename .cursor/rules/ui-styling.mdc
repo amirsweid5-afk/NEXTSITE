@@ -6,19 +6,27 @@ alwaysApply: false
 
 # UI and Styling
 
-- Use Shadcn UI for consistent, accessible components
-- Use Radix primitives when building custom accessible controls
-- Compose small pieces rather than one mega-component
+- Use the global palette in `app/globals.css` only
+	- ink `#010203` (`bg-ink`, `text-ink`)
+	- surface `#1D1D1F` (`bg-surface`)
+	- stone `#3B3130` (`border-stone`, `border-line`)
+	- gold `#B16C04` (`text-gold`, `bg-gold`)
+	- highlight `#D3AC2C` (`text-highlight`, `bg-highlight`)
+	- orange `#E87812` (`text-orange`, `bg-orange`) — primary CTA accent
+	- white `#F7F4EF` (`text-white`) — high-contrast body on dark heroes
+- Semantic aliases: `background` = ink, `foreground` = highlight,
+	`muted`/`accent` map to gold/highlight, `line` = stone
+- Do not introduce new hex colors; compose with these tokens
+- Buttons: `bg-orange text-ink` (or `bg-highlight text-ink`)
 - Style with Tailwind CSS (utility-first)
 - Mobile-first responsive layouts
-- Dark mode via CSS variables and Tailwind `dark:`
-- Meet WCAG contrast for text and interactive states
-- Consistent spacing scale; theme colors and spacing as CSS variables
+- Meet WCAG contrast: gold/highlight on ink; never stone as body text
+- Consistent spacing; theme colors live as CSS variables
 
 ```tsx
 <button
 	type="button"
-	className="rounded-md bg-primary px-4 py-2 text-primary-foreground"
+	className="rounded-md bg-highlight px-4 py-2 text-ink"
 >
 	Save
 </button>
