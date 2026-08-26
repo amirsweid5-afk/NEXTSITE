@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
 	title: {
-		default: 'Lumen',
-		template: '%s · Lumen',
+		default: 'NEXTSITE',
+		template: '%s · NEXTSITE',
 	},
 	description:
 		'A small house for slow mornings, shared tables, and easy stays.',

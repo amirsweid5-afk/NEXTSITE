@@ -6,20 +6,18 @@ import { WhyChooseUs } from '@/components/why-choose-us'
 export const metadata = {
 	title: 'Home',
 	description:
-		'Choose a date and time that works for you and book your appointment in seconds.',
+		'Modern websites built around your ideas — landing pages, static websites, and personal sites for businesses and professionals.',
 }
 
 export default function HomePage () {
 	return (
 		<>
 			<HeroSection
-				eyebrow="Your Time. Your Schedule. Your Booking."
-				title="Book Your Appointment Easily"
-				description="Choose a date and time that works for you and book your appointment in seconds. No phone tag, no waiting — pick a slot and you are done."
+				eyebrow="Modern Websites. Built for You."
+				title="Websites Designed Around Your Ideas."
+				description="We create landing pages, static websites, and personal sites for businesses and professionals who want a modern, professional presence online."
 				ctaLabel="Book Now"
 				ctaHref="/booking"
-				backgroundSrc="/hero-appointment.png"
-				backgroundAlt="A quiet reception desk with an appointment book and gold light"
 			/>
 			<ServicesSection />
 			<WhyChooseUs />

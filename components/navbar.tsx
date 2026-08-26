@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { BrandLogo } from '@/components/brand-logo'
 
 interface NavItem {
 	href: string
@@ -46,17 +47,7 @@ export function Navbar () {
 					'sm:px-10 lg:px-12',
 				].join(' ')}
 			>
-				<Link
-					href="/"
-					className={[
-						'font-semibold tracking-[0.18em]',
-						'text-sm uppercase text-orange',
-						'focus-visible:outline-2',
-						'focus-visible:outline-offset-4',
-					].join(' ')}
-				>
-					Lumen
-				</Link>
+				<BrandLogo />
 
 				<div className="flex items-center gap-3 md:flex-1 md:justify-end md:gap-8">
 					<nav

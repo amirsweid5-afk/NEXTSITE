@@ -332,7 +332,7 @@ export function AboutHero () {
 										'text-white/40',
 									].join(' ')}
 								>
-									lumen.studio/preview
+									nextsite.studio/preview
 								</div>
 							</div>
 
@@ -344,7 +344,7 @@ export function AboutHero () {
 									].join(' ')}
 								>
 									<span className="text-xs font-semibold tracking-[0.2em] text-orange">
-										LUMEN
+										NEXT SITE
 									</span>
 									<div className="hidden gap-3 text-[0.65rem] uppercase tracking-[0.16em] text-white/40 sm:flex">
 										<span>Work</span>

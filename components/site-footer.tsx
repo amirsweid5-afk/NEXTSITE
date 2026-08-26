@@ -202,7 +202,7 @@ export function SiteFooter () {
 								'focus-visible:outline-offset-4',
 							].join(' ')}
 						>
-							Lumen
+							NEXTSITE
 						</Link>
 						<p className="mt-4 max-w-xs text-sm leading-6 text-white/55">
 							Modern websites built around your ideas.
@@ -352,7 +352,7 @@ export function SiteFooter () {
 					].join(' ')}
 				>
 					<p className="text-xs tracking-wide text-white/40">
-						© 2026 Lumen. All rights reserved.
+						© 2026 NEXTSITE. All rights reserved.
 					</p>
 				</div>
 			</div>
