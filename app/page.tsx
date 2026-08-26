@@ -1,5 +1,7 @@
+import { BookingCta } from '@/components/booking-cta'
 import { HeroSection } from '@/components/hero-section'
 import { ServicesSection } from '@/components/services-section'
+import { WhyChooseUs } from '@/components/why-choose-us'
 
 export const metadata = {
 	title: 'Home',
@@ -20,6 +22,8 @@ export default function HomePage () {
 				backgroundAlt="A quiet reception desk with an appointment book and gold light"
 			/>
 			<ServicesSection />
+			<WhyChooseUs />
+			<BookingCta />
 		</>
 	)
 }

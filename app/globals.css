@@ -165,13 +165,100 @@ body {
 	animation: about-pulse-line 4s ease-in-out infinite;
 }
 
+/* Why Choose Us motion */
+@keyframes why-choose-fade-up {
+	from {
+		opacity: 0;
+		transform: translateY(1rem);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.why-choose-animate {
+	animation: why-choose-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.why-choose-delay-1 {
+	animation-delay: 0.08s;
+}
+
+.why-choose-delay-2 {
+	animation-delay: 0.16s;
+}
+
+.why-choose-delay-3 {
+	animation-delay: 0.24s;
+}
+
+.why-choose-delay-4 {
+	animation-delay: 0.32s;
+}
+
+/* Our Story scroll reveal */
+.our-story-reveal {
+	opacity: 0;
+	transform: translateY(1.25rem);
+	transition:
+		opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+		transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.our-story-reveal.is-visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.our-story-delay-1 {
+	transition-delay: 0.05s;
+}
+
+.our-story-delay-2 {
+	transition-delay: 0.12s;
+}
+
+.our-story-delay-3 {
+	transition-delay: 0.2s;
+}
+
+.our-story-delay-4 {
+	transition-delay: 0.28s;
+}
+
+.our-story-delay-5 {
+	transition-delay: 0.36s;
+}
+
+.our-story-delay-6 {
+	transition-delay: 0.44s;
+}
+
+.our-story-delay-7 {
+	transition-delay: 0.52s;
+}
+
+.our-story-delay-8 {
+	transition-delay: 0.6s;
+}
+
+.our-story-delay-9 {
+	transition-delay: 0.68s;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.about-hero-animate,
 	.about-hero-float,
 	.about-hero-float-soft,
 	.about-hero-glow,
 	.about-hero-drift,
-	.about-hero-line {
+	.about-hero-line,
+	.why-choose-animate,
+	.our-story-reveal {
 		animation: none !important;
+		opacity: 1 !important;
+		transform: none !important;
+		transition: none !important;
 	}
 }

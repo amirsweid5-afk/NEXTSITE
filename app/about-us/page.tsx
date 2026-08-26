@@ -1,4 +1,7 @@
 import { AboutHero } from '@/components/about-hero'
+import { OurMission } from '@/components/our-mission'
+import { OurStory } from '@/components/our-story'
+import { OurVision } from '@/components/our-vision'
 
 export const metadata = {
 	title: 'About Us',
@@ -7,5 +10,12 @@ export const metadata = {
 }
 
 export default function AboutUsPage () {
-	return <AboutHero />
+	return (
+		<>
+			<AboutHero />
+			<OurStory />
+			<OurMission />
+			<OurVision />
+		</>
+	)
 }
