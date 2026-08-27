@@ -17,17 +17,6 @@ const SOCIAL_LINKS = [
 	{
 		href: 'https://instagram.com/',
 		label: 'Instagram',
-		icon: 'instagram' as const,
-	},
-	{
-		href: 'https://linkedin.com/',
-		label: 'LinkedIn',
-		icon: 'linkedin' as const,
-	},
-	{
-		href: 'https://x.com/',
-		label: 'X',
-		icon: 'x' as const,
 	},
 ]
 
@@ -38,77 +27,7 @@ const CONTACT = {
 	emailHref: 'mailto:amirsweid5@gmail.com',
 }
 
-function SocialIcon ({ type }: { type: 'instagram' | 'linkedin' | 'x' }) {
-	if (type === 'instagram') {
-		return (
-			<svg
-				aria-hidden="true"
-				viewBox="0 0 24 24"
-				fill="none"
-				className="h-4 w-4"
-			>
-				<rect
-					x="3.5"
-					y="3.5"
-					width="17"
-					height="17"
-					rx="4"
-					stroke="currentColor"
-					strokeWidth="1.5"
-				/>
-				<circle
-					cx="12"
-					cy="12"
-					r="3.75"
-					stroke="currentColor"
-					strokeWidth="1.5"
-				/>
-				<circle
-					cx="17.25"
-					cy="6.75"
-					r="0.9"
-					fill="currentColor"
-				/>
-			</svg>
-		)
-	}
-
-	if (type === 'linkedin') {
-		return (
-			<svg
-				aria-hidden="true"
-				viewBox="0 0 24 24"
-				fill="none"
-				className="h-4 w-4"
-			>
-				<path
-					d="M6.5 9.5V17.5"
-					stroke="currentColor"
-					strokeWidth="1.5"
-					strokeLinecap="round"
-				/>
-				<circle
-					cx="6.5"
-					cy="6.5"
-					r="1.25"
-					fill="currentColor"
-				/>
-				<path
-					d="M10.5 17.5V12.5c0-1.66 1.34-3 3-3s3 1.34 3 3v5"
-					stroke="currentColor"
-					strokeWidth="1.5"
-					strokeLinecap="round"
-				/>
-				<path
-					d="M10.5 12.5V17.5"
-					stroke="currentColor"
-					strokeWidth="1.5"
-					strokeLinecap="round"
-				/>
-			</svg>
-		)
-	}
-
+function SocialIcon () {
 	return (
 		<svg
 			aria-hidden="true"
@@ -116,8 +35,26 @@ function SocialIcon ({ type }: { type: 'instagram' | 'linkedin' | 'x' }) {
 			fill="none"
 			className="h-4 w-4"
 		>
-			<path
-				d="M5 5l5.8 7.2L5.4 19H7.2l4.1-5.1L15.4 19H19l-6-7.4L18.4 5H16.6l-3.8 4.7L8.6 5H5Z"
+			<rect
+				x="3.5"
+				y="3.5"
+				width="17"
+				height="17"
+				rx="4"
+				stroke="currentColor"
+				strokeWidth="1.5"
+			/>
+			<circle
+				cx="12"
+				cy="12"
+				r="3.75"
+				stroke="currentColor"
+				strokeWidth="1.5"
+			/>
+			<circle
+				cx="17.25"
+				cy="6.75"
+				r="0.9"
 				fill="currentColor"
 			/>
 		</svg>
@@ -207,28 +144,6 @@ export function SiteFooter () {
 						<p className="mt-4 max-w-xs text-sm leading-6 text-white/55">
 							Modern websites built around your ideas.
 						</p>
-						<div className="mt-6 flex items-center gap-3">
-							{SOCIAL_LINKS.map((social) => (
-								<a
-									key={social.label}
-									href={social.href}
-									target="_blank"
-									rel="noopener noreferrer"
-									aria-label={social.label}
-									className={[
-										'inline-flex h-10 w-10',
-										'items-center justify-center',
-										'rounded-full border border-white/10',
-										'text-white/55 transition duration-300',
-										'hover:border-orange/45 hover:text-orange',
-										'focus-visible:outline-2',
-										'focus-visible:outline-offset-4',
-									].join(' ')}
-								>
-									<SocialIcon type={social.icon} />
-								</a>
-							))}
-						</div>
 						<Link
 							href="/booking"
 							className={[
@@ -346,12 +261,31 @@ export function SiteFooter () {
 				<div
 					className={[
 						'mx-auto flex max-w-7xl',
-						'flex-col gap-3 px-6 py-6',
-						'sm:flex-row sm:items-center',
-						'sm:justify-between sm:px-10 lg:px-12',
+						'flex-col items-center gap-4',
+						'px-6 py-6 sm:px-10 lg:px-12',
 					].join(' ')}
 				>
-					<p className="text-xs tracking-wide text-white/40">
+					{SOCIAL_LINKS.map((social) => (
+						<a
+							key={social.label}
+							href={social.href}
+							target="_blank"
+							rel="noopener noreferrer"
+							aria-label={social.label}
+							className={[
+								'inline-flex h-10 w-10',
+								'items-center justify-center',
+								'rounded-full border border-white/10',
+								'text-white/55 transition duration-300',
+								'hover:border-orange/45 hover:text-orange',
+								'focus-visible:outline-2',
+								'focus-visible:outline-offset-4',
+							].join(' ')}
+						>
+							<SocialIcon />
+						</a>
+					))}
+					<p className="text-center text-xs tracking-wide text-white/40">
 						© 2026 NEXTSITE. All rights reserved.
 					</p>
 				</div>

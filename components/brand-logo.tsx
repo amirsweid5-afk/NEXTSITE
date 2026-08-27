@@ -26,25 +26,23 @@ export function BrandLogo ({
 	const logoMark = (
 		<span
 			className={[
-				'relative inline-flex h-[1.35em]',
-				'w-[1.35em] shrink-0 items-center',
-				'justify-center overflow-visible',
-				'rounded-full ring-1 ring-white/15',
+				'relative inline-flex h-9 w-9',
+				'shrink-0 items-center justify-center',
+				'overflow-visible rounded-full',
+				'bg-ink ring-1 ring-white/15',
 				'origin-center transition-transform',
 				'duration-500 ease-out',
-				isEnlarged ? 'scale-[2.4]' : 'scale-100',
+				isEnlarged ? 'scale-[1.50]' : 'scale-100',
 			].join(' ')}
 		>
 			<span className="relative h-full w-full overflow-hidden rounded-full">
 				<Image
-					src="/nextsite-logo.jpg"
-					alt=""
+					src="/ns-logo.jpg"
+					alt="NS"
 					fill
-					sizes="24px"
-					className={[
-						'object-contain object-center',
-						'scale-[0.62] mix-blend-screen',
-					].join(' ')}
+					sizes="36px"
+					priority
+					className="object-contain object-center scale-[0.78]"
 				/>
 			</span>
 		</span>

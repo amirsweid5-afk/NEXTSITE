@@ -1,0 +1,1 @@
+Please run all tests, ESLint, TypeScript checks, and the build process. If any errors occur, fix them without introducing new issues or breaking existing functionality. Ensure that everything continues to work properly after the fixes.
