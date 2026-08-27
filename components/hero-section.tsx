@@ -23,7 +23,7 @@ export function HeroSection ({
 			className={[
 				'relative isolate flex min-h-[calc(100svh-4.5rem)]',
 				'flex-col justify-end overflow-hidden',
-				'bg-ink px-6 pb-16 pt-24 sm:px-10',
+				'bg-ink px-6 pb-16 pt-16 sm:px-10',
 				'lg:px-16',
 			].join(' ')}
 		>

@@ -141,7 +141,7 @@ export function HomeHero () {
 			<div
 				className={[
 					'relative z-10 mx-auto w-full max-w-6xl',
-					'px-6 pb-16 pt-28 sm:px-10 sm:pb-20',
+					'px-6 pb-16 pt-20 sm:px-10 sm:pb-20',
 					'lg:px-16 lg:pb-24',
 				].join(' ')}
 			>
