@@ -10,7 +10,7 @@ export const metadata = {
 export default function BookingPage () {
 	return (
 		<>
-			<HeroSection source="booking" />
+			<HeroSection />
 			<BookNowSection />
 		</>
 	)

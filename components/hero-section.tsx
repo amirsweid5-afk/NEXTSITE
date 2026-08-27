@@ -5,23 +5,18 @@ import Link from 'next/link'
 import { useContent } from '@/components/language-provider'
 
 interface HeroSectionProps {
-	source: 'home' | 'booking'
 	backgroundSrc?: string
 	backgroundAlt?: string
 }
 
 /**
- * Full-viewport hero used on each marketing page.
+ * Full-viewport hero used on the booking page.
  */
 export function HeroSection ({
-	source,
 	backgroundSrc,
 	backgroundAlt = '',
 }: HeroSectionProps) {
-	const content = useContent()
-	const hero = source === 'home'
-		? content.home.hero
-		: content.booking.hero
+	const hero = useContent().booking.hero
 
 	return (
 		<section

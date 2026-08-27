@@ -1,5 +1,5 @@
 import { BookingCta } from '@/components/booking-cta'
-import { HeroSection } from '@/components/hero-section'
+import { HomeHero } from '@/components/home-hero'
 import { ServicesSection } from '@/components/services-section'
 import { WhyChooseUs } from '@/components/why-choose-us'
 
@@ -12,7 +12,7 @@ export const metadata = {
 export default function HomePage () {
 	return (
 		<>
-			<HeroSection source="home" />
+			<HomeHero />
 			<ServicesSection />
 			<WhyChooseUs />
 			<BookingCta />

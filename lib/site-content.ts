@@ -38,7 +38,13 @@ export interface SiteContent {
 	themeToggle: string
 	nav: NavContent
 	home: {
-		hero: HeroContent
+		hero: {
+			brand: string
+			title: string
+			description: string
+			ctaLabel: string
+			secondaryCtaLabel: string
+		}
 		services: {
 			eyebrow: string
 			title: string
@@ -160,11 +166,12 @@ const ENGLISH: SiteContent = {
 	},
 	home: {
 		hero: {
-			eyebrow: 'Modern Websites. Built for You.',
-			title: 'Websites Designed Around Your Ideas.',
+			brand: 'NEXTSITE',
+			title: 'Websites designed around your ideas.',
 			description:
-				'We create landing pages, static websites, and personal sites for businesses and professionals who want a modern, professional presence online.',
+				'Landing pages, static sites, and personal brands — built modern, fast, and unmistakably yours.',
 			ctaLabel: 'Book Now',
+			secondaryCtaLabel: 'View Services',
 		},
 		services: {
 			eyebrow: 'Services',
@@ -446,11 +453,12 @@ const ARABIC: SiteContent = {
 	},
 	home: {
 		hero: {
-			eyebrow: 'مواقع حديثة. مصمّمة لأجلك.',
+			brand: 'NEXTSITE',
 			title: 'مواقع مصمّمة حول أفكارك.',
 			description:
-				'نصمّم صفحات هبوط ومواقع ثابتة ومواقع شخصية للشركات والمحترفين الذين يريدون حضوراً حديثاً واحترافياً على الإنترنت.',
+				'صفحات هبوط ومواقع ثابتة وهويّات شخصية — حديثة وسريعة وبصمتك أنت.',
 			ctaLabel: 'احجز الآن',
+			secondaryCtaLabel: 'عرض الخدمات',
 		},
 		services: {
 			eyebrow: 'الخدمات',
