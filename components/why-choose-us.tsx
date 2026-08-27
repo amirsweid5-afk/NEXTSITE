@@ -1,39 +1,17 @@
+'use client'
+
+import { useContent } from '@/components/language-provider'
+
 interface WhyChooseFeature {
 	id: string
-	title: string
-	description: string
 	icon: 'design' | 'responsive' | 'fast' | 'support'
 }
 
-const FEATURES: WhyChooseFeature[] = [
-	{
-		id: 'custom-designs',
-		title: 'Built for Your Brand',
-		description:
-			'Every website is designed specifically for your brand, goals, and style — never just a generic template.',
-		icon: 'design',
-	},
-	{
-		id: 'fully-responsive',
-		title: 'Looks Great Everywhere',
-		description:
-			'Every website is optimized to work smoothly and look great on phones, tablets, and desktops.',
-		icon: 'responsive',
-	},
-	{
-		id: 'fast-modern',
-		title: 'Fast. Clean. Professional.',
-		description:
-			'Modern, lightweight websites built with a focus on fast loading speeds and a smooth user experience.',
-		icon: 'fast',
-	},
-	{
-		id: 'personal-support',
-		title: 'We’re Here for You',
-		description:
-			'Clear communication and personal support throughout the project, from the first idea to the final website.',
-		icon: 'support',
-	},
+const FEATURE_ICONS: WhyChooseFeature[] = [
+	{ id: 'custom-designs', icon: 'design' },
+	{ id: 'fully-responsive', icon: 'responsive' },
+	{ id: 'fast-modern', icon: 'fast' },
+	{ id: 'personal-support', icon: 'support' },
 ]
 
 function FeatureIcon ({ type }: { type: WhyChooseFeature['icon'] }) {
@@ -152,6 +130,8 @@ function FeatureIcon ({ type }: { type: WhyChooseFeature['icon'] }) {
  * Home-page trust section highlighting four reasons to choose the studio.
  */
 export function WhyChooseUs () {
+	const copy = useContent().home.whyChooseUs
+
 	return (
 		<section
 			id="why-choose-us"
@@ -170,64 +150,69 @@ export function WhyChooseUs () {
 			<div className="relative z-10 mx-auto max-w-7xl px-6 sm:px-10 lg:px-12">
 				<div className="mx-auto max-w-2xl text-center">
 					<p className="text-xs font-medium uppercase tracking-[0.28em] text-orange">
-						Why Us
+						{copy.eyebrow}
 					</p>
 					<h2
 						id="why-choose-us-heading"
 						className="mt-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl"
 					>
-						Why Choose Us?
+						{copy.title}
 					</h2>
 					<p className="mt-4 text-base leading-7 text-white/65 sm:text-lg sm:leading-8">
-						More than just a website — we build a digital
-						presence designed around you.
+						{copy.description}
 					</p>
 				</div>
 
 				<ul className="mt-14 grid gap-6 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-7">
-					{FEATURES.map((feature, index) => (
-						<li
-							key={feature.id}
-							className={[
-								'why-choose-animate',
-								`why-choose-delay-${index + 1}`,
-							].join(' ')}
-						>
-							<article
+					{copy.items.map((feature, index) => {
+						const icon = FEATURE_ICONS.find(
+							(item) => item.id === feature.id,
+						)?.icon ?? 'design'
+
+						return (
+							<li
+								key={feature.id}
 								className={[
-									'group flex h-full flex-col',
-									'rounded-2xl border border-white/10',
-									'bg-surface/80 p-7',
-									'shadow-[0_20px_50px_rgba(0,0,0,0.35)]',
-									'transition duration-300 ease-out',
-									'hover:-translate-y-1.5',
-									'hover:border-gold/45',
-									'hover:shadow-[0_24px_60px_rgba(209,172,44,0.12)]',
+									'why-choose-animate',
+									`why-choose-delay-${index + 1}`,
 								].join(' ')}
 							>
-								<div
+								<article
 									className={[
-										'inline-flex h-12 w-12 items-center',
-										'justify-center rounded-xl',
-										'border border-gold/30 bg-gold/10',
-										'text-highlight transition duration-300',
-										'group-hover:border-gold/60',
-										'group-hover:bg-gold/15',
-										'group-hover:shadow-[0_0_24px_rgba(209,172,44,0.25)]',
+										'group flex h-full flex-col',
+										'rounded-2xl border border-white/10',
+										'bg-surface/80 p-7',
+										'shadow-[0_20px_50px_rgba(0,0,0,0.35)]',
+										'transition duration-300 ease-out',
+										'hover:-translate-y-1.5',
+										'hover:border-gold/45',
+										'hover:shadow-[0_24px_60px_rgba(209,172,44,0.12)]',
 									].join(' ')}
 								>
-									<FeatureIcon type={feature.icon} />
-								</div>
+									<div
+										className={[
+											'inline-flex h-12 w-12 items-center',
+											'justify-center rounded-xl',
+											'border border-gold/30 bg-gold/10',
+											'text-highlight transition duration-300',
+											'group-hover:border-gold/60',
+											'group-hover:bg-gold/15',
+											'group-hover:shadow-[0_0_24px_rgba(209,172,44,0.25)]',
+										].join(' ')}
+									>
+										<FeatureIcon type={icon} />
+									</div>
 
-								<h3 className="mt-6 text-lg font-semibold tracking-tight text-white sm:text-xl">
-									{feature.title}
-								</h3>
-								<p className="mt-3 flex-1 text-sm leading-6 text-white/60">
-									{feature.description}
-								</p>
-							</article>
-						</li>
-					))}
+									<h3 className="mt-6 text-lg font-semibold tracking-tight text-white sm:text-xl">
+										{feature.title}
+									</h3>
+									<p className="mt-3 flex-1 text-sm leading-6 text-white/60">
+										{feature.description}
+									</p>
+								</article>
+							</li>
+						)
+					})}
 				</ul>
 			</div>
 		</section>

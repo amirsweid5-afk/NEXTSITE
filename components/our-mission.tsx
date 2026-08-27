@@ -1,46 +1,21 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useContent } from '@/components/language-provider'
 
-interface CoreValue {
+interface CoreValueIcon {
 	id: string
-	title: string
-	description: string
 	icon: 'quality' | 'personalization' | 'simplicity' | 'satisfaction'
 }
 
-const CORE_VALUES: CoreValue[] = [
-	{
-		id: 'quality',
-		title: 'Quality',
-		description:
-			'We focus on creating polished websites with attention to design, performance, and details.',
-		icon: 'quality',
-	},
-	{
-		id: 'personalization',
-		title: 'Personalization',
-		description:
-			'Every website is built around the client\'s unique needs, style, and goals.',
-		icon: 'personalization',
-	},
-	{
-		id: 'simplicity',
-		title: 'Simplicity',
-		description:
-			'We believe websites should be easy to understand, navigate, and use.',
-		icon: 'simplicity',
-	},
-	{
-		id: 'satisfaction',
-		title: 'Client Satisfaction',
-		description:
-			'We communicate clearly, listen to our clients, and aim to make the entire process smooth and enjoyable.',
-		icon: 'satisfaction',
-	},
+const VALUE_ICONS: CoreValueIcon[] = [
+	{ id: 'quality', icon: 'quality' },
+	{ id: 'personalization', icon: 'personalization' },
+	{ id: 'simplicity', icon: 'simplicity' },
+	{ id: 'satisfaction', icon: 'satisfaction' },
 ]
 
-function ValueIcon ({ type }: { type: CoreValue['icon'] }) {
+function ValueIcon ({ type }: { type: CoreValueIcon['icon'] }) {
 	if (type === 'quality') {
 		return (
 			<svg
@@ -152,6 +127,7 @@ function ValueIcon ({ type }: { type: CoreValue['icon'] }) {
  * About Us mission statement and core values section.
  */
 export function OurMission () {
+	const copy = useContent().about.mission
 	const sectionRef = useRef<HTMLElement>(null)
 	const [isVisible, setIsVisible] = useState(false)
 
@@ -206,7 +182,7 @@ export function OurMission () {
 						className={revealClass('our-story-delay-1')}
 					>
 						<span className="text-xs font-medium uppercase tracking-[0.28em] text-orange">
-							What We Stand For
+							{copy.eyebrow}
 						</span>
 					</p>
 					<h2
@@ -218,7 +194,7 @@ export function OurMission () {
 							'sm:text-4xl lg:text-5xl',
 						].join(' ')}
 					>
-						Our Mission
+						{copy.title}
 					</h2>
 					<p
 						className={[
@@ -228,10 +204,7 @@ export function OurMission () {
 							'sm:leading-8',
 						].join(' ')}
 					>
-						Our mission is to help businesses,
-						professionals, and individuals build a strong
-						online presence through modern, professional,
-						and personalized websites.
+						{copy.paragraphOne}
 					</p>
 					<p
 						className={[
@@ -241,9 +214,7 @@ export function OurMission () {
 							'sm:leading-8',
 						].join(' ')}
 					>
-						We don&apos;t simply build websites — we take
-						your ideas and turn them into a website that
-						fits your goals, identity, and audience.
+						{copy.paragraphTwo}
 					</p>
 				</div>
 
@@ -254,48 +225,54 @@ export function OurMission () {
 						'lg:grid-cols-4 lg:gap-7',
 					].join(' ')}
 				>
-					{CORE_VALUES.map((value, index) => (
-						<li
-							key={value.id}
-							className={revealClass(
-								`our-story-delay-${index + 5}`,
-							)}
-						>
-							<article
-								className={[
-									'group flex h-full flex-col',
-									'rounded-2xl border border-white/10',
-									'bg-ink/60 p-7',
-									'shadow-[0_20px_50px_rgba(0,0,0,0.35)]',
-									'transition duration-300 ease-out',
-									'hover:-translate-y-1.5',
-									'hover:border-orange/45',
-									'hover:shadow-[0_24px_60px_rgba(232,120,18,0.12)]',
-								].join(' ')}
+					{copy.values.map((value, index) => {
+						const icon = VALUE_ICONS.find(
+							(item) => item.id === value.id,
+						)?.icon ?? 'quality'
+
+						return (
+							<li
+								key={value.id}
+								className={revealClass(
+									`our-story-delay-${index + 5}`,
+								)}
 							>
-								<div
+								<article
 									className={[
-										'inline-flex h-12 w-12 items-center',
-										'justify-center rounded-xl',
-										'border border-orange/30 bg-orange/10',
-										'text-orange transition duration-300',
-										'group-hover:border-orange/60',
-										'group-hover:bg-orange/15',
-										'group-hover:shadow-[0_0_24px_rgba(232,120,18,0.25)]',
+										'group flex h-full flex-col',
+										'rounded-2xl border border-white/10',
+										'bg-ink/60 p-7',
+										'shadow-[0_20px_50px_rgba(0,0,0,0.35)]',
+										'transition duration-300 ease-out',
+										'hover:-translate-y-1.5',
+										'hover:border-orange/45',
+										'hover:shadow-[0_24px_60px_rgba(232,120,18,0.12)]',
 									].join(' ')}
 								>
-									<ValueIcon type={value.icon} />
-								</div>
+									<div
+										className={[
+											'inline-flex h-12 w-12 items-center',
+											'justify-center rounded-xl',
+											'border border-orange/30 bg-orange/10',
+											'text-orange transition duration-300',
+											'group-hover:border-orange/60',
+											'group-hover:bg-orange/15',
+											'group-hover:shadow-[0_0_24px_rgba(232,120,18,0.25)]',
+										].join(' ')}
+									>
+										<ValueIcon type={icon} />
+									</div>
 
-								<h3 className="mt-6 text-lg font-semibold tracking-tight text-white">
-									{value.title}
-								</h3>
-								<p className="mt-3 flex-1 text-sm leading-6 text-white/60">
-									{value.description}
-								</p>
-							</article>
-						</li>
-					))}
+									<h3 className="mt-6 text-lg font-semibold tracking-tight text-white">
+										{value.title}
+									</h3>
+									<p className="mt-3 flex-1 text-sm leading-6 text-white/60">
+										{value.description}
+									</p>
+								</article>
+							</li>
+						)
+					})}
 				</ul>
 			</div>
 		</section>

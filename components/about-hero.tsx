@@ -1,29 +1,27 @@
-import Link from 'next/link'
+'use client'
 
-interface FloatingCard {
-	label: string
+import Link from 'next/link'
+import { useContent } from '@/components/language-provider'
+
+interface FloatingCardLayout {
 	className: string
 	delayClass: string
 }
 
-const FLOATING_CARDS: FloatingCard[] = [
+const FLOATING_CARD_LAYOUTS: FloatingCardLayout[] = [
 	{
-		label: 'Business Websites',
 		className: 'left-0 top-[8%] hidden sm:flex',
 		delayClass: 'about-hero-delay-3',
 	},
 	{
-		label: 'E-Commerce',
 		className: 'right-0 top-[4%] hidden md:flex',
 		delayClass: 'about-hero-delay-4',
 	},
 	{
-		label: 'Custom Design',
 		className: 'bottom-[18%] left-[-2%] hidden lg:flex',
 		delayClass: 'about-hero-delay-4',
 	},
 	{
-		label: 'Responsive Design',
 		className: 'bottom-[8%] right-[-2%] sm:bottom-[12%]',
 		delayClass: 'about-hero-delay-5',
 	},
@@ -33,6 +31,8 @@ const FLOATING_CARDS: FloatingCard[] = [
  * Premium agency-style hero for the About Us page.
  */
 export function AboutHero () {
+	const copy = useContent().about.hero
+
 	return (
 		<section
 			className={[
@@ -161,7 +161,7 @@ export function AboutHero () {
 							aria-hidden="true"
 							className="h-1.5 w-1.5 rounded-full bg-orange shadow-[0_0_10px_#e87812]"
 						/>
-						Digital Studio
+						{copy.eyebrow}
 					</p>
 
 					<h1
@@ -173,9 +173,9 @@ export function AboutHero () {
 							'lg:text-[3.4rem] xl:text-6xl',
 						].join(' ')}
 					>
-						Build Your{' '}
+						{copy.titleLead}{' '}
 						<span className="text-orange drop-shadow-[0_0_24px_rgba(232,120,18,0.45)]">
-							Digital Presence.
+							{copy.titleAccent}
 						</span>
 					</h1>
 
@@ -187,9 +187,7 @@ export function AboutHero () {
 							'sm:text-lg sm:leading-8',
 						].join(' ')}
 					>
-						We craft modern, fast, high-quality websites for
-						businesses that want to look premium online — and
-						convert visitors into clients.
+						{copy.description}
 					</p>
 
 					<div
@@ -212,7 +210,7 @@ export function AboutHero () {
 								'focus-visible:outline-offset-4',
 							].join(' ')}
 						>
-							Book a Consultation
+							{copy.bookLabel}
 						</Link>
 						<Link
 							href="/"
@@ -229,7 +227,7 @@ export function AboutHero () {
 								'focus-visible:outline-offset-4',
 							].join(' ')}
 						>
-							View Our Work
+							{copy.workLabel}
 						</Link>
 					</div>
 
@@ -241,7 +239,7 @@ export function AboutHero () {
 							'text-white/45',
 						].join(' ')}
 					>
-						Professional · Fast · Modern · Responsive
+						{copy.traits}
 					</p>
 				</div>
 
@@ -326,13 +324,13 @@ export function AboutHero () {
 								<span className="h-2.5 w-2.5 rounded-full bg-orange/80" />
 								<div
 									className={[
-										'ml-3 flex-1 rounded-md',
+										'ms-3 flex-1 rounded-md',
 										'bg-white/5 px-3 py-1.5',
 										'text-[0.65rem] tracking-wide',
 										'text-white/40',
 									].join(' ')}
 								>
-									nextsite.studio/preview
+									{copy.previewUrl}
 								</div>
 							</div>
 
@@ -344,13 +342,13 @@ export function AboutHero () {
 									].join(' ')}
 								>
 									<span className="text-xs font-semibold tracking-[0.2em] text-orange">
-										NEXT SITE
+										{copy.previewBrand}
 									</span>
 									<div className="hidden gap-3 text-[0.65rem] uppercase tracking-[0.16em] text-white/40 sm:flex">
-										<span>Work</span>
-										<span>Services</span>
+										<span>{copy.previewWork}</span>
+										<span>{copy.previewServices}</span>
 										<span className="text-orange">
-											Contact
+											{copy.previewContact}
 										</span>
 									</div>
 								</div>
@@ -362,7 +360,7 @@ export function AboutHero () {
 										<div className="h-2 w-full rounded-full bg-white/20" />
 										<div className="h-2 w-[83%] rounded-full bg-white/15" />
 										<div className="mt-4 inline-flex rounded-full bg-orange px-3 py-1.5 text-[0.65rem] font-semibold text-ink">
-											Start Project
+											{copy.previewCta}
 										</div>
 									</div>
 									<div
@@ -397,14 +395,18 @@ export function AboutHero () {
 						</div>
 					</div>
 
-					{FLOATING_CARDS.map((card) => (
+					{copy.cards.map((label, index) => {
+						const layout = FLOATING_CARD_LAYOUTS[index]
+						if (!layout) return null
+
+						return (
 						<div
-							key={card.label}
+							key={label}
 							className={[
 								'about-hero-animate about-hero-float-soft',
 								'absolute z-20',
-								card.className,
-								card.delayClass,
+								layout.className,
+								layout.delayClass,
 							].join(' ')}
 						>
 							<div
@@ -418,11 +420,12 @@ export function AboutHero () {
 									'hover:border-orange hover:shadow-[0_0_24px_rgba(232,120,18,0.25)]',
 								].join(' ')}
 							>
-								<span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-orange shadow-[0_0_8px_#e87812]" />
-								{card.label}
+								<span className="me-2 inline-block h-1.5 w-1.5 rounded-full bg-orange shadow-[0_0_8px_#e87812]" />
+								{label}
 							</div>
 						</div>
-					))}
+						)
+					})}
 				</div>
 			</div>
 		</section>

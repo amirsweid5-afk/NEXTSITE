@@ -1,12 +1,11 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
+import { useContent } from '@/components/language-provider'
 
 interface HeroSectionProps {
-	eyebrow: string
-	title: string
-	description: string
-	ctaLabel?: string
-	ctaHref?: string
+	source: 'home' | 'booking'
 	backgroundSrc?: string
 	backgroundAlt?: string
 }
@@ -15,20 +14,21 @@ interface HeroSectionProps {
  * Full-viewport hero used on each marketing page.
  */
 export function HeroSection ({
-	eyebrow,
-	title,
-	description,
-	ctaLabel,
-	ctaHref,
+	source,
 	backgroundSrc,
 	backgroundAlt = '',
 }: HeroSectionProps) {
+	const content = useContent()
+	const hero = source === 'home'
+		? content.home.hero
+		: content.booking.hero
+
 	return (
 		<section
 			className={[
 				'relative isolate flex min-h-[calc(100svh-4.5rem)]',
 				'flex-col justify-end overflow-hidden',
-				'px-6 pb-16 pt-24 sm:px-10',
+				'bg-ink px-6 pb-16 pt-24 sm:px-10',
 				'lg:px-16',
 			].join(' ')}
 		>
@@ -55,13 +55,13 @@ export function HeroSection ({
 					aria-hidden="true"
 					className={[
 						'pointer-events-none absolute',
-						'right-[-0.1em] top-8 select-none',
+						'end-[-0.1em] top-8 select-none',
 						'text-[min(42vw,18rem)] font-semibold',
 						'leading-none tracking-tighter',
 						'text-wash',
 					].join(' ')}
 				>
-					{eyebrow}
+					{hero.eyebrow}
 				</p>
 			)}
 			<div className="relative z-10 mx-auto w-full max-w-6xl">
@@ -72,7 +72,7 @@ export function HeroSection ({
 						'text-gold',
 					].join(' ')}
 				>
-					{eyebrow}
+					{hero.eyebrow}
 				</p>
 				<h1
 					className={[
@@ -82,7 +82,7 @@ export function HeroSection ({
 						'lg:text-7xl',
 					].join(' ')}
 				>
-					{title}
+					{hero.title}
 				</h1>
 				<p
 					className={[
@@ -91,11 +91,11 @@ export function HeroSection ({
 						'sm:text-lg sm:leading-8',
 					].join(' ')}
 				>
-					{description}
+					{hero.description}
 				</p>
-				{ctaLabel && ctaHref ? (
+				{hero.ctaLabel ? (
 					<Link
-						href={ctaHref}
+						href="/booking"
 						className={[
 							'mt-10 inline-flex min-h-14',
 							'items-center rounded-full',
@@ -106,7 +106,7 @@ export function HeroSection ({
 							'focus-visible:outline-offset-4',
 						].join(' ')}
 					>
-						{ctaLabel}
+						{hero.ctaLabel}
 					</Link>
 				) : null}
 			</div>

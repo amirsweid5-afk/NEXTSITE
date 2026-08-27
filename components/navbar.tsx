@@ -1,35 +1,41 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { BrandLogo } from '@/components/brand-logo'
+import { LanguageToggle } from '@/components/language-toggle'
+import { ThemeToggle } from '@/components/theme-toggle'
+import { useContent } from '@/components/language-provider'
 
 interface NavItem {
 	href: string
 	label: string
 }
 
-const NAV_ITEMS: NavItem[] = [
-	{ href: '/', label: 'Home' },
-	{ href: '/about-us', label: 'About Us' },
-	{ href: '/booking', label: 'Booking' },
-]
-
 /**
  * Site-wide navigation with a compact mobile menu.
  */
 export function Navbar () {
 	const pathname = usePathname()
+	const content = useContent()
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
+	const [menuPathname, setMenuPathname] = useState(pathname)
 
-	useEffect(() => {
+	if (pathname !== menuPathname) {
+		setMenuPathname(pathname)
 		setIsMenuOpen(false)
-	}, [pathname])
+	}
 
 	function handleToggleMenu () {
 		setIsMenuOpen((isOpen) => !isOpen)
 	}
+
+	const navItems: NavItem[] = [
+		{ href: '/', label: content.nav.home },
+		{ href: '/about-us', label: content.nav.aboutUs },
+		{ href: '/booking', label: content.nav.booking },
+	]
 
 	return (
 		<header
@@ -50,9 +56,10 @@ export function Navbar () {
 				<BrandLogo />
 
 				<div className="flex items-center gap-3 md:flex-1 md:justify-end md:gap-8">
+					<LanguageToggle />
 					<nav
 						id="site-nav"
-						aria-label="Primary"
+						aria-label={content.nav.primary}
 						className={[
 							isMenuOpen
 								? 'absolute inset-x-0 top-[4.5rem] block'
@@ -69,7 +76,7 @@ export function Navbar () {
 								'md:gap-8 md:px-0 md:py-0',
 							].join(' ')}
 						>
-							{NAV_ITEMS.map((item) => {
+							{navItems.map((item) => {
 								const isActive = pathname === item.href
 								return (
 									<li key={item.href}>
@@ -107,7 +114,7 @@ export function Navbar () {
 										'tracking-[0.18em] text-ink',
 									].join(' ')}
 								>
-									Book Now
+									{content.nav.bookNow}
 								</Link>
 							</li>
 						</ul>
@@ -129,8 +136,9 @@ export function Navbar () {
 							'md:inline-flex',
 						].join(' ')}
 					>
-						Book Now
+						{content.nav.bookNow}
 					</Link>
+					<ThemeToggle />
 					<button
 						type="button"
 						className={[
@@ -147,7 +155,9 @@ export function Navbar () {
 						aria-controls="site-nav"
 						onClick={handleToggleMenu}
 					>
-						{isMenuOpen ? 'Close' : 'Menu'}
+						{isMenuOpen
+							? content.nav.close
+							: content.nav.menu}
 					</button>
 				</div>
 			</div>

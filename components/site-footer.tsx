@@ -1,17 +1,7 @@
+'use client'
+
 import Link from 'next/link'
-
-const NAV_LINKS = [
-	{ href: '/', label: 'Home' },
-	{ href: '/about-us', label: 'About Us' },
-	{ href: '/#services', label: 'Services' },
-	{ href: '/booking', label: 'Booking' },
-] as const
-
-const SERVICE_LINKS = [
-	{ href: '/#services', label: 'Landing Pages' },
-	{ href: '/#services', label: 'Static Websites' },
-	{ href: '/#services', label: 'Personal Websites' },
-] as const
+import { useContent } from '@/components/language-provider'
 
 const SOCIAL_LINKS = [
 	{
@@ -111,6 +101,8 @@ function EmailIcon () {
  * Site-wide footer with brand, contact, nav, and booking CTA.
  */
 export function SiteFooter () {
+	const copy = useContent().footer
+
 	return (
 		<footer
 			className={[
@@ -142,7 +134,7 @@ export function SiteFooter () {
 							NEXTSITE
 						</Link>
 						<p className="mt-4 max-w-xs text-sm leading-6 text-white/55">
-							Modern websites built around your ideas.
+							{copy.tagline}
 						</p>
 						<Link
 							href="/booking"
@@ -159,16 +151,16 @@ export function SiteFooter () {
 								'focus-visible:outline-offset-4',
 							].join(' ')}
 						>
-							Book Now
+							{copy.bookNow}
 						</Link>
 					</div>
 
 					<div className="lg:col-span-2">
 						<p className="text-xs font-medium uppercase tracking-[0.22em] text-white/40">
-							Navigate
+							{copy.navigate}
 						</p>
 						<ul className="mt-5 space-y-3">
-							{NAV_LINKS.map((item) => (
+							{copy.nav.map((item) => (
 								<li key={item.label}>
 									<Link
 										href={item.href}
@@ -189,10 +181,10 @@ export function SiteFooter () {
 
 					<div className="lg:col-span-3">
 						<p className="text-xs font-medium uppercase tracking-[0.22em] text-white/40">
-							Services
+							{copy.services}
 						</p>
 						<ul className="mt-5 space-y-3">
-							{SERVICE_LINKS.map((item) => (
+							{copy.serviceLinks.map((item) => (
 								<li key={item.label}>
 									<Link
 										href={item.href}
@@ -213,7 +205,7 @@ export function SiteFooter () {
 
 					<div className="lg:col-span-3">
 						<p className="text-xs font-medium uppercase tracking-[0.22em] text-white/40">
-							Contact
+							{copy.contact}
 						</p>
 						<ul className="mt-5 space-y-4">
 							<li>
@@ -286,7 +278,7 @@ export function SiteFooter () {
 						</a>
 					))}
 					<p className="text-center text-xs tracking-wide text-white/40">
-						© 2026 NEXTSITE. All rights reserved.
+						{copy.rights}
 					</p>
 				</div>
 			</div>

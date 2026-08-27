@@ -1,35 +1,14 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useContent } from '@/components/language-provider'
 
-interface StoryBlock {
-	id: string
-	title: string
-	content: string
-}
-
-const SPECIALTIES = [
-	'Landing Pages',
-	'Static Websites',
-	'Personal Websites',
-] as const
-
-const STORY_BLOCKS: StoryBlock[] = [
-	{
-		id: 'how-it-started',
-		title: 'How It Started',
-		content:
-			'It started simply — we kept building websites for friends, local businesses, and personal projects. What began as a hobby quickly became something we wanted to do more of. The more we built, the clearer it became that we could turn this skill and passion into a real business.',
-	},
-	{
-		id: 'why-we-started',
-		title: 'Why We Started',
-		content:
-			'We started because we genuinely enjoy creating websites — and we wanted to help people and businesses show up online in a way that feels true to them. For us, a great website is not just about looking good. It needs to be useful, responsive, and built around what each client actually needs.',
-	},
-]
-
-function StoryVisual ({ isVisible }: { isVisible: boolean }) {
+function StoryVisual ({
+	isVisible,
+}: {
+	isVisible: boolean
+}) {
+	const copy = useContent().about.story
 	return (
 		<div
 			className={[
@@ -56,31 +35,15 @@ function StoryVisual ({ isVisible }: { isVisible: boolean }) {
 				>
 					<div className="border-b border-white/10 px-6 py-5">
 						<p className="text-xs font-medium uppercase tracking-[0.22em] text-orange">
-							The Journey
+							{copy.journeyEyebrow}
 						</p>
 						<p className="mt-2 text-sm text-white/55">
-							From side projects to helping clients
+							{copy.journeyCaption}
 						</p>
 					</div>
 
 					<ol className="space-y-0 px-6 py-2">
-						{[
-							{
-								step: '01',
-								label: 'Built our first websites',
-								detail: 'For friends and personal ideas',
-							},
-							{
-								step: '02',
-								label: 'Helped local businesses',
-								detail: 'Simple sites that actually worked',
-							},
-							{
-								step: '03',
-								label: 'Turned passion into Creativity',
-								detail: 'A small team, client by client',
-							},
-						].map((item, index) => (
+						{copy.steps.map((item, index) => (
 							<li
 								key={item.step}
 								className={[
@@ -94,7 +57,7 @@ function StoryVisual ({ isVisible }: { isVisible: boolean }) {
 									<span
 										aria-hidden="true"
 										className={[
-											'absolute left-[1.15rem] top-[3.1rem]',
+											'absolute start-[1.15rem] top-[3.1rem]',
 											'h-[calc(100%-1.5rem)] w-px',
 											'bg-linear-to-b from-orange/50',
 											'to-white/10',
@@ -131,10 +94,10 @@ function StoryVisual ({ isVisible }: { isVisible: boolean }) {
 						].join(' ')}
 					>
 						<p className="text-xs font-medium uppercase tracking-[0.18em] text-highlight">
-							What we build today
+							{copy.todayTitle}
 						</p>
 						<ul className="mt-3 flex flex-wrap gap-2">
-							{SPECIALTIES.map((specialty) => (
+							{copy.specialties.map((specialty) => (
 								<li
 									key={specialty}
 									className={[
@@ -158,6 +121,7 @@ function StoryVisual ({ isVisible }: { isVisible: boolean }) {
  * Personal About Us story section with scroll-triggered reveal.
  */
 export function OurStory () {
+	const copy = useContent().about.story
 	const sectionRef = useRef<HTMLElement>(null)
 	const [isVisible, setIsVisible] = useState(false)
 
@@ -218,7 +182,7 @@ export function OurStory () {
 							className={revealClass('our-story-delay-1')}
 						>
 							<span className="text-xs font-medium uppercase tracking-[0.28em] text-orange">
-								About Us
+								{copy.eyebrow}
 							</span>
 						</p>
 						<h2
@@ -230,7 +194,7 @@ export function OurStory () {
 								'sm:text-4xl lg:text-5xl',
 							].join(' ')}
 						>
-							Our Story
+							{copy.title}
 						</h2>
 						<p
 							className={[
@@ -240,10 +204,7 @@ export function OurStory () {
 								'sm:leading-8',
 							].join(' ')}
 						>
-							We&apos;re a small, passionate web
-							development team — real people who love
-							building modern websites for businesses,
-							professionals, and individuals.
+							{copy.intro}
 						</p>
 
 						<div
@@ -254,16 +215,13 @@ export function OurStory () {
 							].join(' ')}
 						>
 							<h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-white">
-								Who We Are
+								{copy.whoTitle}
 							</h3>
 							<p className="mt-3 text-sm leading-6 text-white/60 sm:text-base sm:leading-7">
-								We focus on creating clean, thoughtful
-								websites that help people show up
-								professionally online — without the
-								overcomplicated process. We specialize in:
+								{copy.whoBody}
 							</p>
 							<ul className="mt-4 space-y-2">
-								{SPECIALTIES.map((specialty) => (
+								{copy.specialties.map((specialty) => (
 									<li
 										key={specialty}
 										className={[
@@ -282,7 +240,7 @@ export function OurStory () {
 						</div>
 
 						<div className="mt-8 space-y-8">
-							{STORY_BLOCKS.map((block, index) => (
+							{copy.blocks.map((block, index) => (
 								<article
 									key={block.id}
 									className={revealClass(
@@ -293,7 +251,7 @@ export function OurStory () {
 										{block.title}
 									</h3>
 									<p className="mt-3 text-sm leading-6 text-white/60 sm:text-base sm:leading-7">
-										{block.content}
+										{block.description}
 									</p>
 								</article>
 							))}

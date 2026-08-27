@@ -1,38 +1,17 @@
+'use client'
+
 import Link from 'next/link'
+import { useContent } from '@/components/language-provider'
 
 interface ServiceOffer {
 	id: string
-	title: string
-	description: string
-	priceLabel: string
 	icon: 'landing' | 'static' | 'personal'
 }
 
-const SERVICES: ServiceOffer[] = [
-	{
-		id: 'landing-page',
-		title: 'Landing Page',
-		description:
-			'A focused, high-converting single-page site for businesses, products, or campaigns — clean, modern, and fully responsive.',
-		priceLabel: 'Starting from $200',
-		icon: 'landing',
-	},
-	{
-		id: 'static-website',
-		title: 'Static Website',
-		description:
-			'A professional multi-page website for businesses, portfolios, or organizations — fast, modern, and built to last.',
-		priceLabel: 'Starting from $300',
-		icon: 'static',
-	},
-	{
-		id: 'personal-website',
-		title: 'Personal Website',
-		description:
-			'A personalized site for creators and professionals — designed to showcase your work, skills, and personal brand.',
-		priceLabel: 'Starting from $250',
-		icon: 'personal',
-	},
+const SERVICE_ICONS: ServiceOffer[] = [
+	{ id: 'landing-page', icon: 'landing' },
+	{ id: 'static-website', icon: 'static' },
+	{ id: 'personal-website', icon: 'personal' },
 ]
 
 function ServiceIcon ({ type }: { type: ServiceOffer['icon'] }) {
@@ -123,6 +102,9 @@ function ServiceIcon ({ type }: { type: ServiceOffer['icon'] }) {
  * Home-page services grid with booking CTAs.
  */
 export function ServicesSection () {
+	const content = useContent()
+	const copy = content.home.services
+
 	return (
 		<section
 			id="services"
@@ -141,78 +123,83 @@ export function ServicesSection () {
 			<div className="relative z-10 mx-auto max-w-7xl px-6 sm:px-10 lg:px-12">
 				<div className="mx-auto max-w-2xl text-center">
 					<p className="text-xs font-medium uppercase tracking-[0.28em] text-orange">
-						Services
+						{copy.eyebrow}
 					</p>
 					<h2
 						id="services-heading"
 						className="mt-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl"
 					>
-						What I Offer
+						{copy.title}
 					</h2>
 					<p className="mt-4 text-base leading-7 text-white/65 sm:text-lg sm:leading-8">
-						Professional websites designed to bring your ideas
-						to life.
+						{copy.description}
 					</p>
 				</div>
 
 				<ul className="mt-14 grid gap-6 md:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-7">
-					{SERVICES.map((service) => (
-						<li key={service.id}>
-							<article
-								className={[
-									'group flex h-full flex-col',
-									'rounded-2xl border border-white/10',
-									'bg-surface/80 p-7',
-									'shadow-[0_20px_50px_rgba(0,0,0,0.35)]',
-									'transition duration-300 ease-out',
-									'hover:-translate-y-1.5',
-									'hover:border-orange/45',
-									'hover:shadow-[0_24px_60px_rgba(232,120,18,0.12)]',
-								].join(' ')}
-							>
-								<div
-									className={[
-										'inline-flex h-12 w-12 items-center',
-										'justify-center rounded-xl',
-										'border border-orange/30 bg-orange/10',
-										'text-orange transition duration-300',
-										'group-hover:border-orange/60',
-										'group-hover:bg-orange/15',
-										'group-hover:shadow-[0_0_24px_rgba(232,120,18,0.25)]',
-									].join(' ')}
-								>
-									<ServiceIcon type={service.icon} />
-								</div>
+					{copy.items.map((service) => {
+						const icon = SERVICE_ICONS.find(
+							(item) => item.id === service.id,
+						)?.icon ?? 'landing'
 
-								<h3 className="mt-6 text-xl font-semibold tracking-tight text-white">
-									{service.title}
-								</h3>
-								<p className="mt-3 flex-1 text-sm leading-6 text-white/60">
-									{service.description}
-								</p>
-								<p className="mt-6 text-sm font-medium tracking-wide text-orange">
-									{service.priceLabel}
-								</p>
-								<Link
-									href="/booking"
+						return (
+							<li key={service.id}>
+								<article
 									className={[
-										'mt-5 inline-flex min-h-11',
-										'items-center justify-center',
-										'rounded-full bg-orange px-5',
-										'text-xs font-semibold uppercase',
-										'tracking-[0.18em] text-ink',
-										'transition duration-300',
-										'hover:bg-highlight',
-										'hover:shadow-[0_0_24px_rgba(209,172,44,0.35)]',
-										'focus-visible:outline-2',
-										'focus-visible:outline-offset-4',
+										'group flex h-full flex-col',
+										'rounded-2xl border border-white/10',
+										'bg-surface/80 p-7',
+										'shadow-[0_20px_50px_rgba(0,0,0,0.35)]',
+										'transition duration-300 ease-out',
+										'hover:-translate-y-1.5',
+										'hover:border-orange/45',
+										'hover:shadow-[0_24px_60px_rgba(232,120,18,0.12)]',
 									].join(' ')}
 								>
-									Book Now
-								</Link>
-							</article>
-						</li>
-					))}
+									<div
+										className={[
+											'inline-flex h-12 w-12 items-center',
+											'justify-center rounded-xl',
+											'border border-orange/30 bg-orange/10',
+											'text-orange transition duration-300',
+											'group-hover:border-orange/60',
+											'group-hover:bg-orange/15',
+											'group-hover:shadow-[0_0_24px_rgba(232,120,18,0.25)]',
+										].join(' ')}
+									>
+										<ServiceIcon type={icon} />
+									</div>
+
+									<h3 className="mt-6 text-xl font-semibold tracking-tight text-white">
+										{service.title}
+									</h3>
+									<p className="mt-3 flex-1 text-sm leading-6 text-white/60">
+										{service.description}
+									</p>
+									<p className="mt-6 text-sm font-medium tracking-wide text-orange">
+										{service.priceLabel}
+									</p>
+									<Link
+										href="/booking"
+										className={[
+											'mt-5 inline-flex min-h-11',
+											'items-center justify-center',
+											'rounded-full bg-orange px-5',
+											'text-xs font-semibold uppercase',
+											'tracking-[0.18em] text-ink',
+											'transition duration-300',
+											'hover:bg-highlight',
+											'hover:shadow-[0_0_24px_rgba(209,172,44,0.35)]',
+											'focus-visible:outline-2',
+											'focus-visible:outline-offset-4',
+										].join(' ')}
+									>
+										{copy.bookNow}
+									</Link>
+								</article>
+							</li>
+						)
+					})}
 				</ul>
 			</div>
 		</section>

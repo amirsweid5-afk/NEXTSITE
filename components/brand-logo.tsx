@@ -10,7 +10,7 @@ interface BrandLogoProps {
 }
 
 /**
- * NEXTSITE wordmark with circular NS monogram.
+ * NEXTSITE wordmark with a circular NS avatar.
  */
 export function BrandLogo ({
 	asLink = true,
@@ -26,23 +26,23 @@ export function BrandLogo ({
 	const logoMark = (
 		<span
 			className={[
-				'relative inline-flex h-9 w-9',
+				'relative inline-flex h-8 w-8',
 				'shrink-0 items-center justify-center',
 				'overflow-visible rounded-full',
 				'bg-ink ring-1 ring-white/15',
 				'origin-center transition-transform',
 				'duration-500 ease-out',
-				isEnlarged ? 'scale-[1.50]' : 'scale-100',
+				isEnlarged ? 'z-10 scale-[1.50]' : 'scale-100',
 			].join(' ')}
 		>
 			<span className="relative h-full w-full overflow-hidden rounded-full">
 				<Image
-					src="/ns-logo.jpg"
-					alt="NS"
+					src="/ns-logo.png"
+					alt=""
 					fill
-					sizes="36px"
+					sizes="32px"
 					priority
-					className="object-contain object-center scale-[0.78]"
+					className="object-contain object-center scale-[0.86]"
 				/>
 			</span>
 		</span>

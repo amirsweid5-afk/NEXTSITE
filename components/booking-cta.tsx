@@ -1,9 +1,13 @@
+'use client'
+
 import Link from 'next/link'
+import { useContent } from '@/components/language-provider'
 
 /**
  * Final homepage CTA that links visitors straight to booking.
  */
 export function BookingCta () {
+	const copy = useContent().home.bookingCta
 	return (
 		<section
 			id="book"
@@ -27,7 +31,7 @@ export function BookingCta () {
 
 			<div className="relative z-10 mx-auto max-w-3xl px-6 text-center sm:px-10">
 				<p className="text-xs font-medium uppercase tracking-[0.28em] text-orange">
-					Next Step
+					{copy.eyebrow}
 				</p>
 				<h2
 					id="booking-cta-heading"
@@ -37,11 +41,10 @@ export function BookingCta () {
 						'lg:leading-[1.1]',
 					].join(' ')}
 				>
-					Ready to Build Your Website?
+					{copy.title}
 				</h2>
 				<p className="mx-auto mt-5 max-w-xl text-base leading-7 text-white/65 sm:text-lg sm:leading-8">
-					Let’s bring your idea to life with a modern website
-					designed for you.
+					{copy.description}
 				</p>
 				<Link
 					href="/booking"
@@ -61,7 +64,7 @@ export function BookingCta () {
 						'focus-visible:outline-offset-4',
 					].join(' ')}
 				>
-					Book Now
+					{copy.ctaLabel}
 				</Link>
 			</div>
 		</section>

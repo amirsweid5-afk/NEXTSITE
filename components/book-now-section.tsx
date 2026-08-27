@@ -1,25 +1,13 @@
 'use client'
 
 import { useState, type FormEvent } from 'react'
+import { useContent } from '@/components/language-provider'
 
 const WHATSAPP_NUMBER = '96170552181'
 
 interface FormErrors {
 	fullName?: string
 	websiteDescription?: string
-}
-
-function buildWhatsAppMessage (
-	fullName: string,
-	websiteDescription: string,
-): string {
-	return [
-		'New Website Booking',
-		'',
-		`Full Name: ${fullName}`,
-		'',
-		`Website Description: ${websiteDescription}`,
-	].join('\n')
 }
 
 function getWhatsAppUrl (message: string): string {
@@ -30,6 +18,7 @@ function getWhatsAppUrl (message: string): string {
  * Booking form that opens WhatsApp with the client's details.
  */
 export function BookNowSection () {
+	const copy = useContent().booking.form
 	const [fullName, setFullName] = useState('')
 	const [websiteDescription, setWebsiteDescription] = useState('')
 	const [errors, setErrors] = useState<FormErrors>({})
@@ -42,12 +31,11 @@ export function BookNowSection () {
 		const trimmedDescription = websiteDescription.trim()
 
 		if (trimmedName === '') {
-			nextErrors.fullName = 'Please enter your full name.'
+			nextErrors.fullName = copy.fullNameError
 		}
 
 		if (trimmedDescription === '') {
-			nextErrors.websiteDescription =
-				'Please tell us about your website.'
+			nextErrors.websiteDescription = copy.websiteError
 		}
 
 		return nextErrors
@@ -68,10 +56,13 @@ export function BookNowSection () {
 
 		const trimmedName = fullName.trim()
 		const trimmedDescription = websiteDescription.trim()
-		const message = buildWhatsAppMessage(
-			trimmedName,
-			trimmedDescription,
-		)
+		const message = [
+			copy.whatsAppTitle,
+			'',
+			`${copy.whatsAppName}: ${trimmedName}`,
+			'',
+			`${copy.whatsAppDescription}: ${trimmedDescription}`,
+		].join('\n')
 		const whatsAppUrl = getWhatsAppUrl(message)
 
 		window.open(whatsAppUrl, '_blank', 'noopener,noreferrer')
@@ -113,7 +104,7 @@ export function BookNowSection () {
 			<div className="relative z-10 mx-auto max-w-2xl px-6 sm:px-10 lg:px-12">
 				<div className="text-center">
 					<p className="text-xs font-medium uppercase tracking-[0.28em] text-orange">
-						Get Started
+						{copy.eyebrow}
 					</p>
 					<h2
 						id="book-now-heading"
@@ -123,11 +114,10 @@ export function BookNowSection () {
 							'sm:text-4xl',
 						].join(' ')}
 					>
-						Book Now
+						{copy.title}
 					</h2>
 					<p className="mt-4 text-base leading-7 text-white/65 sm:text-lg sm:leading-8">
-						Tell us about your website and we&apos;ll get
-						back to you to discuss the details.
+						{copy.description}
 					</p>
 				</div>
 
@@ -145,7 +135,7 @@ export function BookNowSection () {
 							htmlFor="full-name"
 							className="block text-sm font-medium text-white"
 						>
-							Full Name
+							{copy.fullName}
 						</label>
 						<input
 							id="full-name"
@@ -163,7 +153,7 @@ export function BookNowSection () {
 									}))
 								}
 							}}
-							placeholder="Enter your full name"
+							placeholder={copy.fullNamePlaceholder}
 							aria-invalid={errors.fullName ? true : undefined}
 							aria-describedby={
 								errors.fullName
@@ -194,7 +184,7 @@ export function BookNowSection () {
 							htmlFor="website-description"
 							className="block text-sm font-medium text-white"
 						>
-							Tell us about your website
+							{copy.website}
 						</label>
 						<textarea
 							id="website-description"
@@ -211,7 +201,7 @@ export function BookNowSection () {
 									}))
 								}
 							}}
-							placeholder="Describe the website you need, including its purpose, pages, features, or any ideas you have..."
+							placeholder={copy.websitePlaceholder}
 							aria-invalid={
 								errors.websiteDescription
 									? true
@@ -260,8 +250,8 @@ export function BookNowSection () {
 						].join(' ')}
 					>
 						{isSubmitting
-							? 'Opening WhatsApp...'
-							: 'Submit Booking'}
+							? copy.submitting
+							: copy.submit}
 					</button>
 
 					{isConfirmed ? (
@@ -272,8 +262,7 @@ export function BookNowSection () {
 								'leading-6 text-highlight',
 							].join(' ')}
 						>
-							Your booking details are ready in WhatsApp.
-							Please press Send to complete your request.
+							{copy.confirmed}
 						</p>
 					) : null}
 				</form>

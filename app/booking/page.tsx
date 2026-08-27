@@ -10,11 +10,7 @@ export const metadata = {
 export default function BookingPage () {
 	return (
 		<>
-			<HeroSection
-				eyebrow="03 Book"
-				title="Ready to start your website?"
-				description="Share your project details below and reach us directly on WhatsApp. We will review your request and get back to you to discuss the next steps."
-			/>
+			<HeroSection source="booking" />
 			<BookNowSection />
 		</>
 	)

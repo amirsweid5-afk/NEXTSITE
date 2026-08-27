@@ -1,51 +1,20 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useContent } from '@/components/language-provider'
 
-interface VisionPoint {
+interface VisionPointIcon {
 	id: string
-	number: string
-	title: string
-	description: string
 	icon: 'grow' | 'improve' | 'digital'
 }
 
-const VISION_TRAITS = [
-	'Modern',
-	'Professional',
-	'Fast',
-	'Accessible',
-	'Tailored to each client',
-] as const
-
-const VISION_POINTS: VisionPoint[] = [
-	{
-		id: 'grow-together',
-		number: '01',
-		title: 'Grow Together',
-		description:
-			'Build long-term relationships with clients and grow alongside their businesses.',
-		icon: 'grow',
-	},
-	{
-		id: 'keep-improving',
-		number: '02',
-		title: 'Keep Improving',
-		description:
-			'Continuously learn, improve our skills, and stay up to date with modern web technologies and design.',
-		icon: 'improve',
-	},
-	{
-		id: 'make-ideas-digital',
-		number: '03',
-		title: 'Make Ideas Digital',
-		description:
-			'Turn our clients\' ideas into professional websites that help them present themselves confidently online.',
-		icon: 'digital',
-	},
+const VISION_ICONS: VisionPointIcon[] = [
+	{ id: 'grow-together', icon: 'grow' },
+	{ id: 'keep-improving', icon: 'improve' },
+	{ id: 'make-ideas-digital', icon: 'digital' },
 ]
 
-function VisionIcon ({ type }: { type: VisionPoint['icon'] }) {
+function VisionIcon ({ type }: { type: VisionPointIcon['icon'] }) {
 	if (type === 'grow') {
 		return (
 			<svg
@@ -133,6 +102,7 @@ function VisionIcon ({ type }: { type: VisionPoint['icon'] }) {
  * About Us vision statement and forward-looking goals.
  */
 export function OurVision () {
+	const copy = useContent().about.vision
 	const sectionRef = useRef<HTMLElement>(null)
 	const [isVisible, setIsVisible] = useState(false)
 
@@ -192,7 +162,7 @@ export function OurVision () {
 					<div className="lg:pt-2">
 						<p className={revealClass('our-story-delay-1')}>
 							<span className="text-xs font-medium uppercase tracking-[0.28em] text-orange">
-								Looking Ahead
+								{copy.eyebrow}
 							</span>
 						</p>
 						<h2
@@ -205,10 +175,12 @@ export function OurVision () {
 								'lg:text-[3.25rem] xl:text-6xl',
 							].join(' ')}
 						>
-							Our{' '}
-							<span className="text-highlight">
-								Vision
-							</span>
+							{copy.titleLead}{' '}
+							{copy.titleAccent ? (
+								<span className="text-highlight">
+									{copy.titleAccent}
+								</span>
+							) : null}
 						</h2>
 					</div>
 
@@ -221,10 +193,7 @@ export function OurVision () {
 								'sm:leading-8',
 							].join(' ')}
 						>
-							Our vision is to become a trusted web
-							development partner for businesses,
-							professionals, and individuals who want to
-							build a strong presence online.
+							{copy.paragraphOne}
 						</p>
 						<p
 							className={[
@@ -234,10 +203,7 @@ export function OurVision () {
 								'sm:leading-8',
 							].join(' ')}
 						>
-							We want to create websites that feel
-							modern, professional, fast, and accessible
-							— tailored to each client&apos;s identity
-							and goals.
+							{copy.paragraphTwo}
 						</p>
 						<ul
 							className={[
@@ -245,7 +211,7 @@ export function OurVision () {
 								'mt-6 flex flex-wrap gap-2',
 							].join(' ')}
 						>
-							{VISION_TRAITS.map((trait) => (
+							{copy.traits.map((trait) => (
 								<li
 									key={trait}
 									className={[
@@ -267,10 +233,7 @@ export function OurVision () {
 								'sm:leading-7',
 							].join(' ')}
 						>
-							As we grow, we want to keep improving our
-							skills, adopting better technologies, and
-							creating better digital experiences for
-							every client.
+							{copy.paragraphThree}
 						</p>
 					</div>
 				</div>
@@ -281,61 +244,71 @@ export function OurVision () {
 						'md:grid-cols-3 lg:mt-20 lg:gap-7',
 					].join(' ')}
 				>
-					{VISION_POINTS.map((point, index) => (
-						<li
-							key={point.id}
-							className={revealClass(
-								`our-story-delay-${index + 7}`,
-							)}
-						>
-							<article
-								className={[
-									'group relative flex h-full',
-									'flex-col overflow-hidden',
-									'rounded-2xl border border-white/10',
-									'bg-surface/70 p-7',
-									'transition duration-300 ease-out',
-									'hover:-translate-y-1',
-									'hover:border-highlight/40',
-									'hover:shadow-[0_20px_50px_rgba(209,172,44,0.1)]',
-								].join(' ')}
+					{copy.points.map((point, index) => {
+						const icon = VISION_ICONS.find(
+							(item) => item.id === point.id,
+						)?.icon ?? 'grow'
+						const number = String(index + 1).padStart(
+							2,
+							'0',
+						)
+
+						return (
+							<li
+								key={point.id}
+								className={revealClass(
+									`our-story-delay-${index + 7}`,
+								)}
 							>
-								<span
-									aria-hidden="true"
+								<article
 									className={[
-										'absolute right-5 top-4',
-										'text-4xl font-semibold',
-										'leading-none tracking-tight',
-										'text-white/6',
+										'group relative flex h-full',
+										'flex-col overflow-hidden',
+										'rounded-2xl border border-white/10',
+										'bg-surface/70 p-7',
+										'transition duration-300 ease-out',
+										'hover:-translate-y-1',
+										'hover:border-highlight/40',
+										'hover:shadow-[0_20px_50px_rgba(209,172,44,0.1)]',
 									].join(' ')}
 								>
-									{point.number}
-								</span>
-								<div
-									className={[
-										'inline-flex h-11 w-11 items-center',
-										'justify-center rounded-xl',
-										'border border-highlight/30',
-										'bg-highlight/10 text-highlight',
-										'transition duration-300',
-										'group-hover:border-highlight/55',
-										'group-hover:bg-highlight/15',
-									].join(' ')}
-								>
-									<VisionIcon type={point.icon} />
-								</div>
-								<p className="mt-5 text-xs font-medium uppercase tracking-[0.2em] text-orange">
-									{point.number}
-								</p>
-								<h3 className="mt-2 text-lg font-semibold tracking-tight text-white">
-									{point.title}
-								</h3>
-								<p className="mt-3 text-sm leading-6 text-white/60">
-									{point.description}
-								</p>
-							</article>
-						</li>
-					))}
+									<span
+										aria-hidden="true"
+										className={[
+											'absolute end-5 top-4',
+											'text-4xl font-semibold',
+											'leading-none tracking-tight',
+											'text-white/6',
+										].join(' ')}
+									>
+										{number}
+									</span>
+									<div
+										className={[
+											'inline-flex h-11 w-11 items-center',
+											'justify-center rounded-xl',
+											'border border-highlight/30',
+											'bg-highlight/10 text-highlight',
+											'transition duration-300',
+											'group-hover:border-highlight/55',
+											'group-hover:bg-highlight/15',
+										].join(' ')}
+									>
+										<VisionIcon type={icon} />
+									</div>
+									<p className="mt-5 text-xs font-medium uppercase tracking-[0.2em] text-orange">
+										{number}
+									</p>
+									<h3 className="mt-2 text-lg font-semibold tracking-tight text-white">
+										{point.title}
+									</h3>
+									<p className="mt-3 text-sm leading-6 text-white/60">
+										{point.description}
+									</p>
+								</article>
+							</li>
+						)
+					})}
 				</ul>
 			</div>
 		</section>

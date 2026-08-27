@@ -12,13 +12,7 @@ export const metadata = {
 export default function HomePage () {
 	return (
 		<>
-			<HeroSection
-				eyebrow="Modern Websites. Built for You."
-				title="Websites Designed Around Your Ideas."
-				description="We create landing pages, static websites, and personal sites for businesses and professionals who want a modern, professional presence online."
-				ctaLabel="Book Now"
-				ctaHref="/booking"
-			/>
+			<HeroSection source="home" />
 			<ServicesSection />
 			<WhyChooseUs />
 			<BookingCta />
