@@ -13,8 +13,7 @@ export function HomeHero () {
 		<section
 			className={[
 				'relative isolate flex min-h-[calc(100svh-4.5rem)]',
-				'items-end overflow-hidden',
-				'bg-[#010203] text-[#f7f4ef]',
+				'items-end overflow-hidden bg-ink text-white',
 			].join(' ')}
 		>
 			<div
@@ -27,12 +26,7 @@ export function HomeHero () {
 						'bg-[radial-gradient(ellipse_80%_55%_at_50%_115%,rgba(232,120,18,0.38),transparent_55%),radial-gradient(ellipse_60%_40%_at_80%_10%,rgba(209,172,44,0.16),transparent_50%),radial-gradient(ellipse_50%_35%_at_12%_20%,rgba(177,108,4,0.14),transparent_55%)]',
 					].join(' ')}
 				/>
-				<div
-					className={[
-						'absolute inset-0',
-						'bg-[linear-gradient(to_bottom,rgba(1,2,3,0.55)_0%,transparent_28%,transparent_55%,rgba(1,2,3,0.88)_100%)]',
-					].join(' ')}
-				/>
+				<div className="home-hero-vignette absolute inset-0" />
 				<svg
 					className="home-hero-grid absolute inset-x-0 bottom-0 h-[58%] w-full opacity-70"
 					viewBox="0 0 1440 520"
@@ -149,12 +143,10 @@ export function HomeHero () {
 					dir="ltr"
 					className={[
 						'home-hero-animate home-hero-delay-1',
-						'max-w-5xl font-semibold',
+						'home-hero-title max-w-5xl font-semibold',
 						'leading-[0.92] tracking-[-0.04em]',
 						'text-[clamp(3.25rem,12vw,8.5rem)]',
-						'text-transparent',
-						'bg-clip-text',
-						'bg-[linear-gradient(115deg,#f7f4ef_18%,#d3ac2c_58%,#e87812_92%)]',
+						'text-transparent bg-clip-text',
 					].join(' ')}
 				>
 					{copy.brand}
@@ -164,9 +156,8 @@ export function HomeHero () {
 					className={[
 						'home-hero-animate home-hero-delay-2',
 						'mt-8 max-w-xl text-2xl font-medium',
-						'leading-snug tracking-tight',
-						'text-[#f7f4ef] sm:text-3xl',
-						'lg:text-[2rem]',
+						'leading-snug tracking-tight text-white',
+						'sm:text-3xl lg:text-[2rem]',
 					].join(' ')}
 				>
 					{copy.title}
@@ -176,7 +167,7 @@ export function HomeHero () {
 					className={[
 						'home-hero-animate home-hero-delay-3',
 						'mt-5 max-w-lg text-base leading-7',
-						'text-[#f7f4ef]/65 sm:text-lg sm:leading-8',
+						'text-white/65 sm:text-lg sm:leading-8',
 					].join(' ')}
 				>
 					{copy.description}
@@ -194,7 +185,7 @@ export function HomeHero () {
 							'inline-flex min-h-12 items-center',
 							'justify-center rounded-full',
 							'bg-orange px-8 text-sm font-semibold',
-							'uppercase tracking-[0.18em] text-[#010203]',
+							'uppercase tracking-[0.18em] text-ink',
 							'shadow-[0_0_32px_rgba(232,120,18,0.4)]',
 							'transition duration-300',
 							'hover:bg-highlight',
@@ -210,9 +201,9 @@ export function HomeHero () {
 						className={[
 							'inline-flex min-h-12 items-center',
 							'justify-center rounded-full',
-							'border border-[#f7f4ef]/20 bg-[#f7f4ef]/5',
+							'border border-white/20 bg-white/5',
 							'px-8 text-sm font-semibold',
-							'uppercase tracking-[0.18em] text-[#f7f4ef]',
+							'uppercase tracking-[0.18em] text-white',
 							'backdrop-blur-sm transition duration-300',
 							'hover:border-orange/50 hover:bg-orange/10',
 							'hover:text-orange',

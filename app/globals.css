@@ -154,6 +154,33 @@ html[lang='ar'] .uppercase {
 	outline-color: var(--highlight);
 }
 
+.home-hero-vignette {
+	background: linear-gradient(
+		to bottom,
+		color-mix(in srgb, var(--ink) 55%, transparent) 0%,
+		transparent 28%,
+		transparent 55%,
+		color-mix(in srgb, var(--ink) 88%, transparent) 100%
+	);
+}
+
+.home-hero-title {
+	background-image: linear-gradient(
+		115deg,
+		var(--white) 18%,
+		var(--highlight) 58%,
+		var(--orange) 92%
+	);
+}
+
+html[data-theme='light'] .home-hero-grid {
+	opacity: 0.4;
+}
+
+html[data-theme='light'] .home-hero-beam {
+	opacity: 0.55;
+}
+
 /* Home hero motion */
 @keyframes home-fade-up {
 	from {
