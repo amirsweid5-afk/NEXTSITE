@@ -12,8 +12,9 @@ export function HomeHero () {
 	return (
 		<section
 			className={[
-				'relative isolate flex min-h-[calc(100svh-4.5rem)]',
-				'items-end overflow-hidden bg-ink text-white',
+				'relative isolate flex overflow-hidden',
+				'bg-ink text-white',
+				'sm:min-h-[calc(100svh-4.5rem)] sm:items-end',
 			].join(' ')}
 		>
 			<div
@@ -135,8 +136,8 @@ export function HomeHero () {
 			<div
 				className={[
 					'relative z-10 mx-auto w-full max-w-6xl',
-					'px-6 pb-16 pt-20 sm:px-10 sm:pb-20',
-					'lg:px-16 lg:pb-24',
+					'px-6 py-16 sm:px-10 sm:pb-20 sm:pt-20',
+					'lg:px-12 lg:pb-24',
 				].join(' ')}
 			>
 				<h1
@@ -155,7 +156,8 @@ export function HomeHero () {
 				<p
 					className={[
 						'home-hero-animate home-hero-delay-2',
-						'mt-8 max-w-xl text-2xl font-medium',
+						'mt-6 max-w-xl text-2xl font-medium',
+						'sm:mt-8',
 						'leading-snug tracking-tight text-white',
 						'sm:text-3xl lg:text-[2rem]',
 					].join(' ')}
@@ -176,7 +178,7 @@ export function HomeHero () {
 				<div
 					className={[
 						'home-hero-animate home-hero-delay-4',
-						'mt-10 flex flex-wrap items-center gap-3',
+						'mt-9 flex flex-wrap items-center gap-3',
 					].join(' ')}
 				>
 					<Link

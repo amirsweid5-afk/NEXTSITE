@@ -13,11 +13,21 @@ export interface NavContent {
 	arabic: string
 }
 
-export interface HeroContent {
-	eyebrow: string
+export interface BookingHeroStep {
+	mark: string
 	title: string
+	detail: string
+}
+
+export interface BookingHeroContent {
+	eyebrow: string
+	titleLead: string
+	titleAccent: string
 	description: string
-	ctaLabel?: string
+	ctaLabel: string
+	scrollHint: string
+	promise: string
+	steps: BookingHeroStep[]
 }
 
 export interface ServiceItemContent {
@@ -118,7 +128,7 @@ export interface SiteContent {
 		}
 	}
 	booking: {
-		hero: HeroContent
+		hero: BookingHeroContent
 		form: {
 			eyebrow: string
 			title: string
@@ -389,10 +399,31 @@ const ENGLISH: SiteContent = {
 	},
 	booking: {
 		hero: {
-			eyebrow: '03 Book',
-			title: 'Ready to start your website?',
+			eyebrow: 'Begin here',
+			titleLead: 'Your idea is ready',
+			titleAccent: 'to take form.',
 			description:
-				'Share your project details below and reach us directly on WhatsApp. We will review your request and get back to you to discuss the next steps.',
+				'This is the quiet moment before a website is born. Tell us what you see — we will hold it carefully, and build something that feels like you.',
+			ctaLabel: 'Start your booking',
+			scrollHint: 'Share your vision below',
+			promise: 'A human reply · A clear next step · Made around you',
+			steps: [
+				{
+					mark: '01',
+					title: 'Speak the spark',
+					detail: 'A few honest words are enough.',
+				},
+				{
+					mark: '02',
+					title: 'We listen',
+					detail: 'Then we shape it with you.',
+				},
+				{
+					mark: '03',
+					title: 'It awakens',
+					detail: 'A site that feels like home.',
+				},
+			],
 		},
 		form: {
 			eyebrow: 'Get Started',
@@ -676,10 +707,31 @@ const ARABIC: SiteContent = {
 	},
 	booking: {
 		hero: {
-			eyebrow: '03 احجز',
-			title: 'جاهز لبدء موقعك؟',
+			eyebrow: 'ابدأ من هنا',
+			titleLead: 'فكرتك جاهزة',
+			titleAccent: 'لتأخذ شكلها.',
 			description:
-				'شارك تفاصيل مشروعك أدناه وتواصل معنا مباشرة عبر واتساب. سنراجع طلبك ونعود إليك لمناقشة الخطوات التالية.',
+				'هذه اللحظة الهادئة قبل أن يُولد الموقع. أخبرنا بما تراه — سنحملها بعناية، ونبني شيئاً يشبهك.',
+			ctaLabel: 'ابدأ حجزك',
+			scrollHint: 'شارك رؤيتك في الأسفل',
+			promise: 'ردّ إنساني · خطوة واضحة · مصمّم حولك',
+			steps: [
+				{
+					mark: '01',
+					title: 'اروِ رؤيتك',
+					detail: 'كلمات صادقة تكفي.',
+				},
+				{
+					mark: '02',
+					title: 'نصغي إليك',
+					detail: 'ثم نبنيها معك.',
+				},
+				{
+					mark: '03',
+					title: 'تولد',
+					detail: 'موقع يشبهك.',
+				},
+			],
 		},
 		form: {
 			eyebrow: 'ابدأ الآن',

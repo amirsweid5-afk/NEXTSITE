@@ -1,5 +1,5 @@
 import { BookNowSection } from '@/components/book-now-section'
-import { HeroSection } from '@/components/hero-section'
+import { BookingHero } from '@/components/booking-hero'
 
 export const metadata = {
 	title: 'Booking',
@@ -10,7 +10,7 @@ export const metadata = {
 export default function BookingPage () {
 	return (
 		<>
-			<HeroSection />
+			<BookingHero />
 			<BookNowSection />
 		</>
 	)

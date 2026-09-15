@@ -15,7 +15,7 @@ export function BookingCta () {
 			className={[
 				'relative isolate overflow-hidden',
 				'border-t border-white/10',
-				'bg-surface py-24 sm:py-28 lg:py-32',
+				'bg-surface py-20 sm:py-24 lg:py-32',
 			].join(' ')}
 		>
 			<div

@@ -6,12 +6,12 @@
 
 :root {
 	--ink: #010203;
-	--surface: #1d1d1f;
+	--white: #f7f4ef;
+	--surface: color-mix(in srgb, #1d1d1f 97%, var(--white));
 	--stone: #3b3130;
 	--gold: #b16c04;
 	--highlight: #d3ac2c;
 	--orange: #e87812;
-	--white: #f7f4ef;
 	--muted: var(--gold);
 	--accent: var(--highlight);
 	--line: var(--stone);
@@ -109,7 +109,7 @@ html[data-theme='light'] {
 	color-scheme: light;
 	--ink: #f7f4ef;
 	--white: #010203;
-	--surface: color-mix(in srgb, var(--ink) 88%, var(--stone));
+	--surface: color-mix(in srgb, var(--ink) 89%, var(--stone));
 	--background: var(--ink);
 	--foreground: var(--white);
 	--line: color-mix(in srgb, var(--stone) 42%, var(--ink));
@@ -398,6 +398,130 @@ html[data-theme='light'] .home-hero-beam {
 	animation: about-pulse-line 4s ease-in-out infinite;
 }
 
+/* Booking hero motion */
+@keyframes booking-fade-up {
+	from {
+		opacity: 0;
+		transform: translateY(1.25rem);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes booking-breathe {
+	0%,
+	100% {
+		opacity: 0.5;
+		transform: scale(1);
+	}
+	50% {
+		opacity: 0.95;
+		transform: scale(1.08);
+	}
+}
+
+@keyframes booking-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes booking-orbit {
+	0%,
+	100% {
+		transform: translate3d(0, 0, 0);
+	}
+	50% {
+		transform: translate3d(10px, -14px, 0);
+	}
+}
+
+@keyframes booking-rise {
+	0%,
+	100% {
+		opacity: 0.35;
+		transform: translateX(-50%) scaleY(1);
+	}
+	50% {
+		opacity: 0.8;
+		transform: translateX(-50%) scaleY(1.08);
+	}
+}
+
+@keyframes booking-spark {
+	0%,
+	100% {
+		opacity: 0.2;
+	}
+	50% {
+		opacity: 0.9;
+	}
+}
+
+@keyframes booking-ring-pulse {
+	0%,
+	100% {
+		stroke-dashoffset: 0;
+		opacity: 0.35;
+	}
+	50% {
+		stroke-dashoffset: 28;
+		opacity: 0.75;
+	}
+}
+
+.booking-hero-animate {
+	animation: booking-fade-up 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.booking-hero-delay-1 {
+	animation-delay: 0.1s;
+}
+
+.booking-hero-delay-2 {
+	animation-delay: 0.22s;
+}
+
+.booking-hero-delay-3 {
+	animation-delay: 0.36s;
+}
+
+.booking-hero-delay-4 {
+	animation-delay: 0.5s;
+}
+
+.booking-hero-delay-5 {
+	animation-delay: 0.64s;
+}
+
+.booking-hero-breathe {
+	animation: booking-breathe 6s ease-in-out infinite;
+}
+
+.booking-hero-spin {
+	transform-box: fill-box;
+	transform-origin: center;
+	animation: booking-spin 36s linear infinite;
+}
+
+.booking-hero-orbit {
+	animation: booking-orbit 14s ease-in-out infinite;
+}
+
+.booking-hero-rise {
+	animation: booking-rise 7s ease-in-out infinite;
+}
+
+.booking-hero-spark {
+	animation: booking-spark 3.6s ease-in-out infinite;
+}
+
+.booking-hero-ring {
+	animation: booking-ring-pulse 5s ease-in-out infinite;
+}
+
 /* Why Choose Us motion */
 @keyframes why-choose-fade-up {
 	from {
@@ -493,6 +617,13 @@ html[data-theme='light'] .home-hero-beam {
 	.about-hero-glow,
 	.about-hero-drift,
 	.about-hero-line,
+	.booking-hero-animate,
+	.booking-hero-breathe,
+	.booking-hero-spin,
+	.booking-hero-orbit,
+	.booking-hero-rise,
+	.booking-hero-spark,
+	.booking-hero-ring,
 	.why-choose-animate,
 	.our-story-reveal {
 		animation: none !important;
