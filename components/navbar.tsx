@@ -13,6 +13,72 @@ interface NavItem {
 	label: string
 }
 
+interface NavAuthLinksProps {
+	onNavigate?: () => void
+	isCompact?: boolean
+}
+
+/**
+ * Login and Sign in actions shown beside the theme toggle.
+ */
+function NavAuthLinks ({
+	onNavigate,
+	isCompact = false,
+}: NavAuthLinksProps) {
+	const content = useContent()
+	const pathname = usePathname()
+
+	const baseClassName = [
+		'inline-flex min-h-10 items-center justify-center',
+		'rounded-full px-4',
+		'text-xs font-semibold uppercase',
+		'tracking-[0.18em]',
+		'transition duration-300',
+		'focus-visible:outline-2',
+		'focus-visible:outline-offset-4',
+		isCompact ? 'w-full' : 'whitespace-nowrap',
+	].join(' ')
+
+	return (
+		<div
+			className={[
+				'flex items-center gap-2',
+				isCompact ? 'w-full' : '',
+			].join(' ')}
+		>
+			<Link
+				href="/sign-in"
+				onClick={onNavigate}
+				aria-current={
+					pathname === '/sign-in' ? 'page' : undefined
+				}
+				className={[
+					baseClassName,
+					'border border-white/10',
+					'bg-[#010203] text-[#f7f4ef]',
+					'hover:border-white/25 hover:bg-stone',
+				].join(' ')}
+			>
+				{content.nav.signIn}
+			</Link>
+			<Link
+				href="/login"
+				onClick={onNavigate}
+				aria-current={
+					pathname === '/login' ? 'page' : undefined
+				}
+				className={[
+					baseClassName,
+					'bg-gold text-[#f7f4ef]',
+					'hover:bg-highlight hover:text-ink',
+				].join(' ')}
+			>
+				{content.nav.login}
+			</Link>
+		</div>
+	)
+}
+
 /**
  * Site-wide navigation with a mobile sidebar menu.
  */
@@ -143,7 +209,8 @@ export function Navbar () {
 						>
 							{content.nav.bookNow}
 						</Link>
-						<div className="hidden md:block">
+						<div className="hidden items-center gap-2 md:flex">
+							<NavAuthLinks />
 							<ThemeToggle />
 						</div>
 						<button
@@ -268,6 +335,10 @@ export function Navbar () {
 							</p>
 							<ThemeToggle />
 						</div>
+						<NavAuthLinks
+							isCompact
+							onNavigate={handleCloseMenu}
+						/>
 					</div>
 					<Link
 						href="/booking"

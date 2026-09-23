@@ -5,6 +5,8 @@ export interface NavContent {
 	aboutUs: string
 	booking: string
 	bookNow: string
+	login: string
+	signIn: string
 	menu: string
 	close: string
 	primary: string
@@ -180,6 +182,8 @@ const ENGLISH: SiteContent = {
 		aboutUs: 'About Us',
 		booking: 'Booking',
 		bookNow: 'Book Now',
+		login: 'Login',
+		signIn: 'Sign in',
 		menu: 'Menu',
 		close: 'Close',
 		primary: 'Primary',
@@ -503,6 +507,8 @@ const ARABIC: SiteContent = {
 		aboutUs: 'من نحن',
 		booking: 'الحجز',
 		bookNow: 'احجز الآن',
+		login: 'دخول',
+		signIn: 'تسجيل',
 		menu: 'القائمة',
 		close: 'إغلاق',
 		primary: 'رئيسي',

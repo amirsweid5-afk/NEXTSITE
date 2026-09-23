@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Cairo, Geist, Geist_Mono } from 'next/font/google'
 import { cookies } from 'next/headers'
-import Script from 'next/script'
 import { LanguageProvider } from '@/components/language-provider'
 import { Navbar } from '@/components/navbar'
 import { SiteFooter } from '@/components/site-footer'
@@ -68,13 +67,15 @@ export default async function RootLayout ({
 			suppressHydrationWarning
 			className={`${geistSans.variable} ${geistMono.variable} ${cairo.variable} dark h-full bg-background text-foreground antialiased`}
 		>
-			<body className="flex min-h-full flex-col font-sans">
-				<Script
+			<head>
+				<script
 					id="theme-init"
-					strategy="beforeInteractive"
-				>
-					{BOOTSTRAP_SCRIPT}
-				</Script>
+					dangerouslySetInnerHTML={{
+						__html: BOOTSTRAP_SCRIPT,
+					}}
+				/>
+			</head>
+			<body className="flex min-h-full flex-col font-sans">
 				<LanguageProvider initialLanguage={language}>
 					<SplashCursorEffect />
 					<SkipToContent />
