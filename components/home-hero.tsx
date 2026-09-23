@@ -1,13 +1,60 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useContent } from '@/components/language-provider'
+
+const TYPE_DELAY_MS = 180
+const TYPE_INTERVAL_MS = 110
+
+/**
+ * Types the brand word letter by letter on first view.
+ */
+function useTypedBrand (brand: string) {
+	const [typedBrand, setTypedBrand] = useState('')
+	const [isTyping, setIsTyping] = useState(true)
+
+	useEffect(() => {
+		const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+		if (media.matches) {
+			setTypedBrand(brand)
+			setIsTyping(false)
+			return
+		}
+
+		setTypedBrand('')
+		setIsTyping(true)
+		let index = 0
+		let intervalId = 0
+
+		const timeoutId = window.setTimeout(() => {
+			intervalId = window.setInterval(() => {
+				index += 1
+				setTypedBrand(brand.slice(0, index))
+
+				if (index >= brand.length) {
+					window.clearInterval(intervalId)
+					setIsTyping(false)
+				}
+			}, TYPE_INTERVAL_MS)
+		}, TYPE_DELAY_MS)
+
+		return () => {
+			window.clearTimeout(timeoutId)
+			window.clearInterval(intervalId)
+		}
+	}, [brand])
+
+	return { typedBrand, isTyping }
+}
 
 /**
  * Cinematic brand-first hero for the home page.
  */
 export function HomeHero () {
 	const copy = useContent().home.hero
+	const { typedBrand, isTyping } = useTypedBrand(copy.brand)
 
 	return (
 		<section
@@ -143,14 +190,31 @@ export function HomeHero () {
 				<h1
 					dir="ltr"
 					className={[
-						'home-hero-animate home-hero-delay-1',
-						'home-hero-title max-w-5xl font-semibold',
-						'leading-[0.92] tracking-[-0.04em]',
-						'text-[clamp(3.25rem,12vw,8.5rem)]',
-						'text-transparent bg-clip-text',
+						'relative max-w-5xl font-brand home-hero-brand',
+						'leading-[1.05] tracking-normal',
+						'text-[clamp(3.25rem,11vw,8.5rem)]',
 					].join(' ')}
 				>
-					{copy.brand}
+					<span className="sr-only">{copy.brand}</span>
+					<span className="invisible select-none" aria-hidden="true">
+						{copy.brand}
+					</span>
+					<span
+						aria-hidden="true"
+						className="absolute inset-0"
+					>
+						<span
+							className={[
+								'home-hero-title text-transparent',
+								'bg-clip-text',
+							].join(' ')}
+						>
+							{typedBrand}
+						</span>
+						{isTyping ? (
+							<span className="home-hero-caret" />
+						) : null}
+					</span>
 				</h1>
 
 				<p

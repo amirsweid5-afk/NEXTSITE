@@ -1,10 +1,10 @@
-import { AuthEntryScreen } from '@/components/auth-entry-screen'
+import { SignInForm } from '@/components/sign-in-form'
 
 export const metadata = {
 	title: 'Sign in',
-	description: 'Sign in to NEXTSITE.',
+	description: 'Create your NEXTSITE account.',
 }
 
 export default function SignInPage () {
-	return <AuthEntryScreen mode="signIn" />
+	return <SignInForm />
 }

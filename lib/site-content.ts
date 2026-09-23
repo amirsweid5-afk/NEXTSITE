@@ -162,6 +162,39 @@ export interface SiteContent {
 			whatsAppDescription: string
 		}
 	}
+	auth: {
+		loginEyebrow: string
+		loginTitle: string
+		loginDescription: string
+		signInEyebrow: string
+		signInTitle: string
+		signInDescription: string
+		fullName: string
+		fullNamePlaceholder: string
+		fullNameError: string
+		email: string
+		emailPlaceholder: string
+		emailError: string
+		password: string
+		passwordPlaceholder: string
+		passwordError: string
+		showPassword: string
+		hidePassword: string
+		confirmPassword: string
+		confirmPasswordPlaceholder: string
+		confirmPasswordError: string
+		loginSubmit: string
+		loginSubmitting: string
+		signInSubmit: string
+		signInSubmitting: string
+		loginError: string
+		signInError: string
+		checkEmail: string
+		hasAccount: string
+		noAccount: string
+		goLogin: string
+		goSignIn: string
+	}
 	footer: {
 		tagline: string
 		bookNow: string
@@ -477,6 +510,42 @@ const ENGLISH: SiteContent = {
 			whatsAppService: 'Service',
 			whatsAppDescription: 'Website Description',
 		},
+	},
+	auth: {
+		loginEyebrow: 'Welcome back',
+		loginTitle: 'Login',
+		loginDescription:
+			'Enter your email and password to access your account.',
+		signInEyebrow: 'Join NEXTSITE',
+		signInTitle: 'Sign in',
+		signInDescription:
+			'Create your account to book projects and save your details.',
+		fullName: 'Full Name',
+		fullNamePlaceholder: 'Enter your full name',
+		fullNameError: 'Please enter your full name.',
+		email: 'Email',
+		emailPlaceholder: 'Enter your email',
+		emailError: 'Please enter a valid email.',
+		password: 'Password',
+		passwordPlaceholder: 'Enter your password',
+		passwordError: 'Password must be at least 8 characters.',
+		showPassword: 'Show password',
+		hidePassword: 'Hide password',
+		confirmPassword: 'Confirm Password',
+		confirmPasswordPlaceholder: 'Re-enter your password',
+		confirmPasswordError: 'Passwords do not match.',
+		loginSubmit: 'Login',
+		loginSubmitting: 'Logging in...',
+		signInSubmit: 'Sign in',
+		signInSubmitting: 'Creating your account...',
+		loginError: 'Invalid email or password.',
+		signInError: 'Could not create your account. Please try again.',
+		checkEmail:
+			'Check your email to confirm your account, then log in.',
+		hasAccount: 'Already have an account?',
+		noAccount: 'Need an account?',
+		goLogin: 'Login',
+		goSignIn: 'Sign in',
 	},
 	footer: {
 		tagline: 'Modern websites built around your ideas.',
@@ -802,6 +871,42 @@ const ARABIC: SiteContent = {
 			whatsAppService: 'الخدمة',
 			whatsAppDescription: 'وصف الموقع',
 		},
+	},
+	auth: {
+		loginEyebrow: 'أهلاً بعودتك',
+		loginTitle: 'دخول',
+		loginDescription:
+			'أدخل بريدك الإلكتروني وكلمة المرور للوصول إلى حسابك.',
+		signInEyebrow: 'انضم إلى NEXTSITE',
+		signInTitle: 'تسجيل',
+		signInDescription:
+			'أنشئ حسابك لحجز المشاريع وحفظ بياناتك.',
+		fullName: 'الاسم الكامل',
+		fullNamePlaceholder: 'أدخل اسمك الكامل',
+		fullNameError: 'يرجى إدخال اسمك الكامل.',
+		email: 'البريد الإلكتروني',
+		emailPlaceholder: 'أدخل بريدك الإلكتروني',
+		emailError: 'يرجى إدخال بريد إلكتروني صالح.',
+		password: 'كلمة المرور',
+		passwordPlaceholder: 'أدخل كلمة المرور',
+		passwordError: 'يجب أن تكون كلمة المرور 8 أحرف على الأقل.',
+		showPassword: 'إظهار كلمة المرور',
+		hidePassword: 'إخفاء كلمة المرور',
+		confirmPassword: 'تأكيد كلمة المرور',
+		confirmPasswordPlaceholder: 'أعد إدخال كلمة المرور',
+		confirmPasswordError: 'كلمتا المرور غير متطابقتين.',
+		loginSubmit: 'دخول',
+		loginSubmitting: 'جاري تسجيل الدخول...',
+		signInSubmit: 'تسجيل',
+		signInSubmitting: 'جاري إنشاء حسابك...',
+		loginError: 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
+		signInError: 'تعذر إنشاء حسابك. يرجى المحاولة مرة أخرى.',
+		checkEmail:
+			'تحقق من بريدك الإلكتروني لتأكيد حسابك، ثم سجّل الدخول.',
+		hasAccount: 'لديك حساب بالفعل؟',
+		noAccount: 'تحتاج إلى حساب؟',
+		goLogin: 'دخول',
+		goSignIn: 'تسجيل',
 	},
 	footer: {
 		tagline: 'مواقع حديثة مبنية حول أفكارك.',

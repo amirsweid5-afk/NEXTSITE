@@ -1,4 +1,4 @@
-import { AuthEntryScreen } from '@/components/auth-entry-screen'
+import { LoginForm } from '@/components/login-form'
 
 export const metadata = {
 	title: 'Login',
@@ -6,5 +6,5 @@ export const metadata = {
 }
 
 export default function LoginPage () {
-	return <AuthEntryScreen mode="login" />
+	return <LoginForm />
 }

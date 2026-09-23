@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Cairo, Geist, Geist_Mono } from 'next/font/google'
+import { Berkshire_Swash, Cairo, Emilys_Candy } from 'next/font/google'
 import { cookies } from 'next/headers'
 import { LanguageProvider } from '@/components/language-provider'
 import { Navbar } from '@/components/navbar'
@@ -9,19 +9,21 @@ import { SplashCursorEffect } from '@/components/splash-cursor-effect'
 import { DEFAULT_LANGUAGE, isLanguage } from '@/lib/language'
 import './globals.css'
 
-const geistSans = Geist({
-	variable: '--font-geist-sans',
+const emilysCandy = Emilys_Candy({
+	variable: '--font-emilys-candy',
 	subsets: ['latin'],
-})
-
-const geistMono = Geist_Mono({
-	variable: '--font-geist-mono',
-	subsets: ['latin'],
+	weight: '400',
 })
 
 const cairo = Cairo({
 	variable: '--font-cairo',
 	subsets: ['arabic', 'latin'],
+})
+
+const berkshireSwash = Berkshire_Swash({
+	variable: '--font-berkshire-swash',
+	subsets: ['latin'],
+	weight: '400',
 })
 
 export const metadata: Metadata = {
@@ -65,7 +67,7 @@ export default async function RootLayout ({
 			data-lang={language}
 			data-theme="dark"
 			suppressHydrationWarning
-			className={`${geistSans.variable} ${geistMono.variable} ${cairo.variable} dark h-full bg-background text-foreground antialiased`}
+			className={`${emilysCandy.variable} ${cairo.variable} ${berkshireSwash.variable} dark h-full bg-background text-foreground antialiased`}
 		>
 			<head>
 				<script

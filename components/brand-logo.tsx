@@ -52,13 +52,19 @@ export function BrandLogo ({
 		<span
 			className={[
 				'inline-flex items-center gap-2.5',
-				'text-sm font-semibold uppercase',
-				'tracking-[0.18em] text-orange',
+				'text-orange',
 				className,
 			].join(' ')}
 		>
 			{logoMark}
-			<span>NEXTSITE</span>
+			<span
+				className={[
+					'font-brand home-hero-brand',
+					'text-lg leading-none tracking-normal',
+				].join(' ')}
+			>
+				NEXTSITE
+			</span>
 		</span>
 	)
 
