@@ -136,14 +136,27 @@ export interface SiteContent {
 			fullName: string
 			fullNamePlaceholder: string
 			fullNameError: string
+			email: string
+			emailPlaceholder: string
+			emailError: string
+			phone: string
+			phonePlaceholder: string
+			service: string
+			servicePlaceholder: string
+			serviceError: string
 			website: string
 			websitePlaceholder: string
 			websiteError: string
 			submit: string
 			submitting: string
 			confirmed: string
+			saveError: string
+			noServices: string
 			whatsAppTitle: string
 			whatsAppName: string
+			whatsAppEmail: string
+			whatsAppPhone: string
+			whatsAppService: string
 			whatsAppDescription: string
 		}
 	}
@@ -433,16 +446,31 @@ const ENGLISH: SiteContent = {
 			fullName: 'Full Name',
 			fullNamePlaceholder: 'Enter your full name',
 			fullNameError: 'Please enter your full name.',
+			email: 'Email',
+			emailPlaceholder: 'Enter your email',
+			emailError: 'Please enter a valid email.',
+			phone: 'Phone',
+			phonePlaceholder: 'Optional phone number',
+			service: 'Service',
+			servicePlaceholder: 'Choose a service',
+			serviceError: 'Please choose a service.',
 			website: 'Tell us about your website',
 			websitePlaceholder:
 				'Describe the website you need, including its purpose, pages, features, or any ideas you have...',
 			websiteError: 'Please tell us about your website.',
 			submit: 'Submit Booking',
-			submitting: 'Opening WhatsApp...',
+			submitting: 'Saving your booking...',
 			confirmed:
-				'Your booking details are ready in WhatsApp. Please press Send to complete your request.',
+				'Your booking is saved. WhatsApp is opening so you can send it to us.',
+			saveError:
+				'We could not save your booking. Please try again.',
+			noServices:
+				'Services are unavailable right now. Please try again shortly.',
 			whatsAppTitle: 'New Website Booking',
 			whatsAppName: 'Full Name',
+			whatsAppEmail: 'Email',
+			whatsAppPhone: 'Phone',
+			whatsAppService: 'Service',
 			whatsAppDescription: 'Website Description',
 		},
 	},
@@ -741,16 +769,31 @@ const ARABIC: SiteContent = {
 			fullName: 'الاسم الكامل',
 			fullNamePlaceholder: 'أدخل اسمك الكامل',
 			fullNameError: 'يرجى إدخال اسمك الكامل.',
+			email: 'البريد الإلكتروني',
+			emailPlaceholder: 'أدخل بريدك الإلكتروني',
+			emailError: 'يرجى إدخال بريد إلكتروني صالح.',
+			phone: 'الهاتف',
+			phonePlaceholder: 'رقم هاتف اختياري',
+			service: 'الخدمة',
+			servicePlaceholder: 'اختر خدمة',
+			serviceError: 'يرجى اختيار خدمة.',
 			website: 'أخبرنا عن موقعك',
 			websitePlaceholder:
 				'صف الموقع الذي تحتاجه، بما في ذلك الغرض والصفحات والميزات أو أي أفكار لديك...',
 			websiteError: 'يرجى إخبارنا عن موقعك.',
 			submit: 'إرسال الحجز',
-			submitting: 'جاري فتح واتساب...',
+			submitting: 'جاري حفظ حجزك...',
 			confirmed:
-				'تفاصيل حجزك جاهزة في واتساب. يرجى الضغط على إرسال لإكمال طلبك.',
+				'تم حفظ حجزك. سيتم فتح واتساب لترسله إلينا.',
+			saveError:
+				'تعذر حفظ حجزك. يرجى المحاولة مرة أخرى.',
+			noServices:
+				'الخدمات غير متاحة حالياً. يرجى المحاولة بعد قليل.',
 			whatsAppTitle: 'حجز موقع جديد',
 			whatsAppName: 'الاسم الكامل',
+			whatsAppEmail: 'البريد الإلكتروني',
+			whatsAppPhone: 'الهاتف',
+			whatsAppService: 'الخدمة',
 			whatsAppDescription: 'وصف الموقع',
 		},
 	},

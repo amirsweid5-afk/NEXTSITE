@@ -1,5 +1,6 @@
 import { BookNowSection } from '@/components/book-now-section'
 import { BookingHero } from '@/components/booking-hero'
+import { getBookingServices } from '@/lib/bookings/get-booking-services'
 
 export const metadata = {
 	title: 'Booking',
@@ -7,11 +8,13 @@ export const metadata = {
 		'Book your website project with NEXTSITE.',
 }
 
-export default function BookingPage () {
+export default async function BookingPage () {
+	const services = await getBookingServices()
+
 	return (
 		<>
 			<BookingHero />
-			<BookNowSection />
+			<BookNowSection services={services} />
 		</>
 	)
 }

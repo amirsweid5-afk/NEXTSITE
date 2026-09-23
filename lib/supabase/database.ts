@@ -11,6 +11,7 @@ export interface Database {
 			users: {
 				Row: {
 					user_id: string
+					auth_user_id: string | null
 					name: string
 					email: string
 					phone: string | null
@@ -19,7 +20,8 @@ export interface Database {
 					updated_at: string
 				}
 				Insert: {
-					user_id: string
+					user_id?: string
+					auth_user_id?: string | null
 					name: string
 					email: string
 					phone?: string | null
@@ -29,6 +31,7 @@ export interface Database {
 				}
 				Update: {
 					user_id?: string
+					auth_user_id?: string | null
 					name?: string
 					email?: string
 					phone?: string | null
@@ -38,8 +41,8 @@ export interface Database {
 				}
 				Relationships: [
 					{
-						foreignKeyName: 'users_user_id_fkey'
-						columns: ['user_id']
+						foreignKeyName: 'users_auth_user_id_fkey'
+						columns: ['auth_user_id']
 						isOneToOne: true
 						referencedRelation: 'users'
 						referencedColumns: ['id']

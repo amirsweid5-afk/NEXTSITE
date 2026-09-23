@@ -1,13 +1,27 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
+import { useMemo, useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 import { useContent } from '@/components/language-provider'
+import { createBooking } from '@/lib/bookings/create-booking'
+import {
+	createBookingSchema,
+	type BookingServiceOption,
+} from '@/lib/bookings/booking-schema'
 
 const WHATSAPP_NUMBER = '96170552181'
 
-interface FormErrors {
-	fullName?: string
-	websiteDescription?: string
+interface BookNowSectionProps {
+	services: BookingServiceOption[]
+}
+
+interface BookingFormValues {
+	fullName: string
+	email: string
+	phone: string
+	serviceId: string
+	websiteDescription: string
 }
 
 function getWhatsAppUrl (message: string): string {
@@ -15,62 +29,79 @@ function getWhatsAppUrl (message: string): string {
 }
 
 /**
- * Booking form that opens WhatsApp with the client's details.
+ * Booking form that saves to the database, then opens WhatsApp.
  */
-export function BookNowSection () {
+export function BookNowSection ({ services }: BookNowSectionProps) {
 	const copy = useContent().booking.form
-	const [fullName, setFullName] = useState('')
-	const [websiteDescription, setWebsiteDescription] = useState('')
-	const [errors, setErrors] = useState<FormErrors>({})
-	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [isConfirmed, setIsConfirmed] = useState(false)
+	const [saveError, setSaveError] = useState<string | null>(null)
 
-	function validateForm (): FormErrors {
-		const nextErrors: FormErrors = {}
-		const trimmedName = fullName.trim()
-		const trimmedDescription = websiteDescription.trim()
+	const schema = useMemo(() => {
+		return createBookingSchema({
+			fullNameError: copy.fullNameError,
+			emailError: copy.emailError,
+			serviceError: copy.serviceError,
+			websiteError: copy.websiteError,
+		})
+	}, [
+		copy.emailError,
+		copy.fullNameError,
+		copy.serviceError,
+		copy.websiteError,
+	])
 
-		if (trimmedName === '') {
-			nextErrors.fullName = copy.fullNameError
-		}
+	const form = useForm<BookingFormValues>({
+		resolver: zodResolver(schema),
+		defaultValues: {
+			fullName: '',
+			email: '',
+			phone: '',
+			serviceId: '',
+			websiteDescription: '',
+		},
+	})
 
-		if (trimmedDescription === '') {
-			nextErrors.websiteDescription = copy.websiteError
-		}
+	const isSubmitting = form.formState.isSubmitting
+	const errors = form.formState.errors
+	const hasServices = services.length > 0
 
-		return nextErrors
-	}
-
-	function handleSubmit (event: FormEvent<HTMLFormElement>) {
-		event.preventDefault()
-
-		if (isSubmitting) return
-
-		const nextErrors = validateForm()
-		setErrors(nextErrors)
+	async function handleSubmit (values: BookingFormValues) {
 		setIsConfirmed(false)
+		setSaveError(null)
 
-		if (Object.keys(nextErrors).length > 0) return
+		const result = await createBooking(values)
 
-		setIsSubmitting(true)
+		if (!result.ok) {
+			setSaveError(result.error ?? copy.saveError)
+			return
+		}
 
-		const trimmedName = fullName.trim()
-		const trimmedDescription = websiteDescription.trim()
+		const selectedService = services.find((service) => {
+			return service.serviceId === values.serviceId
+		})
+
 		const message = [
 			copy.whatsAppTitle,
 			'',
-			`${copy.whatsAppName}: ${trimmedName}`,
+			`${copy.whatsAppName}: ${values.fullName}`,
+			`${copy.whatsAppEmail}: ${values.email}`,
+			values.phone === ''
+				? null
+				: `${copy.whatsAppPhone}: ${values.phone}`,
+			selectedService
+				? `${copy.whatsAppService}: ${selectedService.name}`
+				: null,
 			'',
-			`${copy.whatsAppDescription}: ${trimmedDescription}`,
-		].join('\n')
-		const whatsAppUrl = getWhatsAppUrl(message)
+			`${copy.whatsAppDescription}: ${values.websiteDescription}`,
+		].filter((line) => line !== null).join('\n')
 
-		window.open(whatsAppUrl, '_blank', 'noopener,noreferrer')
+		window.open(
+			getWhatsAppUrl(message),
+			'_blank',
+			'noopener,noreferrer',
+		)
 		setIsConfirmed(true)
-
-		window.setTimeout(() => {
-			setIsSubmitting(false)
-		}, 2000)
+		form.reset()
 	}
 
 	const inputClassName = [
@@ -122,7 +153,7 @@ export function BookNowSection () {
 				</div>
 
 				<form
-					onSubmit={handleSubmit}
+					onSubmit={form.handleSubmit(handleSubmit)}
 					noValidate
 					className={[
 						'mt-12 rounded-2xl border border-white/10',
@@ -139,22 +170,12 @@ export function BookNowSection () {
 						</label>
 						<input
 							id="full-name"
-							name="fullName"
 							type="text"
-							required
 							autoComplete="name"
-							value={fullName}
-							onChange={(event) => {
-								setFullName(event.target.value)
-								if (errors.fullName) {
-									setErrors((prev) => ({
-										...prev,
-										fullName: undefined,
-									}))
-								}
-							}}
 							placeholder={copy.fullNamePlaceholder}
-							aria-invalid={errors.fullName ? true : undefined}
+							aria-invalid={
+								errors.fullName ? true : undefined
+							}
 							aria-describedby={
 								errors.fullName
 									? 'full-name-error'
@@ -167,6 +188,7 @@ export function BookNowSection () {
 									? 'border-orange/70'
 									: 'border-white/10',
 							].join(' ')}
+							{...form.register('fullName')}
 						/>
 						{errors.fullName ? (
 							<p
@@ -174,7 +196,114 @@ export function BookNowSection () {
 								role="alert"
 								className="mt-2 text-sm text-orange"
 							>
-								{errors.fullName}
+								{errors.fullName.message}
+							</p>
+						) : null}
+					</div>
+
+					<div className="mt-6">
+						<label
+							htmlFor="email"
+							className="block text-sm font-medium text-white"
+						>
+							{copy.email}
+						</label>
+						<input
+							id="email"
+							type="email"
+							autoComplete="email"
+							placeholder={copy.emailPlaceholder}
+							aria-invalid={
+								errors.email ? true : undefined
+							}
+							aria-describedby={
+								errors.email ? 'email-error' : undefined
+							}
+							className={[
+								inputClassName,
+								'mt-2',
+								errors.email
+									? 'border-orange/70'
+									: 'border-white/10',
+							].join(' ')}
+							{...form.register('email')}
+						/>
+						{errors.email ? (
+							<p
+								id="email-error"
+								role="alert"
+								className="mt-2 text-sm text-orange"
+							>
+								{errors.email.message}
+							</p>
+						) : null}
+					</div>
+
+					<div className="mt-6">
+						<label
+							htmlFor="phone"
+							className="block text-sm font-medium text-white"
+						>
+							{copy.phone}
+						</label>
+						<input
+							id="phone"
+							type="tel"
+							autoComplete="tel"
+							placeholder={copy.phonePlaceholder}
+							className={[
+								inputClassName,
+								'mt-2 border-white/10',
+							].join(' ')}
+							{...form.register('phone')}
+						/>
+					</div>
+
+					<div className="mt-6">
+						<label
+							htmlFor="service"
+							className="block text-sm font-medium text-white"
+						>
+							{copy.service}
+						</label>
+						<select
+							id="service"
+							aria-invalid={
+								errors.serviceId ? true : undefined
+							}
+							aria-describedby={
+								errors.serviceId
+									? 'service-error'
+									: undefined
+							}
+							className={[
+								inputClassName,
+								'mt-2',
+								errors.serviceId
+									? 'border-orange/70'
+									: 'border-white/10',
+							].join(' ')}
+							{...form.register('serviceId')}
+						>
+							<option value="">
+								{copy.servicePlaceholder}
+							</option>
+							{services.map((service) => (
+								<option
+									key={service.serviceId}
+									value={service.serviceId}
+								>
+									{service.name}
+								</option>
+							))}
+						</select>
+						{errors.serviceId ? (
+							<p
+								id="service-error"
+								role="alert"
+								className="mt-2 text-sm text-orange"
+							>
+								{errors.serviceId.message}
 							</p>
 						) : null}
 					</div>
@@ -188,19 +317,7 @@ export function BookNowSection () {
 						</label>
 						<textarea
 							id="website-description"
-							name="websiteDescription"
-							required
 							rows={6}
-							value={websiteDescription}
-							onChange={(event) => {
-								setWebsiteDescription(event.target.value)
-								if (errors.websiteDescription) {
-									setErrors((prev) => ({
-										...prev,
-										websiteDescription: undefined,
-									}))
-								}
-							}}
 							placeholder={copy.websitePlaceholder}
 							aria-invalid={
 								errors.websiteDescription
@@ -219,6 +336,7 @@ export function BookNowSection () {
 									? 'border-orange/70'
 									: 'border-white/10',
 							].join(' ')}
+							{...form.register('websiteDescription')}
 						/>
 						{errors.websiteDescription ? (
 							<p
@@ -226,14 +344,14 @@ export function BookNowSection () {
 								role="alert"
 								className="mt-2 text-sm text-orange"
 							>
-								{errors.websiteDescription}
+								{errors.websiteDescription.message}
 							</p>
 						) : null}
 					</div>
 
 					<button
 						type="submit"
-						disabled={isSubmitting}
+						disabled={isSubmitting || !hasServices}
 						className={[
 							'mt-8 inline-flex min-h-12 w-full',
 							'items-center justify-center',
@@ -253,6 +371,24 @@ export function BookNowSection () {
 							? copy.submitting
 							: copy.submit}
 					</button>
+
+					{!hasServices ? (
+						<p
+							role="alert"
+							className="mt-4 text-center text-sm text-orange"
+						>
+							{copy.noServices}
+						</p>
+					) : null}
+
+					{saveError ? (
+						<p
+							role="alert"
+							className="mt-4 text-center text-sm text-orange"
+						>
+							{saveError}
+						</p>
+					) : null}
 
 					{isConfirmed ? (
 						<p

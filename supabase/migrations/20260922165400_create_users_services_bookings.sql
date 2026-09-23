@@ -31,7 +31,9 @@ end
 $$;
 
 create table if not exists public.users (
-	user_id uuid primary key references auth.users (id) on delete cascade,
+	user_id uuid primary key default gen_random_uuid(),
+	auth_user_id uuid unique
+		references auth.users (id) on delete set null,
 	name text not null,
 	email text not null unique,
 	phone text,
@@ -102,8 +104,16 @@ security definer
 set search_path = public
 as $$
 begin
-	insert into public.users (user_id, name, email, phone, role)
+	insert into public.users (
+		user_id,
+		auth_user_id,
+		name,
+		email,
+		phone,
+		role
+	)
 	values (
+		new.id,
 		new.id,
 		coalesce(
 			new.raw_user_meta_data ->> 'name',
@@ -112,7 +122,13 @@ begin
 		new.email,
 		new.raw_user_meta_data ->> 'phone',
 		'customer'
-	);
+	)
+	on conflict (email) do update
+	set
+		auth_user_id = coalesce(
+			public.users.auth_user_id,
+			excluded.auth_user_id
+		);
 
 	return new;
 end;
@@ -134,9 +150,22 @@ as $$
 	select exists (
 		select 1
 		from public.users
-		where user_id = auth.uid()
+		where auth_user_id = auth.uid()
 			and role = 'admin'
 	);
+$$;
+
+create or replace function public.current_app_user_id ()
+returns uuid
+language sql
+stable
+security definer
+set search_path = public
+as $$
+	select user_id
+	from public.users
+	where auth_user_id = auth.uid()
+	limit 1;
 $$;
 
 alter table public.users enable row level security;
@@ -148,15 +177,15 @@ create policy users_select_own_or_admin
 	on public.users
 	for select
 	to authenticated
-	using (user_id = auth.uid() or public.is_admin());
+	using (auth_user_id = auth.uid() or public.is_admin());
 
 drop policy if exists users_update_own_or_admin on public.users;
 create policy users_update_own_or_admin
 	on public.users
 	for update
 	to authenticated
-	using (user_id = auth.uid() or public.is_admin())
-	with check (user_id = auth.uid() or public.is_admin());
+	using (auth_user_id = auth.uid() or public.is_admin())
+	with check (auth_user_id = auth.uid() or public.is_admin());
 
 drop policy if exists services_select_public on public.services;
 create policy services_select_public
@@ -178,29 +207,51 @@ create policy bookings_select_own_or_admin
 	on public.bookings
 	for select
 	to authenticated
-	using (user_id = auth.uid() or public.is_admin());
+	using (
+		user_id = public.current_app_user_id()
+		or public.is_admin()
+	);
 
 drop policy if exists bookings_insert_own on public.bookings;
 create policy bookings_insert_own
 	on public.bookings
 	for insert
 	to authenticated
-	with check (user_id = auth.uid() or public.is_admin());
+	with check (
+		user_id = public.current_app_user_id()
+		or public.is_admin()
+	);
 
 drop policy if exists bookings_update_own_or_admin on public.bookings;
 create policy bookings_update_own_or_admin
 	on public.bookings
 	for update
 	to authenticated
-	using (user_id = auth.uid() or public.is_admin())
-	with check (user_id = auth.uid() or public.is_admin());
+	using (
+		user_id = public.current_app_user_id()
+		or public.is_admin()
+	)
+	with check (
+		user_id = public.current_app_user_id()
+		or public.is_admin()
+	);
 
 drop policy if exists bookings_delete_own_or_admin on public.bookings;
 create policy bookings_delete_own_or_admin
 	on public.bookings
 	for delete
 	to authenticated
-	using (user_id = auth.uid() or public.is_admin());
+	using (
+		user_id = public.current_app_user_id()
+		or public.is_admin()
+	);
+
+grant select on table public.services to anon, authenticated;
+grant select, update on table public.users to authenticated;
+grant select, insert, update, delete on table public.bookings
+	to authenticated;
+grant execute on function public.is_admin () to authenticated;
+grant execute on function public.current_app_user_id () to authenticated;
 
 insert into public.services (name, description, price)
 values
@@ -223,3 +274,5 @@ on conflict (name) do update
 set
 	description = excluded.description,
 	price = excluded.price;
+
+notify pgrst, 'reload schema';
