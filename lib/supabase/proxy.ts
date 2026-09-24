@@ -8,9 +8,16 @@ import {
 /**
  * Refreshes the Supabase auth session cookies for a request.
  */
-export async function updateSession (request: NextRequest) {
+export async function updateSession (
+	request: NextRequest,
+	requestHeaders?: Headers,
+) {
+	const headersForRequest = requestHeaders ?? request.headers
+
 	let supabaseResponse = NextResponse.next({
-		request,
+		request: {
+			headers: headersForRequest,
+		},
 	})
 
 	const supabase = createServerClient(
@@ -26,7 +33,9 @@ export async function updateSession (request: NextRequest) {
 						request.cookies.set(name, value)
 					})
 					supabaseResponse = NextResponse.next({
-						request,
+						request: {
+							headers: headersForRequest,
+						},
 					})
 					cookiesToSet.forEach(({ name, value, options }) => {
 						supabaseResponse.cookies.set(name, value, options)

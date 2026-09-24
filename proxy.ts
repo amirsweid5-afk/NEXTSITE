@@ -5,7 +5,10 @@ import { updateSession } from '@/lib/supabase/proxy'
  * Keeps the Supabase auth session fresh on matched requests.
  */
 export async function proxy (request: NextRequest) {
-	return updateSession(request)
+	const requestHeaders = new Headers(request.headers)
+	requestHeaders.set('x-pathname', request.nextUrl.pathname)
+
+	return updateSession(request, requestHeaders)
 }
 
 export const config = {

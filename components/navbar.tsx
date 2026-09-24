@@ -197,9 +197,9 @@ export function Navbar ({ isAdmin = false }: NavbarProps) {
 
 						{isAdmin ? (
 							<Link
-								href="/dashboard"
+								href="/admin"
 								aria-current={
-									pathname === '/dashboard'
+									pathname.startsWith('/admin')
 										? 'page'
 										: undefined
 								}
@@ -352,10 +352,10 @@ export function Navbar ({ isAdmin = false }: NavbarProps) {
 					</div>
 					{isAdmin ? (
 						<Link
-							href="/dashboard"
+							href="/admin"
 							onClick={handleCloseMenu}
 							aria-current={
-								pathname === '/dashboard'
+								pathname.startsWith('/admin')
 									? 'page'
 									: undefined
 							}

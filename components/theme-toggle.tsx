@@ -71,7 +71,7 @@ export function ThemeToggle () {
 				'inline-flex h-10 w-10',
 				'shrink-0 items-center justify-center',
 				'rounded-full border border-white/15',
-				'text-white transition duration-300',
+				'bg-transparent text-white transition duration-300',
 				'hover:border-orange/45 hover:text-orange',
 				'focus-visible:outline-2',
 				'focus-visible:outline-offset-4',

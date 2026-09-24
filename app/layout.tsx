@@ -2,11 +2,6 @@ import type { Metadata } from 'next'
 import { Berkshire_Swash, Cairo, Emilys_Candy } from 'next/font/google'
 import { cookies } from 'next/headers'
 import { LanguageProvider } from '@/components/language-provider'
-import { Navbar } from '@/components/navbar'
-import { SiteFooter } from '@/components/site-footer'
-import { SkipToContent } from '@/components/skip-to-content'
-import { SplashCursorEffect } from '@/components/splash-cursor-effect'
-import { getCurrentProfile } from '@/lib/auth/get-current-profile'
 import { DEFAULT_LANGUAGE, isLanguage } from '@/lib/language'
 import './globals.css'
 
@@ -33,7 +28,7 @@ export const metadata: Metadata = {
 		template: '%s · NEXTSITE',
 	},
 	description:
-		'A small house for slow mornings, shared tables, and easy stays.',
+		'Modern websites built around your ideas.',
 }
 
 const BOOTSTRAP_SCRIPT = `(function () {
@@ -60,7 +55,6 @@ export default async function RootLayout ({
 	const language = isLanguage(langCookie)
 		? langCookie
 		: DEFAULT_LANGUAGE
-	const profile = await getCurrentProfile()
 
 	return (
 		<html
@@ -81,13 +75,7 @@ export default async function RootLayout ({
 			</head>
 			<body className="flex min-h-full flex-col font-sans">
 				<LanguageProvider initialLanguage={language}>
-					<SplashCursorEffect />
-					<SkipToContent />
-					<Navbar isAdmin={profile?.isAdmin === true} />
-					<main id="main" className="flex flex-1 flex-col">
-						{children}
-					</main>
-					<SiteFooter />
+					{children}
 				</LanguageProvider>
 			</body>
 		</html>

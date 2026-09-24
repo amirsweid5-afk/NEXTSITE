@@ -133,6 +133,39 @@ html[data-theme='light'] .theme-icon-moon {
 	display: block;
 }
 
+/* Admin portal theme surfaces (follow data-theme like the public site). */
+.admin-portal {
+	--admin-bg: #0a0a0f;
+	--admin-surface: #14141c;
+	--admin-chrome: #121218;
+	--admin-topbar: color-mix(in srgb, #0e0e14 82%, transparent);
+	--admin-inset: #0a0a0f;
+	--admin-overlay: rgba(0, 0, 0, 0.6);
+	--admin-chart-grid: rgba(255, 255, 255, 0.08);
+	--admin-chart-tick: rgba(255, 255, 255, 0.45);
+	--admin-chart-cursor: rgba(139, 92, 246, 0.08);
+	--admin-chart-tooltip-bg: #14141c;
+	--admin-chart-tooltip-border: rgba(255, 255, 255, 0.1);
+	--admin-chart-tooltip-fg: #ffffff;
+	background: var(--admin-bg);
+	color: var(--white);
+}
+
+html[data-theme='light'] .admin-portal {
+	--admin-bg: #f3f1f8;
+	--admin-surface: #ffffff;
+	--admin-chrome: #ffffff;
+	--admin-topbar: color-mix(in srgb, #ffffff 88%, transparent);
+	--admin-inset: #f7f5fc;
+	--admin-overlay: rgba(18, 18, 28, 0.35);
+	--admin-chart-grid: rgba(18, 18, 24, 0.08);
+	--admin-chart-tick: rgba(18, 18, 24, 0.45);
+	--admin-chart-cursor: rgba(124, 58, 237, 0.1);
+	--admin-chart-tooltip-bg: #ffffff;
+	--admin-chart-tooltip-border: rgba(18, 18, 24, 0.12);
+	--admin-chart-tooltip-fg: #121218;
+}
+
 body {
 	font-family: var(--font-emilys-candy), serif;
 	font-weight: 400;

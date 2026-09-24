@@ -5,6 +5,12 @@ export type BookingStatus =
 	| 'cancelled'
 	| 'completed'
 
+export type PaymentStatus =
+	| 'unpriced'
+	| 'unpaid'
+	| 'partial'
+	| 'paid'
+
 export interface Database {
 	public: {
 		Tables: {
@@ -81,6 +87,7 @@ export interface Database {
 					description: string | null
 					booking_date: string
 					status: BookingStatus
+					price_usd: number | null
 					created_at: string
 					updated_at: string
 				}
@@ -91,6 +98,7 @@ export interface Database {
 					description?: string | null
 					booking_date?: string
 					status?: BookingStatus
+					price_usd?: number | null
 					created_at?: string
 					updated_at?: string
 				}
@@ -101,6 +109,7 @@ export interface Database {
 					description?: string | null
 					booking_date?: string
 					status?: BookingStatus
+					price_usd?: number | null
 					created_at?: string
 					updated_at?: string
 				}
@@ -121,6 +130,44 @@ export interface Database {
 					},
 				]
 			}
+			booking_payments: {
+				Row: {
+					payment_id: string
+					booking_id: string
+					amount_usd: number
+					paid_at: string
+					note: string | null
+					created_at: string
+					created_by: string | null
+				}
+				Insert: {
+					payment_id?: string
+					booking_id: string
+					amount_usd: number
+					paid_at?: string
+					note?: string | null
+					created_at?: string
+					created_by?: string | null
+				}
+				Update: {
+					payment_id?: string
+					booking_id?: string
+					amount_usd?: number
+					paid_at?: string
+					note?: string | null
+					created_at?: string
+					created_by?: string | null
+				}
+				Relationships: [
+					{
+						foreignKeyName: 'booking_payments_booking_id_fkey'
+						columns: ['booking_id']
+						isOneToOne: false
+						referencedRelation: 'bookings'
+						referencedColumns: ['booking_id']
+					},
+				]
+			}
 		}
 		Views: {
 			[_ in never]: never
@@ -129,6 +176,10 @@ export interface Database {
 			is_admin: {
 				Args: Record<PropertyKey, never>
 				Returns: boolean
+			}
+			current_app_user_id: {
+				Args: Record<PropertyKey, never>
+				Returns: string
 			}
 		}
 		Enums: {

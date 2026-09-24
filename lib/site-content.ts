@@ -163,8 +163,45 @@ export interface SiteContent {
 	dashboard: {
 		eyebrow: string
 		title: string
+		badge: string
 		description: string
+		totalBookings: string
+		pendingBookings: string
+		recentTitle: string
+		recentDescription: string
+		revenueTitle: string
+		revenueDescription: string
+		totalRevenue: string
+		revenueThisMonth: string
+		pendingPayments: string
+		monthlyChartTitle: string
+		monthlyChartHint: string
+		revenueByService: string
+		noRevenueYet: string
 		empty: string
+		client: string
+		status: string
+		statusPending: string
+		statusAccepted: string
+		statusCompleted: string
+		statusCancelled: string
+		projectPrice: string
+		amountPaid: string
+		remaining: string
+		paymentStatus: string
+		paymentUnpriced: string
+		paymentUnpaid: string
+		paymentPartial: string
+		paymentPaid: string
+		notSet: string
+		setPrice: string
+		savePrice: string
+		recordPayment: string
+		paymentPlaceholder: string
+		addPayment: string
+		noPaymentsYet: string
+		priceError: string
+		paymentError: string
 		viewDetails: string
 		hideDetails: string
 		fullName: string
@@ -231,7 +268,7 @@ const ENGLISH: SiteContent = {
 		home: 'Home',
 		aboutUs: 'About Us',
 		booking: 'Booking',
-		dashboard: 'Dashboard',
+		dashboard: 'Admin Portal',
 		bookNow: 'Book Now',
 		login: 'Login',
 		signIn: 'Sign in',
@@ -528,11 +565,50 @@ const ENGLISH: SiteContent = {
 	},
 	dashboard: {
 		eyebrow: 'Admin',
-		title: 'Booking Dashboard',
+		title: 'Admin Dashboard',
+		badge: 'Admin',
 		description:
-			'Review every client who submitted a booking and open a card to see their full details.',
+			'Review bookings, set project prices, and track real payments.',
+		totalBookings: 'Total Bookings',
+		pendingBookings: 'Pending Bookings',
+		recentTitle: 'Recent Bookings',
+		recentDescription:
+			'Set prices, record payments, and open details for each client.',
+		revenueTitle: 'Revenue & Earnings',
+		revenueDescription:
+			'Only recorded payments count as revenue — unpaid balances stay pending.',
+		totalRevenue: 'Total Revenue Received',
+		revenueThisMonth: 'Revenue This Month',
+		pendingPayments: 'Pending Payments',
+		monthlyChartTitle: 'Monthly Revenue',
+		monthlyChartHint: 'Last 12 months from real payment records.',
+		revenueByService: 'Revenue by Service',
+		noRevenueYet: 'No payments recorded yet.',
 		empty: 'No bookings have been submitted yet.',
-		viewDetails: 'View full details',
+		client: 'Client',
+		status: 'Status',
+		statusPending: 'Pending',
+		statusAccepted: 'Accepted',
+		statusCompleted: 'Completed',
+		statusCancelled: 'Cancelled',
+		projectPrice: 'Project Price',
+		amountPaid: 'Amount Paid',
+		remaining: 'Remaining',
+		paymentStatus: 'Payment',
+		paymentUnpriced: 'No price',
+		paymentUnpaid: 'Unpaid',
+		paymentPartial: 'Partial',
+		paymentPaid: 'Paid',
+		notSet: 'Not set',
+		setPrice: 'Project price (USD)',
+		savePrice: 'Save price',
+		recordPayment: 'Record payment (USD)',
+		paymentPlaceholder: 'Amount received',
+		addPayment: 'Add payment',
+		noPaymentsYet: 'No payments recorded for this booking.',
+		priceError: 'Enter a valid USD price.',
+		paymentError: 'Enter a valid payment amount.',
+		viewDetails: 'See details',
 		hideDetails: 'Hide details',
 		fullName: 'Full Name',
 		email: 'Email',
@@ -612,7 +688,7 @@ const ARABIC: SiteContent = {
 		home: 'الرئيسية',
 		aboutUs: 'من نحن',
 		booking: 'الحجز',
-		dashboard: 'لوحة التحكم',
+		dashboard: 'بوابة الإدارة',
 		bookNow: 'احجز الآن',
 		login: 'دخول',
 		signIn: 'تسجيل',
@@ -909,11 +985,50 @@ const ARABIC: SiteContent = {
 	},
 	dashboard: {
 		eyebrow: 'المسؤول',
-		title: 'لوحة الحجوزات',
+		title: 'لوحة الإدارة',
+		badge: 'مسؤول',
 		description:
-			'راجع كل العملاء الذين أرسلوا حجزاً وافتح البطاقة لرؤية كل التفاصيل.',
+			'راجع الحجوزات، حدّد أسعار المشاريع، وتتبّع المدفوعات الحقيقية.',
+		totalBookings: 'إجمالي الحجوزات',
+		pendingBookings: 'الحجوزات المعلّقة',
+		recentTitle: 'أحدث الحجوزات',
+		recentDescription:
+			'حدّد الأسعار وسجّل المدفوعات وافتح تفاصيل كل عميل.',
+		revenueTitle: 'الإيرادات والأرباح',
+		revenueDescription:
+			'تُحسب الإيرادات من المدفوعات المسجّلة فقط — الأرصدة غير المدفوعة تبقى معلّقة.',
+		totalRevenue: 'إجمالي الإيرادات المستلمة',
+		revenueThisMonth: 'إيرادات هذا الشهر',
+		pendingPayments: 'المدفوعات المعلّقة',
+		monthlyChartTitle: 'الإيرادات الشهرية',
+		monthlyChartHint: 'آخر 12 شهراً من سجلات الدفع الحقيقية.',
+		revenueByService: 'الإيرادات حسب الخدمة',
+		noRevenueYet: 'لا توجد مدفوعات مسجّلة بعد.',
 		empty: 'لا توجد حجوزات بعد.',
-		viewDetails: 'عرض التفاصيل الكاملة',
+		client: 'العميل',
+		status: 'الحالة',
+		statusPending: 'معلّق',
+		statusAccepted: 'مقبول',
+		statusCompleted: 'مكتمل',
+		statusCancelled: 'ملغى',
+		projectPrice: 'سعر المشروع',
+		amountPaid: 'المبلغ المدفوع',
+		remaining: 'المتبقي',
+		paymentStatus: 'الدفع',
+		paymentUnpriced: 'بلا سعر',
+		paymentUnpaid: 'غير مدفوع',
+		paymentPartial: 'جزئي',
+		paymentPaid: 'مدفوع',
+		notSet: 'غير محدد',
+		setPrice: 'سعر المشروع (دولار)',
+		savePrice: 'حفظ السعر',
+		recordPayment: 'تسجيل دفعة (دولار)',
+		paymentPlaceholder: 'المبلغ المستلم',
+		addPayment: 'إضافة دفعة',
+		noPaymentsYet: 'لا توجد مدفوعات لهذا الحجز.',
+		priceError: 'أدخل سعراً صالحاً بالدولار.',
+		paymentError: 'أدخل مبلغ دفعة صالحاً.',
+		viewDetails: 'عرض التفاصيل',
 		hideDetails: 'إخفاء التفاصيل',
 		fullName: 'الاسم الكامل',
 		email: 'البريد الإلكتروني',

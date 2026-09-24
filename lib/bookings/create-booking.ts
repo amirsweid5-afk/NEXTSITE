@@ -38,7 +38,7 @@ export async function createBooking (
 
 		const { data: service, error: serviceError } = await supabase
 			.from('services')
-			.select('service_id')
+			.select('service_id, price')
 			.eq('service_id', serviceId)
 			.maybeSingle()
 
@@ -109,6 +109,7 @@ export async function createBooking (
 				service_id: serviceId,
 				description: websiteDescription,
 				status: 'pending',
+				price_usd: Number(service.price),
 			})
 			.select('booking_id')
 			.single()
