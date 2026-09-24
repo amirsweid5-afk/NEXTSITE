@@ -79,10 +79,14 @@ function NavAuthLinks ({
 	)
 }
 
+interface NavbarProps {
+	isAdmin?: boolean
+}
+
 /**
  * Site-wide navigation with a mobile sidebar menu.
  */
-export function Navbar () {
+export function Navbar ({ isAdmin = false }: NavbarProps) {
 	const pathname = usePathname()
 	const content = useContent()
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -191,24 +195,30 @@ export function Navbar () {
 							</ul>
 						</nav>
 
-						<Link
-							href="/booking"
-							className={[
-								'hidden min-h-10 items-center',
-								'rounded-full bg-orange px-5',
-								'text-xs font-semibold uppercase',
-								'tracking-[0.18em] text-ink',
-								'shadow-[0_0_20px_rgba(232,120,18,0.35)]',
-								'transition duration-300',
-								'hover:bg-highlight',
-								'hover:shadow-[0_0_28px_rgba(209,172,44,0.4)]',
-								'focus-visible:outline-2',
-								'focus-visible:outline-offset-4',
-								'md:inline-flex',
-							].join(' ')}
-						>
-							{content.nav.bookNow}
-						</Link>
+						{isAdmin ? (
+							<Link
+								href="/dashboard"
+								aria-current={
+									pathname === '/dashboard'
+										? 'page'
+										: undefined
+								}
+								className={[
+									'hidden min-h-10 items-center',
+									'rounded-full border border-gold/50',
+									'bg-gold/15 px-5 text-xs',
+									'font-semibold uppercase',
+									'tracking-[0.18em] text-highlight',
+									'transition duration-300',
+									'hover:border-gold hover:bg-gold/25',
+									'focus-visible:outline-2',
+									'focus-visible:outline-offset-4',
+									'md:inline-flex',
+								].join(' ')}
+							>
+								{content.nav.dashboard}
+							</Link>
+						) : null}
 						<div className="hidden items-center gap-2 md:flex">
 							<NavAuthLinks />
 							<ThemeToggle />
@@ -340,23 +350,31 @@ export function Navbar () {
 							onNavigate={handleCloseMenu}
 						/>
 					</div>
-					<Link
-						href="/booking"
-						onClick={handleCloseMenu}
-						className={[
-							'mt-auto inline-flex min-h-11',
-							'items-center justify-center',
-							'rounded-full bg-orange px-5',
-							'text-xs font-semibold uppercase',
-							'tracking-[0.18em] text-ink',
-							'transition duration-300',
-							'hover:bg-highlight',
-							'focus-visible:outline-2',
-							'focus-visible:outline-offset-4',
-						].join(' ')}
-					>
-						{content.nav.bookNow}
-					</Link>
+					{isAdmin ? (
+						<Link
+							href="/dashboard"
+							onClick={handleCloseMenu}
+							aria-current={
+								pathname === '/dashboard'
+									? 'page'
+									: undefined
+							}
+							className={[
+								'mt-auto inline-flex min-h-11',
+								'items-center justify-center',
+								'rounded-full border border-gold/50',
+								'bg-gold/15 px-5 text-xs',
+								'font-semibold uppercase',
+								'tracking-[0.18em] text-highlight',
+								'transition duration-300',
+								'hover:border-gold hover:bg-gold/25',
+								'focus-visible:outline-2',
+								'focus-visible:outline-offset-4',
+							].join(' ')}
+						>
+							{content.nav.dashboard}
+						</Link>
+					) : null}
 				</nav>
 			</aside>
 		</>

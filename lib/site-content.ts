@@ -4,6 +4,7 @@ export interface NavContent {
 	home: string
 	aboutUs: string
 	booking: string
+	dashboard: string
 	bookNow: string
 	login: string
 	signIn: string
@@ -143,6 +144,9 @@ export interface SiteContent {
 			emailError: string
 			phone: string
 			phonePlaceholder: string
+			phoneError: string
+			country: string
+			countryError: string
 			service: string
 			servicePlaceholder: string
 			serviceError: string
@@ -161,6 +165,21 @@ export interface SiteContent {
 			whatsAppService: string
 			whatsAppDescription: string
 		}
+	}
+	dashboard: {
+		eyebrow: string
+		title: string
+		description: string
+		empty: string
+		viewDetails: string
+		hideDetails: string
+		fullName: string
+		email: string
+		phone: string
+		service: string
+		website: string
+		noPhone: string
+		noWebsite: string
 	}
 	auth: {
 		loginEyebrow: string
@@ -214,6 +233,7 @@ const ENGLISH: SiteContent = {
 		home: 'Home',
 		aboutUs: 'About Us',
 		booking: 'Booking',
+		dashboard: 'Dashboard',
 		bookNow: 'Book Now',
 		login: 'Login',
 		signIn: 'Sign in',
@@ -487,7 +507,10 @@ const ENGLISH: SiteContent = {
 			emailPlaceholder: 'Enter your email',
 			emailError: 'Please enter a valid email.',
 			phone: 'Phone',
-			phonePlaceholder: 'Optional phone number',
+			phonePlaceholder: 'Enter your phone number',
+			phoneError: 'Please enter your phone number.',
+			country: 'Country code',
+			countryError: 'Please choose a country code.',
 			service: 'Service',
 			servicePlaceholder: 'Choose a service',
 			serviceError: 'Please choose a service.',
@@ -510,6 +533,22 @@ const ENGLISH: SiteContent = {
 			whatsAppService: 'Service',
 			whatsAppDescription: 'Website Description',
 		},
+	},
+	dashboard: {
+		eyebrow: 'Admin',
+		title: 'Booking Dashboard',
+		description:
+			'Review every client who submitted a booking and open a card to see their full details.',
+		empty: 'No bookings have been submitted yet.',
+		viewDetails: 'View full details',
+		hideDetails: 'Hide details',
+		fullName: 'Full Name',
+		email: 'Email',
+		phone: 'Phone',
+		service: 'Service',
+		website: 'Tell us about your website',
+		noPhone: 'No phone provided',
+		noWebsite: 'No website details provided',
 	},
 	auth: {
 		loginEyebrow: 'Welcome back',
@@ -575,6 +614,7 @@ const ARABIC: SiteContent = {
 		home: 'الرئيسية',
 		aboutUs: 'من نحن',
 		booking: 'الحجز',
+		dashboard: 'لوحة التحكم',
 		bookNow: 'احجز الآن',
 		login: 'دخول',
 		signIn: 'تسجيل',
@@ -848,7 +888,10 @@ const ARABIC: SiteContent = {
 			emailPlaceholder: 'أدخل بريدك الإلكتروني',
 			emailError: 'يرجى إدخال بريد إلكتروني صالح.',
 			phone: 'الهاتف',
-			phonePlaceholder: 'رقم هاتف اختياري',
+			phonePlaceholder: 'أدخل رقم هاتفك',
+			phoneError: 'يرجى إدخال رقم هاتفك.',
+			country: 'رمز الدولة',
+			countryError: 'يرجى اختيار رمز الدولة.',
 			service: 'الخدمة',
 			servicePlaceholder: 'اختر خدمة',
 			serviceError: 'يرجى اختيار خدمة.',
@@ -871,6 +914,22 @@ const ARABIC: SiteContent = {
 			whatsAppService: 'الخدمة',
 			whatsAppDescription: 'وصف الموقع',
 		},
+	},
+	dashboard: {
+		eyebrow: 'المسؤول',
+		title: 'لوحة الحجوزات',
+		description:
+			'راجع كل العملاء الذين أرسلوا حجزاً وافتح البطاقة لرؤية كل التفاصيل.',
+		empty: 'لا توجد حجوزات بعد.',
+		viewDetails: 'عرض التفاصيل الكاملة',
+		hideDetails: 'إخفاء التفاصيل',
+		fullName: 'الاسم الكامل',
+		email: 'البريد الإلكتروني',
+		phone: 'الهاتف',
+		service: 'الخدمة',
+		website: 'أخبرنا عن موقعك',
+		noPhone: 'لا يوجد رقم هاتف',
+		noWebsite: 'لا توجد تفاصيل عن الموقع',
 	},
 	auth: {
 		loginEyebrow: 'أهلاً بعودتك',

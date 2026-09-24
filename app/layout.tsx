@@ -6,6 +6,7 @@ import { Navbar } from '@/components/navbar'
 import { SiteFooter } from '@/components/site-footer'
 import { SkipToContent } from '@/components/skip-to-content'
 import { SplashCursorEffect } from '@/components/splash-cursor-effect'
+import { getCurrentProfile } from '@/lib/auth/get-current-profile'
 import { DEFAULT_LANGUAGE, isLanguage } from '@/lib/language'
 import './globals.css'
 
@@ -59,6 +60,7 @@ export default async function RootLayout ({
 	const language = isLanguage(langCookie)
 		? langCookie
 		: DEFAULT_LANGUAGE
+	const profile = await getCurrentProfile()
 
 	return (
 		<html
@@ -81,7 +83,7 @@ export default async function RootLayout ({
 				<LanguageProvider initialLanguage={language}>
 					<SplashCursorEffect />
 					<SkipToContent />
-					<Navbar />
+					<Navbar isAdmin={profile?.isAdmin === true} />
 					<main id="main" className="flex flex-1 flex-col">
 						{children}
 					</main>

@@ -1,6 +1,9 @@
 'use server'
 
-import { bookingInputSchema } from '@/lib/bookings/booking-schema'
+import {
+	bookingInputSchema,
+	toStoredPhone,
+} from '@/lib/bookings/booking-schema'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 export interface CreateBookingResult {
@@ -26,9 +29,7 @@ export async function createBooking (
 
 	const fullName = parsed.data.fullName
 	const email = parsed.data.email
-	const phone = parsed.data.phone === ''
-		? null
-		: parsed.data.phone
+	const phone = toStoredPhone(parsed.data)
 	const serviceId = parsed.data.serviceId
 	const websiteDescription = parsed.data.websiteDescription
 

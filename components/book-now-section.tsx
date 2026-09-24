@@ -2,13 +2,16 @@
 
 import { useMemo, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useContent } from '@/components/language-provider'
+import { PhoneCountryField } from '@/components/phone-country-field'
 import { createBooking } from '@/lib/bookings/create-booking'
 import {
 	createBookingSchema,
+	toStoredPhone,
 	type BookingServiceOption,
 } from '@/lib/bookings/booking-schema'
+import { DEFAULT_PHONE_COUNTRY } from '@/lib/phone/countries'
 
 const WHATSAPP_NUMBER = '96170552181'
 
@@ -19,6 +22,7 @@ interface BookNowSectionProps {
 interface BookingFormValues {
 	fullName: string
 	email: string
+	countryCode: string
 	phone: string
 	serviceId: string
 	websiteDescription: string
@@ -40,21 +44,27 @@ export function BookNowSection ({ services }: BookNowSectionProps) {
 		return createBookingSchema({
 			fullNameError: copy.fullNameError,
 			emailError: copy.emailError,
+			phoneError: copy.phoneError,
+			countryError: copy.countryError,
 			serviceError: copy.serviceError,
 			websiteError: copy.websiteError,
 		})
 	}, [
+		copy.countryError,
 		copy.emailError,
 		copy.fullNameError,
+		copy.phoneError,
 		copy.serviceError,
 		copy.websiteError,
 	])
 
 	const form = useForm<BookingFormValues>({
 		resolver: zodResolver(schema),
+		mode: 'onChange',
 		defaultValues: {
 			fullName: '',
 			email: '',
+			countryCode: DEFAULT_PHONE_COUNTRY.code,
 			phone: '',
 			serviceId: '',
 			websiteDescription: '',
@@ -62,8 +72,10 @@ export function BookNowSection ({ services }: BookNowSectionProps) {
 	})
 
 	const isSubmitting = form.formState.isSubmitting
+	const isValid = form.formState.isValid
 	const errors = form.formState.errors
 	const hasServices = services.length > 0
+	const canSubmit = hasServices && isValid && !isSubmitting
 
 	async function handleSubmit (values: BookingFormValues) {
 		setIsConfirmed(false)
@@ -79,15 +91,14 @@ export function BookNowSection ({ services }: BookNowSectionProps) {
 		const selectedService = services.find((service) => {
 			return service.serviceId === values.serviceId
 		})
+		const fullPhone = toStoredPhone(values)
 
 		const message = [
 			copy.whatsAppTitle,
 			'',
 			`${copy.whatsAppName}: ${values.fullName}`,
 			`${copy.whatsAppEmail}: ${values.email}`,
-			values.phone === ''
-				? null
-				: `${copy.whatsAppPhone}: ${values.phone}`,
+			`${copy.whatsAppPhone}: ${fullPhone}`,
 			selectedService
 				? `${copy.whatsAppService}: ${selectedService.name}`
 				: null,
@@ -101,7 +112,14 @@ export function BookNowSection ({ services }: BookNowSectionProps) {
 			'noopener,noreferrer',
 		)
 		setIsConfirmed(true)
-		form.reset()
+		form.reset({
+			fullName: '',
+			email: '',
+			countryCode: DEFAULT_PHONE_COUNTRY.code,
+			phone: '',
+			serviceId: '',
+			websiteDescription: '',
+		})
 	}
 
 	const inputClassName = [
@@ -240,22 +258,39 @@ export function BookNowSection ({ services }: BookNowSectionProps) {
 					</div>
 
 					<div className="mt-6">
-						<label
-							htmlFor="phone"
-							className="block text-sm font-medium text-white"
-						>
-							{copy.phone}
-						</label>
-						<input
-							id="phone"
-							type="tel"
-							autoComplete="tel"
-							placeholder={copy.phonePlaceholder}
-							className={[
-								inputClassName,
-								'mt-2 border-white/10',
-							].join(' ')}
-							{...form.register('phone')}
+						<Controller
+							control={form.control}
+							name="countryCode"
+							render={({ field: countryField }) => (
+								<Controller
+									control={form.control}
+									name="phone"
+									render={({ field: phoneField }) => (
+										<PhoneCountryField
+											label={copy.phone}
+											countryLabel={copy.country}
+											phonePlaceholder={
+												copy.phonePlaceholder
+											}
+											countryCode={countryField.value}
+											phoneValue={phoneField.value}
+											countryError={
+												errors.countryCode?.message
+											}
+											phoneError={
+												errors.phone?.message
+											}
+											onCountryChange={(code) => {
+												countryField.onChange(code)
+											}}
+											onPhoneChange={(value) => {
+												phoneField.onChange(value)
+											}}
+											onPhoneBlur={phoneField.onBlur}
+										/>
+									)}
+								/>
+							)}
 						/>
 					</div>
 
@@ -351,7 +386,7 @@ export function BookNowSection ({ services }: BookNowSectionProps) {
 
 					<button
 						type="submit"
-						disabled={isSubmitting || !hasServices}
+						disabled={!canSubmit}
 						className={[
 							'mt-8 inline-flex min-h-12 w-full',
 							'items-center justify-center',
