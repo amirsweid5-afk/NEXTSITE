@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { useContent } from '@/components/language-provider'
+import { deleteBooking } from '@/lib/bookings/delete-booking'
 import { type AdminBookingCard } from '@/lib/bookings/get-admin-bookings'
 
 interface AdminDashboardProps {
@@ -9,15 +10,49 @@ interface AdminDashboardProps {
 }
 
 /**
- * Admin booking cards with expandable full form details.
+ * Admin booking cards with expandable details and delete.
  */
-export function AdminDashboard ({ bookings }: AdminDashboardProps) {
+export function AdminDashboard ({
+	bookings: initialBookings,
+}: AdminDashboardProps) {
 	const copy = useContent().dashboard
+	const [bookings, setBookings] = useState(initialBookings)
 	const [selectedId, setSelectedId] = useState<string | null>(null)
+	const [deletingId, setDeletingId] = useState<string | null>(null)
+	const [deleteError, setDeleteError] = useState<string | null>(null)
+	const [isPending, startTransition] = useTransition()
 
 	function handleToggle (bookingId: string) {
 		setSelectedId((current) => {
 			return current === bookingId ? null : bookingId
+		})
+	}
+
+	function handleDelete (bookingId: string) {
+		const confirmed = window.confirm(copy.deleteConfirm)
+		if (!confirmed) return
+
+		setDeleteError(null)
+		setDeletingId(bookingId)
+
+		startTransition(async () => {
+			const result = await deleteBooking(bookingId)
+
+			if (!result.ok) {
+				setDeleteError(result.error ?? copy.deleteError)
+				setDeletingId(null)
+				return
+			}
+
+			setBookings((current) => {
+				return current.filter((booking) => {
+					return booking.bookingId !== bookingId
+				})
+			})
+			setSelectedId((current) => {
+				return current === bookingId ? null : current
+			})
+			setDeletingId(null)
 		})
 	}
 
@@ -58,6 +93,15 @@ export function AdminDashboard ({ bookings }: AdminDashboardProps) {
 					</p>
 				</div>
 
+				{deleteError ? (
+					<p
+						role="alert"
+						className="mt-6 text-sm text-orange"
+					>
+						{deleteError}
+					</p>
+				) : null}
+
 				{bookings.length === 0 ? (
 					<p
 						role="status"
@@ -74,6 +118,8 @@ export function AdminDashboard ({ bookings }: AdminDashboardProps) {
 						{bookings.map((booking) => {
 							const isOpen =
 								selectedId === booking.bookingId
+							const isDeleting =
+								deletingId === booking.bookingId
 							const dateLabel = new Intl.DateTimeFormat(
 								undefined,
 								{
@@ -93,48 +139,83 @@ export function AdminDashboard ({ bookings }: AdminDashboardProps) {
 												: 'hover:border-white/20',
 										].join(' ')}
 									>
-										<button
-											type="button"
-											aria-expanded={isOpen}
-											onClick={() => {
-												handleToggle(booking.bookingId)
-											}}
-											className={[
-												'flex w-full flex-col gap-3',
-												'px-5 py-5 text-start sm:px-6',
-												'focus-visible:outline-2',
-												'focus-visible:outline-offset-[-4px]',
-											].join(' ')}
-										>
-											<div className="flex flex-wrap items-start justify-between gap-3">
-												<div>
-													<h2 className="text-lg font-semibold text-white">
-														{booking.fullName}
-													</h2>
-													<p className="mt-1 text-sm text-white/55">
-														{booking.serviceName}
-													</p>
+										<div className="flex items-stretch gap-2 p-2 sm:gap-3 sm:p-3">
+											<button
+												type="button"
+												aria-expanded={isOpen}
+												onClick={() => {
+													handleToggle(
+														booking.bookingId,
+													)
+												}}
+												className={[
+													'flex min-w-0 flex-1 flex-col',
+													'gap-3 rounded-xl px-3 py-3',
+													'text-start sm:px-4',
+													'focus-visible:outline-2',
+													'focus-visible:outline-offset-2',
+												].join(' ')}
+											>
+												<div className="flex flex-wrap items-start justify-between gap-3">
+													<div>
+														<h2 className="text-lg font-semibold text-white">
+															{booking.fullName}
+														</h2>
+														<p className="mt-1 text-sm text-white/55">
+															{booking.serviceName}
+														</p>
+													</div>
+													<span
+														className={[
+															'rounded-full px-3 py-1',
+															'text-[0.65rem] font-semibold',
+															'uppercase tracking-[0.16em]',
+															'bg-orange/15 text-orange',
+														].join(' ')}
+													>
+														{booking.status}
+													</span>
 												</div>
-												<span
-													className={[
-														'rounded-full px-3 py-1',
-														'text-[0.65rem] font-semibold',
-														'uppercase tracking-[0.16em]',
-														'bg-orange/15 text-orange',
-													].join(' ')}
-												>
-													{booking.status}
-												</span>
-											</div>
-											<p className="text-xs uppercase tracking-[0.16em] text-white/40">
-												{dateLabel}
-											</p>
-											<p className="text-sm text-orange/90">
-												{isOpen
-													? copy.hideDetails
-													: copy.viewDetails}
-											</p>
-										</button>
+												<p className="text-xs uppercase tracking-[0.16em] text-white/40">
+													{dateLabel}
+												</p>
+												<p className="text-sm text-orange/90">
+													{isOpen
+														? copy.hideDetails
+														: copy.viewDetails}
+												</p>
+											</button>
+
+											<button
+												type="button"
+												disabled={isPending}
+												aria-label={
+													`${copy.delete} ${booking.fullName}`
+												}
+												onClick={() => {
+													handleDelete(
+														booking.bookingId,
+													)
+												}}
+												className={[
+													'inline-flex shrink-0 items-center',
+													'justify-center self-start',
+													'rounded-full border border-orange/40',
+													'px-4 py-2 text-xs font-semibold',
+													'uppercase tracking-[0.16em]',
+													'text-orange transition duration-300',
+													'hover:border-orange hover:bg-orange/15',
+													'focus-visible:outline-2',
+													'focus-visible:outline-offset-2',
+													'disabled:cursor-not-allowed',
+													'disabled:opacity-50',
+												].join(' ')}
+											>
+												{isDeleting
+													? copy.deleting
+													: copy.delete}
+											</button>
+										</div>
 
 										{isOpen ? (
 											<dl

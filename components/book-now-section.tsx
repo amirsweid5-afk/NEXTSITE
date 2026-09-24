@@ -8,12 +8,9 @@ import { PhoneCountryField } from '@/components/phone-country-field'
 import { createBooking } from '@/lib/bookings/create-booking'
 import {
 	createBookingSchema,
-	toStoredPhone,
 	type BookingServiceOption,
 } from '@/lib/bookings/booking-schema'
 import { DEFAULT_PHONE_COUNTRY } from '@/lib/phone/countries'
-
-const WHATSAPP_NUMBER = '96170552181'
 
 interface BookNowSectionProps {
 	services: BookingServiceOption[]
@@ -28,12 +25,8 @@ interface BookingFormValues {
 	websiteDescription: string
 }
 
-function getWhatsAppUrl (message: string): string {
-	return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
-}
-
 /**
- * Booking form that saves to the database, then opens WhatsApp.
+ * Booking form that saves to the database and shows a confirmation.
  */
 export function BookNowSection ({ services }: BookNowSectionProps) {
 	const copy = useContent().booking.form
@@ -88,29 +81,6 @@ export function BookNowSection ({ services }: BookNowSectionProps) {
 			return
 		}
 
-		const selectedService = services.find((service) => {
-			return service.serviceId === values.serviceId
-		})
-		const fullPhone = toStoredPhone(values)
-
-		const message = [
-			copy.whatsAppTitle,
-			'',
-			`${copy.whatsAppName}: ${values.fullName}`,
-			`${copy.whatsAppEmail}: ${values.email}`,
-			`${copy.whatsAppPhone}: ${fullPhone}`,
-			selectedService
-				? `${copy.whatsAppService}: ${selectedService.name}`
-				: null,
-			'',
-			`${copy.whatsAppDescription}: ${values.websiteDescription}`,
-		].filter((line) => line !== null).join('\n')
-
-		window.open(
-			getWhatsAppUrl(message),
-			'_blank',
-			'noopener,noreferrer',
-		)
 		setIsConfirmed(true)
 		form.reset({
 			fullName: '',

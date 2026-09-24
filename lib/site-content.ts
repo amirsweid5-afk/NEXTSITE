@@ -158,12 +158,6 @@ export interface SiteContent {
 			confirmed: string
 			saveError: string
 			noServices: string
-			whatsAppTitle: string
-			whatsAppName: string
-			whatsAppEmail: string
-			whatsAppPhone: string
-			whatsAppService: string
-			whatsAppDescription: string
 		}
 	}
 	dashboard: {
@@ -180,6 +174,10 @@ export interface SiteContent {
 		website: string
 		noPhone: string
 		noWebsite: string
+		delete: string
+		deleting: string
+		deleteConfirm: string
+		deleteError: string
 	}
 	auth: {
 		loginEyebrow: string
@@ -521,17 +519,11 @@ const ENGLISH: SiteContent = {
 			submit: 'Submit Booking',
 			submitting: 'Saving your booking...',
 			confirmed:
-				'Your booking is saved. WhatsApp is opening so you can send it to us.',
+				'Booking submitted. Please wait for an admin to email you or contact you on WhatsApp.',
 			saveError:
 				'We could not save your booking. Please try again.',
 			noServices:
 				'Services are unavailable right now. Please try again shortly.',
-			whatsAppTitle: 'New Website Booking',
-			whatsAppName: 'Full Name',
-			whatsAppEmail: 'Email',
-			whatsAppPhone: 'Phone',
-			whatsAppService: 'Service',
-			whatsAppDescription: 'Website Description',
 		},
 	},
 	dashboard: {
@@ -549,6 +541,12 @@ const ENGLISH: SiteContent = {
 		website: 'Tell us about your website',
 		noPhone: 'No phone provided',
 		noWebsite: 'No website details provided',
+		delete: 'Delete',
+		deleting: 'Deleting...',
+		deleteConfirm:
+			'Delete this booking? This cannot be undone.',
+		deleteError:
+			'Could not delete this booking. Please try again.',
 	},
 	auth: {
 		loginEyebrow: 'Welcome back',
@@ -902,17 +900,11 @@ const ARABIC: SiteContent = {
 			submit: 'إرسال الحجز',
 			submitting: 'جاري حفظ حجزك...',
 			confirmed:
-				'تم حفظ حجزك. سيتم فتح واتساب لترسله إلينا.',
+				'تم إرسال الحجز. يرجى انتظار تواصل المسؤول معك عبر البريد الإلكتروني أو واتساب.',
 			saveError:
 				'تعذر حفظ حجزك. يرجى المحاولة مرة أخرى.',
 			noServices:
 				'الخدمات غير متاحة حالياً. يرجى المحاولة بعد قليل.',
-			whatsAppTitle: 'حجز موقع جديد',
-			whatsAppName: 'الاسم الكامل',
-			whatsAppEmail: 'البريد الإلكتروني',
-			whatsAppPhone: 'الهاتف',
-			whatsAppService: 'الخدمة',
-			whatsAppDescription: 'وصف الموقع',
 		},
 	},
 	dashboard: {
@@ -930,6 +922,10 @@ const ARABIC: SiteContent = {
 		website: 'أخبرنا عن موقعك',
 		noPhone: 'لا يوجد رقم هاتف',
 		noWebsite: 'لا توجد تفاصيل عن الموقع',
+		delete: 'حذف',
+		deleting: 'جاري الحذف...',
+		deleteConfirm: 'حذف هذا الحجز؟ لا يمكن التراجع عن ذلك.',
+		deleteError: 'تعذر حذف هذا الحجز. يرجى المحاولة مرة أخرى.',
 	},
 	auth: {
 		loginEyebrow: 'أهلاً بعودتك',
