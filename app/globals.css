@@ -708,7 +708,7 @@ html[data-theme='light'] .home-hero-beam {
 	height: 130%;
 	left: -20%;
 	top: -8%;
-	opacity: calc(0.18 + var(--build) * 0.55);
+	opacity: 0.72;
 	transform:
 		translate3d(0, calc(var(--build) * -7%), 0)
 		scale(calc(1.08 - var(--build) * 0.1));
@@ -805,7 +805,7 @@ html[data-theme='light'] .home-hero-beam {
 .scroll-build-plate-1 {
 	left: 3vw;
 	top: 18vh;
-	opacity: calc(0.22 + var(--build) * 0.78);
+	opacity: 1;
 	transform:
 		translate3d(
 			calc(-4vw + var(--build) * 6vw),
@@ -819,7 +819,7 @@ html[data-theme='light'] .home-hero-beam {
 .scroll-build-plate-2 {
 	right: 4vw;
 	top: 16vh;
-	opacity: calc(0.12 + var(--build) * 0.88);
+	opacity: 1;
 	transform:
 		translate3d(
 			calc(10vw - var(--build) * 14vw),
@@ -834,7 +834,7 @@ html[data-theme='light'] .home-hero-beam {
 	left: 50%;
 	bottom: 8vh;
 	width: min(22rem, 46vw);
-	opacity: calc(max(0, var(--build) - 0.34) * 1.7);
+	opacity: 1;
 	transform:
 		translate3d(
 			-50%,
@@ -849,12 +849,12 @@ html[data-theme='light'] .home-hero-beam {
 	inset: auto 4vw auto auto;
 	top: 14vh;
 	width: min(26rem, 42vw);
-	opacity: calc(0.45 + min(var(--build), 0.5) * 0.9);
+	opacity: 1;
 }
 
 .scroll-build-code-window {
 	position: relative;
-	height: calc(4.5rem + var(--build) * 18rem);
+	height: 22rem;
 	overflow: hidden;
 	border-radius: 1rem;
 	border: 1px solid color-mix(in srgb, var(--white) 14%, transparent);
@@ -868,6 +868,7 @@ html[data-theme='light'] .home-hero-beam {
 	font-size: 0.92rem;
 	line-height: 1.7;
 	font-style: normal;
+	clip-path: inset(0 0 calc((1 - var(--build)) * 88%) 0);
 }
 
 .scroll-build-code pre div {
@@ -888,7 +889,7 @@ html[data-theme='light'] .home-hero-beam {
 .scroll-build-caret {
 	position: absolute;
 	left: 3.3rem;
-	bottom: 0.7rem;
+	top: calc(0.85rem + var(--build) * 16.5rem);
 	width: 0.55rem;
 	height: 1rem;
 	background: var(--orange);
@@ -922,10 +923,10 @@ html[data-theme='light'] .home-hero-beam {
 			color-mix(in srgb, var(--gold) 18%, transparent) 42%,
 			transparent 70%
 		);
-	opacity: calc(max(0, var(--build) - 0.48) * 1.8);
+	opacity: 1;
 	transform:
 		translateX(-50%)
-		scale(calc(0.4 + var(--build) * 0.85));
+		scale(calc(0.45 + var(--build) * 0.7));
 	filter: blur(10px);
 }
 
@@ -955,7 +956,7 @@ html[data-theme='light'] .home-hero-beam {
 	.scroll-build-plate-1 {
 		left: -6vw;
 		width: 14rem;
-		opacity: calc(0.35 + var(--build) * 0.55);
+		opacity: 1;
 	}
 
 	.scroll-build-code {
@@ -970,7 +971,11 @@ html[data-theme='light'] .home-hero-beam {
 	}
 
 	.scroll-build-code-window {
-		height: calc(3.4rem + var(--build) * 11rem);
+		height: 16rem;
+	}
+
+	.scroll-build-caret {
+		top: calc(0.7rem + var(--build) * 11rem);
 	}
 }
 
