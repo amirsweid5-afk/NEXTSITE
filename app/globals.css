@@ -661,6 +661,22 @@ html[data-theme='light'] .home-hero-beam {
 	transition-delay: 0.68s;
 }
 
+.ai-typing-caret {
+	display: inline-block;
+	width: 0.45rem;
+	height: 0.85em;
+	margin-inline-start: 0.15rem;
+	vertical-align: -0.1em;
+	background: var(--orange);
+	animation: ai-typing-blink 0.8s steps(1) infinite;
+}
+
+@keyframes ai-typing-blink {
+	50% {
+		opacity: 0;
+	}
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.home-hero-animate,
 	.home-hero-beam,
@@ -689,7 +705,8 @@ html[data-theme='light'] .home-hero-beam {
 		transition: none !important;
 	}
 
-	.home-hero-caret {
+	.home-hero-caret,
+	.ai-typing-caret {
 		display: none !important;
 	}
 }

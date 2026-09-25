@@ -15,14 +15,14 @@ export function BookingCta () {
 			className={[
 				'relative isolate overflow-hidden',
 				'border-t border-white/10',
-				'bg-surface py-20 sm:py-24 lg:py-32',
+				'bg-ink/25 py-20 sm:py-24 lg:py-32',
 			].join(' ')}
 		>
 			<div
 				aria-hidden="true"
 				className="pointer-events-none absolute inset-0"
 			>
-				<div className="absolute inset-0 bg-linear-to-b from-ink/40 via-transparent to-ink/60" />
+				<div className="absolute inset-0 bg-linear-to-b from-ink/15 via-transparent to-ink/20" />
 				<div className="absolute left-1/2 top-0 h-px w-[min(80%,36rem)] -translate-x-1/2 bg-linear-to-r from-transparent via-orange/50 to-transparent" />
 				<div className="absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange/15 blur-[120px]" />
 				<div className="absolute -left-16 bottom-0 h-56 w-56 rounded-full bg-gold/10 blur-[100px]" />

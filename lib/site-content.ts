@@ -77,6 +77,11 @@ export interface SiteContent {
 			description: string
 			ctaLabel: string
 		}
+		aiClip: {
+			label: string
+			prompt: string
+			lines: string[]
+		}
 	}
 	about: {
 		hero: {
@@ -356,6 +361,16 @@ const ENGLISH: SiteContent = {
 			description:
 				'Let’s bring your idea to life with a modern website designed for you.',
 			ctaLabel: 'Book Now',
+		},
+		aiClip: {
+			label: 'AI typing',
+			prompt: 'Build a modern site for my brand.',
+			lines: [
+				'Reading your idea…',
+				'Choosing layout and type…',
+				'Writing the page copy…',
+				'Polishing the final site…',
+			],
 		},
 	},
 	about: {
@@ -776,6 +791,16 @@ const ARABIC: SiteContent = {
 			description:
 				'لنحوّل فكرتك إلى موقع حديث مصمّم لأجلك.',
 			ctaLabel: 'احجز الآن',
+		},
+		aiClip: {
+			label: 'كتابة بالذكاء الاصطناعي',
+			prompt: 'ابنِ موقعاً حديثاً لعلامتي.',
+			lines: [
+				'أقرأ فكرتك…',
+				'أختار التخطيط والخطوط…',
+				'أكتب نصوص الصفحة…',
+				'أصقل الموقع النهائي…',
+			],
 		},
 	},
 	about: {

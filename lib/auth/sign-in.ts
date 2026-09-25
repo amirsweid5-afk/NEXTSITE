@@ -5,6 +5,7 @@ import {
 	signInInputSchema,
 	type AuthActionResult,
 } from '@/lib/auth/auth-schema'
+import { ensureAppUser } from '@/lib/auth/ensure-app-user'
 import { createClient } from '@/lib/supabase/server'
 
 /**
@@ -37,6 +38,25 @@ export async function signIn (
 		return {
 			ok: false,
 			error: error.message,
+		}
+	}
+
+	const createdUser = data.user
+	const isNewUser = (createdUser?.identities?.length ?? 0) > 0
+
+	if (createdUser && isNewUser) {
+		const profile = await ensureAppUser({
+			id: createdUser.id,
+			email: parsed.data.email,
+			name: parsed.data.fullName,
+		})
+
+		if (!profile.ok) {
+			return {
+				ok: false,
+				error: profile.error
+					?? 'Could not create your account. Please try again.',
+			}
 		}
 	}
 

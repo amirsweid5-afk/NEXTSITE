@@ -1,3 +1,4 @@
+import { AiTypingClip } from '@/components/ai-typing-clip'
 import { BookingCta } from '@/components/booking-cta'
 import { HomeHero } from '@/components/home-hero'
 import { ServicesSection } from '@/components/services-section'
@@ -12,10 +13,13 @@ export const metadata = {
 export default function HomePage () {
 	return (
 		<>
-			<HomeHero />
-			<ServicesSection />
-			<WhyChooseUs />
-			<BookingCta />
+			<AiTypingClip />
+			<div className="relative z-10">
+				<HomeHero />
+				<ServicesSection />
+				<WhyChooseUs />
+				<BookingCta />
+			</div>
 		</>
 	)
 }

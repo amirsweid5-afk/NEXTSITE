@@ -11,6 +11,26 @@ export type PaymentStatus =
 	| 'partial'
 	| 'paid'
 
+export type IncomePaymentMethod =
+	| 'cash'
+	| 'card'
+	| 'bank_transfer'
+	| 'paypal'
+	| 'other'
+
+export type IncomeStatus =
+	| 'pending'
+	| 'completed'
+	| 'failed'
+	| 'refunded'
+
+export type ProjectStatus =
+	| 'planned'
+	| 'in_progress'
+	| 'on_hold'
+	| 'completed'
+	| 'cancelled'
+
 export interface Database {
 	public: {
 		Tables: {
@@ -168,6 +188,87 @@ export interface Database {
 					},
 				]
 			}
+			income: {
+				Row: {
+					income_id: string
+					amount: number
+					payment_date: string
+					payment_method: IncomePaymentMethod
+					payment_currency: string
+					status: IncomeStatus
+					notes: string | null
+					created_at: string
+					updated_at: string
+				}
+				Insert: {
+					income_id?: string
+					amount: number
+					payment_date?: string
+					payment_method?: IncomePaymentMethod
+					payment_currency?: string
+					status?: IncomeStatus
+					notes?: string | null
+					created_at?: string
+					updated_at?: string
+				}
+				Update: {
+					income_id?: string
+					amount?: number
+					payment_date?: string
+					payment_method?: IncomePaymentMethod
+					payment_currency?: string
+					status?: IncomeStatus
+					notes?: string | null
+					created_at?: string
+					updated_at?: string
+				}
+				Relationships: []
+			}
+			project: {
+				Row: {
+					project_id: string
+					project_name: string
+					client_name: string
+					service_type: string
+					description: string | null
+					price: number
+					status: ProjectStatus
+					start_date: string | null
+					deadline: string | null
+					completed_at: string | null
+					created_at: string
+					updated_at: string
+				}
+				Insert: {
+					project_id?: string
+					project_name: string
+					client_name: string
+					service_type: string
+					description?: string | null
+					price: number
+					status?: ProjectStatus
+					start_date?: string | null
+					deadline?: string | null
+					completed_at?: string | null
+					created_at?: string
+					updated_at?: string
+				}
+				Update: {
+					project_id?: string
+					project_name?: string
+					client_name?: string
+					service_type?: string
+					description?: string | null
+					price?: number
+					status?: ProjectStatus
+					start_date?: string | null
+					deadline?: string | null
+					completed_at?: string | null
+					created_at?: string
+					updated_at?: string
+				}
+				Relationships: []
+			}
 		}
 		Views: {
 			[_ in never]: never
@@ -185,6 +286,9 @@ export interface Database {
 		Enums: {
 			user_role: UserRole
 			booking_status: BookingStatus
+			income_payment_method: IncomePaymentMethod
+			income_status: IncomeStatus
+			project_status: ProjectStatus
 		}
 		CompositeTypes: {
 			[_ in never]: never

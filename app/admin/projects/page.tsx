@@ -1,18 +1,18 @@
-import { AdminBookingsPanel } from '@/components/admin/admin-bookings-panel'
+import { AdminProjectPanel } from '@/components/admin/admin-project-panel'
 import { AdminStatCard } from '@/components/admin/admin-stat-card'
-import { getAdminPortalData } from '@/lib/admin/get-admin-portal-data'
+import { getProjectRecords } from '@/lib/admin/get-projects'
 
 export const metadata = {
 	title: 'Projects',
 }
 
 export default async function AdminProjectsPage () {
-	const data = await getAdminPortalData()
-	const inProgress = data.projects.filter((booking) => {
-		return booking.status === 'confirmed'
+	const records = await getProjectRecords()
+	const inProgress = records.filter((record) => {
+		return record.status === 'in_progress'
 	}).length
-	const completed = data.projects.filter((booking) => {
-		return booking.status === 'completed'
+	const completed = records.filter((record) => {
+		return record.status === 'completed'
 	}).length
 
 	return (
@@ -22,31 +22,27 @@ export default async function AdminProjectsPage () {
 					Projects
 				</h1>
 				<p className="mt-1 text-sm text-white/50">
-					Track accepted bookings through delivery and completion.
+					Create, edit, and delete projects from the project table.
 				</p>
 			</div>
 
 			<div className="grid gap-4 sm:grid-cols-3">
 				<AdminStatCard
-					label="Active Projects"
+					label="In Progress"
 					value={String(inProgress)}
 				/>
 				<AdminStatCard
-					label="Completed Websites"
+					label="Completed"
 					value={String(completed)}
 					accent="green"
 				/>
 				<AdminStatCard
 					label="Total Projects"
-					value={String(data.projects.length)}
+					value={String(records.length)}
 				/>
 			</div>
 
-			<AdminBookingsPanel
-				bookings={data.projects}
-				showFinance
-				showActions
-			/>
+			<AdminProjectPanel records={records} />
 		</div>
 	)
 }

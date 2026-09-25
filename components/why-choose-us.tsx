@@ -136,7 +136,7 @@ export function WhyChooseUs () {
 		<section
 			id="why-choose-us"
 			aria-labelledby="why-choose-us-heading"
-			className="relative isolate overflow-hidden bg-ink py-20 sm:py-24 lg:py-28"
+			className="relative isolate overflow-hidden bg-ink/25 py-20 sm:py-24 lg:py-28"
 		>
 			<div
 				aria-hidden="true"
