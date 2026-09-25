@@ -138,7 +138,7 @@ export function OurVision () {
 			aria-labelledby="our-vision-heading"
 			className={[
 				'relative isolate overflow-hidden',
-				'border-t border-white/10 bg-ink',
+				'border-t border-white/10 bg-transparent',
 				'py-20 sm:py-24 lg:py-28',
 			].join(' ')}
 		>

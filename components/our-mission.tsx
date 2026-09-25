@@ -163,7 +163,7 @@ export function OurMission () {
 			aria-labelledby="our-mission-heading"
 			className={[
 				'relative isolate overflow-hidden',
-				'border-t border-white/10 bg-surface',
+				'border-t border-white/10 bg-transparent',
 				'py-20 sm:py-24 lg:py-28',
 			].join(' ')}
 		>

@@ -38,7 +38,7 @@ export function AboutHero () {
 			className={[
 				'relative isolate overflow-hidden',
 				'min-h-[calc(100svh-4.5rem)]',
-				'bg-ink text-white',
+				'bg-transparent text-white',
 			].join(' ')}
 		>
 			<div

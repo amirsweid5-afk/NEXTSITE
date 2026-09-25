@@ -1,12 +1,7 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { Canvas, useThree } from '@react-three/fiber'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { BirthWorld } from '@/components/birth-world'
-
-gsap.registerPlugin(ScrollTrigger)
+import { ScrollCanvas } from '@/components/scroll-canvas'
 
 interface BirthCanvasProps {
 	shardCount: number
@@ -14,69 +9,18 @@ interface BirthCanvasProps {
 }
 
 /**
- * Asks the canvas to draw whenever scroll progress changes.
- */
-function DrawOnScroll ({
-	requestDraw,
-}: {
-	requestDraw: { current: (() => void) | null }
-}) {
-	const invalidate = useThree((state) => state.invalidate)
-
-	useEffect(() => {
-		requestDraw.current = invalidate
-		invalidate()
-		return () => {
-			requestDraw.current = null
-		}
-	}, [invalidate, requestDraw])
-
-	return null
-}
-
-/**
- * Full-viewport WebGL scene locked to homepage scroll progress.
+ * Homepage scene: a website born from liquid chrome.
  */
 export function BirthCanvas ({
 	shardCount,
 	dpr,
 }: BirthCanvasProps) {
-	const progress = useRef(0)
-	const requestDraw = useRef<(() => void) | null>(null)
-
-	useEffect(() => {
-		const trigger = ScrollTrigger.create({
-			trigger: '#home-journey',
-			start: 'top 4.5rem',
-			end: 'bottom bottom',
-			onUpdate: (self) => {
-				progress.current = self.progress
-				requestDraw.current?.()
-			},
-		})
-
-		progress.current = trigger.progress
-		requestDraw.current?.()
-
-		return () => {
-			trigger.kill()
-		}
-	}, [])
-
 	return (
-		<Canvas
+		<ScrollCanvas
+			triggerId="#home-journey"
+			shardCount={shardCount}
 			dpr={dpr}
-			frameloop="demand"
-			gl={{
-				antialias: dpr > 1,
-				alpha: false,
-				powerPreference: 'high-performance',
-			}}
-			camera={{ position: [0, 0.4, 6.4], fov: 42, near: 0.1, far: 40 }}
-			style={{ width: '100%', height: '100%' }}
-		>
-			<DrawOnScroll requestDraw={requestDraw} />
-			<BirthWorld progress={progress} shardCount={shardCount} />
-		</Canvas>
+			World={BirthWorld}
+		/>
 	)
 }
