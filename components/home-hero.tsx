@@ -60,7 +60,7 @@ export function HomeHero () {
 		<section
 			className={[
 				'relative isolate flex overflow-hidden',
-				'bg-ink text-white',
+				'bg-transparent text-white',
 				'sm:min-h-[calc(100svh-4.5rem)] sm:items-end',
 			].join(' ')}
 		>
