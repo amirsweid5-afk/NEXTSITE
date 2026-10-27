@@ -83,13 +83,13 @@ const SHARD_VERT = `
 	void main() {
 		float seed = aSeed;
 		vSeed = seed;
-		float burst = smoothstep(0.1, 0.42, uProgress);
+		float burst = mix(0.72, 1.0, smoothstep(0.0, 0.42, uProgress));
 		float form = smoothstep(0.4, 0.68, uProgress);
 		float collapse = smoothstep(0.7, 0.88, uProgress);
 		float portal = smoothstep(0.84, 1.0, uProgress);
 
 		float angle = seed * 6.2831853 + burst * 6.2;
-		float radius = mix(0.15, 0.35 + hash(seed * 2.2) * 2.8, burst);
+		float radius = mix(1.15, 0.55 + hash(seed * 2.2) * 3.6, burst);
 		vec3 cracked = vec3(
 			cos(angle) * radius,
 			sin(angle * 0.82) * radius * 0.66,
@@ -112,7 +112,7 @@ const SHARD_VERT = `
 		pos = mix(pos, vec3(0.0, -0.15, 0.0), collapse);
 
 		float ringAngle = seed * 6.2831853;
-		float ringRadius = 1.45 + hash(seed * 5.0) * 0.45;
+		float ringRadius = 2.15 + hash(seed * 5.0) * 0.7;
 		vec3 ring = vec3(
 			cos(ringAngle) * ringRadius,
 			sin(ringAngle) * ringRadius * 0.62 - 0.2,
@@ -229,13 +229,13 @@ interface FramePose {
 const FRAMES: FramePose[] = [
 	{
 		from: [-2.6, 1.5, -1.2],
-		to: [-1.72, 0.22, 0.05],
+		to: [-2.55, 0.35, 0.2],
 		spin: 1.15,
 		kind: 0,
 	},
 	{
 		from: [2.5, -1.3, -0.8],
-		to: [1.68, 0.42, 0.0],
+		to: [2.55, 0.5, 0.15],
 		spin: -0.95,
 		kind: 1,
 	},
@@ -264,7 +264,7 @@ function ChromeSeed ({
 
 	return (
 		<mesh>
-			<icosahedronGeometry args={[1.15, 5]} />
+			<icosahedronGeometry args={[1.85, 4]} />
 			<shaderMaterial
 				ref={material}
 				vertexShader={CHROME_VERT}
@@ -292,7 +292,7 @@ function ShardField ({
 	const mesh = useRef<InstancedMesh>(null)
 	const material = useRef<ShaderMaterial>(null)
 	const geometry = useMemo(
-		() => new TetrahedronGeometry(0.045, 0),
+		() => new TetrahedronGeometry(0.11, 0),
 		[],
 	)
 
@@ -389,7 +389,7 @@ function ServiceFrames ({
 					}}
 				>
 					<mesh>
-						<planeGeometry args={[1.35, 0.92]} />
+						<planeGeometry args={[2.05, 1.35]} />
 						<shaderMaterial
 							vertexShader={FRAME_VERT}
 							fragmentShader={FRAME_FRAG}
@@ -425,10 +425,10 @@ function Portal ({
 		const open = ramp(t, 0.84, 1)
 
 		if (group.current) {
-			const scale = 0.04 + open * 1.15
+			const scale = 0.55 + open * 1.7
 			group.current.scale.setScalar(scale)
 			group.current.rotation.z = t * Math.PI * 1.4
-			group.current.visible = open > 0.01
+			group.current.visible = true
 		}
 
 		materials.current.forEach((material) => {
@@ -443,10 +443,10 @@ function Portal ({
 				<mesh key={radius}>
 					<torusGeometry
 						args={[
-							radius,
-							index === 0 ? 0.028 : 0.012,
-							12,
-							80,
+							radius * 1.35,
+							index === 0 ? 0.07 : 0.03,
+							16,
+							96,
 						]}
 					/>
 					<shaderMaterial
@@ -481,9 +481,9 @@ export function BirthWorld ({
 		const dive = ramp(t, 0.18, 0.72)
 		const retreat = ramp(t, 0.8, 1)
 		camera.position.set(
-			Math.sin((t - 0.5) * 1.1) * 1.15,
-			0.42 - t * 0.7,
-			6.4 - dive * 2.35 + retreat * 1.15,
+			Math.sin((t - 0.5) * 1.6) * 2.4,
+			0.55 - t * 1.1,
+			5.1 - dive * 2.1 + retreat * 1.4,
 		)
 		camera.lookAt(0, -0.12 * t, 0)
 	})

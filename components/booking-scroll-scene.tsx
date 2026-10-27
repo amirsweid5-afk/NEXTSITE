@@ -17,8 +17,8 @@ export function BookingScrollScene () {
 	return (
 		<ScrollStage
 			CanvasView={BookingCanvas}
-			desktopCount={96}
-			mobileCount={48}
+			desktopCount={140}
+			mobileCount={64}
 		/>
 	)
 }

@@ -36,7 +36,7 @@ const TICK_VERT = `
 		float tighten = smoothstep(0.68, 1.0, uProgress);
 		float angle = seed * 6.2831853;
 		float loose = 1.0 - align;
-		float radius = mix(2.5, 1.55, align) - tighten * 0.25;
+		float radius = mix(3.4, 2.05, align) - tighten * 0.35;
 		vec3 pos = vec3(
 			cos(angle) * radius + (hash(seed * 2.0) - 0.5) * loose * 2.4,
 			(hash(seed * 4.0) - 0.5) * loose * 2.1,
@@ -92,7 +92,7 @@ function SealTicks ({
 	const mesh = useRef<InstancedMesh>(null)
 	const material = useRef<ShaderMaterial>(null)
 	const geometry = useMemo(
-		() => new BoxGeometry(0.035, 0.16, 0.02),
+		() => new BoxGeometry(0.07, 0.42, 0.04),
 		[],
 	)
 
@@ -186,7 +186,7 @@ function PressPlates ({
 					}}
 				>
 					<mesh>
-						<boxGeometry args={[1.7, 0.035, 1.05]} />
+						<boxGeometry args={[2.5, 0.06, 1.55]} />
 						<meshBasicMaterial
 							color={index % 2 === 0 ? '#e87812' : '#d3ac2c'}
 							transparent
@@ -211,29 +211,38 @@ export function BookingWorld ({
 	useFrame(({ camera }) => {
 		const t = progress.current
 		const drop = ramp(t, 0.08, 0.95)
-		camera.position.set(0.15, 5.1 - drop * 2.4, 2.6 - drop * 0.8)
+		camera.position.set(0.2, 3.6 - drop * 1.5, 3.4 - drop * 1.1)
 		camera.lookAt(0, 0, 0)
 
 		if (stamp.current) {
-			stamp.current.position.y = 2.6 - ramp(t, 0.35, 0.92) * 2.45
+			stamp.current.position.y = 1.35 - ramp(t, 0.2, 0.92) * 1.35
 			stamp.current.rotation.z = t * Math.PI * 2
-			stamp.current.scale.setScalar(0.72 + ramp(t, 0.2, 1) * 0.55)
+			stamp.current.scale.setScalar(1.15 + ramp(t, 0.15, 1) * 0.85)
 		}
 	})
 
 	return (
 		<>
 			<color attach="background" args={['#010203']} />
-			<ambientLight intensity={0.45} />
+			<ambientLight intensity={0.8} />
+			<mesh rotation={[Math.PI / 2, 0, 0]}>
+				<ringGeometry args={[2.2, 2.38, 64]} />
+				<meshBasicMaterial
+					color="#d3ac2c"
+					side={2}
+					transparent
+					opacity={0.85}
+				/>
+			</mesh>
 			<PressPlates progress={progress} />
 			<SealTicks progress={progress} shardCount={shardCount} />
 			<group ref={stamp} rotation={[Math.PI / 2.15, 0, 0]}>
 				<mesh>
-					<torusGeometry args={[1.05, 0.045, 12, 64]} />
+					<torusGeometry args={[1.7, 0.07, 16, 80]} />
 					<meshBasicMaterial color="#e87812" />
 				</mesh>
 				<mesh>
-					<torusGeometry args={[0.62, 0.02, 10, 48]} />
+					<torusGeometry args={[1.05, 0.035, 12, 64]} />
 					<meshBasicMaterial color="#d3ac2c" />
 				</mesh>
 			</group>

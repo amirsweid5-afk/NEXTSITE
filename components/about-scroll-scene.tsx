@@ -17,8 +17,8 @@ export function AboutScrollScene () {
 	return (
 		<ScrollStage
 			CanvasView={AboutCanvas}
-			desktopCount={560}
-			mobileCount={180}
+			desktopCount={900}
+			mobileCount={280}
 		/>
 	)
 }

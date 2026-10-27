@@ -33,11 +33,11 @@ const THREAD_VERT = `
 	void main() {
 		float seed = aSeed;
 		vSeed = seed;
-		float weave = smoothstep(0.05, 0.72, uProgress);
+		float weave = mix(0.45, 1.0, smoothstep(0.0, 0.72, uProgress));
 		float gather = smoothstep(0.78, 1.0, uProgress);
 		float angle = seed * 18.0 + weave * 7.5;
-		float radius = mix(0.18, 1.85, weave);
-		float height = mix(0.0, (seed - 0.5) * 4.4, weave);
+		float radius = mix(1.4, 3.4, weave);
+		float height = mix((seed - 0.5) * 1.2, (seed - 0.5) * 5.2, weave);
 		vec3 spun = vec3(cos(angle) * radius, height, sin(angle) * radius);
 		float side = seed < 0.5 ? -1.15 : 1.15;
 		vec3 edge = vec3(side, (hash(seed * 5.0) - 0.5) * 2.2, 0.35);
@@ -100,7 +100,7 @@ function Thread ({
 }: AboutWorldProps) {
 	const mesh = useRef<InstancedMesh>(null)
 	const material = useRef<ShaderMaterial>(null)
-	const geometry = useMemo(() => new SphereGeometry(0.028, 6, 6), [])
+	const geometry = useMemo(() => new SphereGeometry(0.08, 8, 8), [])
 
 	useLayoutEffect(() => {
 		const current = mesh.current
@@ -164,12 +164,16 @@ function ChapterPages ({
 
 		groups.current.forEach((group, index) => {
 			if (!group) return
-			const open = ramp(t, 0.08 + index * 0.14, 0.3 + index * 0.12)
+			const open = 0.42 + ramp(
+				t,
+				0.08 + index * 0.14,
+				0.3 + index * 0.12,
+			) * 0.58
 			const side = index % 2 === 0 ? -1 : 1
 			group.position.set(
-				side * 0.72 * open * (1 - close),
-				-1.15 + index * 0.62 * (1 - close * 0.85),
-				0.08 * open,
+				side * 2.35 * open * (1 - close * 0.35),
+				-1.35 + index * 0.85 * (1 - close * 0.75),
+				0.2 * open,
 			)
 			group.rotation.set(
 				(1 - open) * 0.7,
@@ -190,7 +194,7 @@ function ChapterPages ({
 					}}
 				>
 					<mesh>
-						<planeGeometry args={[1.15, 1.55]} />
+						<planeGeometry args={[1.7, 2.25]} />
 						<shaderMaterial
 							vertexShader={PAGE_VERT}
 							fragmentShader={PAGE_FRAG}
@@ -216,30 +220,47 @@ export function AboutWorld ({
 	shardCount,
 }: AboutWorldProps) {
 	const spine = useRef<Group>(null)
+	const halo = useRef<Group>(null)
 
 	useFrame(({ camera }) => {
 		const t = progress.current
 		const arc = t * Math.PI
 		camera.position.set(
-			Math.cos(arc) * 4.4,
-			0.55 - t * 0.35,
-			Math.sin(arc) * 3.2 + 2.4,
+			Math.cos(arc) * 5.6,
+			0.85 - t * 0.9,
+			Math.sin(arc) * 4.2 + 1.6,
 		)
 		camera.lookAt(0, 0, 0)
 
 		if (spine.current) {
-			const height = 0.15 + ramp(t, 0.04, 0.7) * 3.8
+			const height = 0.4 + ramp(t, 0.04, 0.7) * 4.6
 			spine.current.scale.set(1, height, 1)
+		}
+
+		if (halo.current) {
+			const spread = 0.85 + ramp(t, 0.05, 0.8) * 0.7
+			halo.current.scale.setScalar(spread)
+			halo.current.rotation.z = t * Math.PI
 		}
 	})
 
 	return (
 		<>
 			<color attach="background" args={['#010203']} />
-			<ambientLight intensity={0.4} />
+			<ambientLight intensity={0.7} />
+			<group ref={halo} rotation={[Math.PI / 2.2, 0, 0]}>
+				<mesh>
+					<torusGeometry args={[2.6, 0.045, 12, 90]} />
+					<meshBasicMaterial color="#e87812" />
+				</mesh>
+				<mesh>
+					<torusGeometry args={[1.7, 0.02, 10, 70]} />
+					<meshBasicMaterial color="#d3ac2c" />
+				</mesh>
+			</group>
 			<group ref={spine} position={[0, -0.2, 0]}>
 				<mesh>
-					<cylinderGeometry args={[0.018, 0.018, 1, 12]} />
+					<cylinderGeometry args={[0.045, 0.045, 1, 16]} />
 					<meshBasicMaterial color="#d3ac2c" />
 				</mesh>
 			</group>
