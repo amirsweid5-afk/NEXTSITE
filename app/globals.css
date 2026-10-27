@@ -147,11 +147,12 @@ html[data-theme='light'] .theme-icon-moon {
 	--admin-chart-tooltip-bg: #14141c;
 	--admin-chart-tooltip-border: rgba(255, 255, 255, 0.1);
 	--admin-chart-tooltip-fg: #ffffff;
-	background: var(--admin-bg);
+	background: transparent;
 	color: var(--white);
 }
 
 html[data-theme='light'] .admin-portal {
+	background: var(--admin-bg);
 	--admin-bg: #f3f1f8;
 	--admin-surface: #ffffff;
 	--admin-chrome: #ffffff;
@@ -193,10 +194,10 @@ html[lang='ar'] .uppercase {
 .home-hero-vignette {
 	background: linear-gradient(
 		to bottom,
-		color-mix(in srgb, var(--ink) 55%, transparent) 0%,
-		transparent 28%,
-		transparent 55%,
-		color-mix(in srgb, var(--ink) 88%, transparent) 100%
+		color-mix(in srgb, var(--ink) 18%, transparent) 0%,
+		transparent 22%,
+		transparent 70%,
+		color-mix(in srgb, var(--ink) 28%, transparent) 100%
 	);
 }
 
@@ -661,45 +662,39 @@ html[data-theme='light'] .home-hero-beam {
 	transition-delay: 0.68s;
 }
 
-.birth-stage {
+.ui-film {
 	position: fixed;
 	inset: 0;
 	z-index: 0;
+	overflow: hidden;
 	pointer-events: none;
+	background: #090a0d;
 }
 
-.birth-stage canvas,
-.birth-still {
+.ui-film iframe {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 1920px;
+	height: 1080px;
+	border: 0;
+	transform: translate(-50%, -50%);
+	transform-origin: center center;
+}
+
+.ui-film-veil {
 	position: absolute;
 	inset: 0;
-	width: 100%;
-	height: 100%;
+	background: radial-gradient(
+		ellipse 85% 75% at 50% 45%,
+		transparent 0%,
+		transparent 62%,
+		color-mix(in srgb, var(--ink) 28%, transparent) 100%
+	);
 }
 
-.birth-still {
-	background:
-		radial-gradient(
-			circle at 50% 48%,
-			color-mix(in srgb, var(--gold) 42%, transparent),
-			transparent 36%
-		),
-		radial-gradient(
-			circle at 50% 48%,
-			color-mix(in srgb, var(--orange) 28%, transparent),
-			var(--ink) 62%
-		);
-}
-
-.birth-veil {
-	position: absolute;
-	inset: 0;
-	background:
-		radial-gradient(
-			ellipse 74% 60% at 50% 42%,
-			color-mix(in srgb, var(--ink) 48%, transparent) 0%,
-			color-mix(in srgb, var(--ink) 16%, transparent) 46%,
-			transparent 68%
-		);
+html[data-theme='light'] .ui-film {
+	opacity: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

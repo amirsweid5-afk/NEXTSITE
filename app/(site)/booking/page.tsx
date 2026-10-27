@@ -1,6 +1,5 @@
 import { BookNowSection } from '@/components/book-now-section'
 import { BookingHero } from '@/components/booking-hero'
-import { BookingScrollScene } from '@/components/booking-scroll-scene'
 import { getBookingServices } from '@/lib/bookings/get-booking-services'
 
 export const metadata = {
@@ -14,11 +13,8 @@ export default async function BookingPage () {
 
 	return (
 		<>
-			<BookingScrollScene />
-			<div id="booking-journey" className="relative z-10">
-				<BookingHero />
-				<BookNowSection services={services} />
-			</div>
+			<BookingHero />
+			<BookNowSection services={services} />
 		</>
 	)
 }

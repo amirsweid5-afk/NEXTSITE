@@ -10,19 +10,29 @@ export async function getBookingServices ():
 	Promise<BookingServiceOption[]> {
 	await connection()
 
-	const supabase = createAdminClient()
-	const { data, error } = await supabase
-		.from('services')
-		.select('service_id, name, price')
-		.order('price', { ascending: true })
+	try {
+		const supabase = createAdminClient()
+		const query = supabase
+			.from('services')
+			.select('service_id, name, price')
+			.order('price', { ascending: true })
+		const pending = query.then((result) => result)
+		void pending.catch(() => undefined)
+		let timer: ReturnType<typeof setTimeout> | undefined
+		const timeout = new Promise<never>((_, reject) => {
+			timer = setTimeout(() => reject(new Error('timeout')), 4000)
+		})
+		const { data, error } = await Promise.race([pending, timeout])
+		if (timer) clearTimeout(timer)
 
-	if (error) {
-		throw new Error(error.message)
+		if (error || !data) return []
+
+		return data.map((service) => ({
+			serviceId: service.service_id,
+			name: service.name,
+			price: Number(service.price),
+		}))
+	} catch {
+		return []
 	}
-
-	return (data ?? []).map((service) => ({
-		serviceId: service.service_id,
-		name: service.name,
-		price: Number(service.price),
-	}))
 }

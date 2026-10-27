@@ -76,7 +76,7 @@ export function HomeHero () {
 				/>
 				<div className="home-hero-vignette absolute inset-0" />
 				<svg
-					className="home-hero-grid absolute inset-x-0 bottom-0 h-[58%] w-full opacity-70"
+					className="home-hero-grid absolute inset-x-0 bottom-0 h-[58%] w-full opacity-30"
 					viewBox="0 0 1440 520"
 					preserveAspectRatio="none"
 					fill="none"

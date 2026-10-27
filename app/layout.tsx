@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Berkshire_Swash, Cairo, Emilys_Candy } from 'next/font/google'
+import { UiFilmBackdrop } from '@/components/ui-film-backdrop'
 import { cookies } from 'next/headers'
 import { LanguageProvider } from '@/components/language-provider'
 import { DEFAULT_LANGUAGE, isLanguage } from '@/lib/language'
@@ -65,17 +67,19 @@ export default async function RootLayout ({
 			suppressHydrationWarning
 			className={`${emilysCandy.variable} ${cairo.variable} ${berkshireSwash.variable} dark h-full bg-background text-foreground antialiased`}
 		>
-			<head>
-				<script
+			<body className="flex min-h-full flex-col font-sans">
+				<Script
 					id="theme-init"
+					strategy="beforeInteractive"
 					dangerouslySetInnerHTML={{
 						__html: BOOTSTRAP_SCRIPT,
 					}}
 				/>
-			</head>
-			<body className="flex min-h-full flex-col font-sans">
+				<UiFilmBackdrop />
 				<LanguageProvider initialLanguage={language}>
-					{children}
+					<div className="relative z-10 flex min-h-full flex-1 flex-col">
+						{children}
+					</div>
 				</LanguageProvider>
 			</body>
 		</html>
