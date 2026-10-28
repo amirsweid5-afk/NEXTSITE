@@ -15,10 +15,14 @@ interface LoginFormValues {
 	password: string
 }
 
+interface LoginFormProps {
+	nextPath?: string
+}
+
 /**
  * Email and password form for returning users.
  */
-export function LoginForm () {
+export function LoginForm ({ nextPath = '/' }: LoginFormProps) {
 	const copy = useContent().auth
 	const [saveError, setSaveError] = useState<string | null>(null)
 
@@ -42,7 +46,13 @@ export function LoginForm () {
 
 	async function handleSubmit (values: LoginFormValues) {
 		setSaveError(null)
-		const result = await login(values)
+		let result
+		try {
+			result = await login(values, nextPath)
+		} catch {
+			setSaveError('This page is out of date. Refresh it, then try again.')
+			return
+		}
 
 		if (!result.ok) {
 			setSaveError(result.error ?? copy.loginError)
@@ -148,7 +158,11 @@ export function LoginForm () {
 				<p className="mt-6 text-center text-sm text-white/55">
 					{copy.noAccount}{' '}
 					<Link
-						href="/sign-in"
+						href={
+							nextPath === '/'
+								? '/sign-in'
+								: '/sign-in?next=' + encodeURIComponent(nextPath)
+						}
 						className="text-orange hover:text-highlight"
 					>
 						{copy.goSignIn}

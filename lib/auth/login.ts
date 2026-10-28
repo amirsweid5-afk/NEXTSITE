@@ -6,6 +6,11 @@ import {
 	type AuthActionResult,
 } from '@/lib/auth/auth-schema'
 import { ensureAppUser } from '@/lib/auth/ensure-app-user'
+import {
+	startLocalSession,
+	verifyLocalAccount,
+} from '@/lib/auth/local-accounts'
+import { isUnreachableError } from '@/lib/bookings/service-catalog'
 import { createClient } from '@/lib/supabase/server'
 
 /**
@@ -13,6 +18,7 @@ import { createClient } from '@/lib/supabase/server'
  */
 export async function login (
 	input: unknown,
+	nextPath?: string,
 ): Promise<AuthActionResult> {
 	const parsed = loginInputSchema.safeParse(input)
 
@@ -23,27 +29,83 @@ export async function login (
 		}
 	}
 
-	const supabase = await createClient()
-	const { data, error } = await supabase.auth.signInWithPassword({
-		email: parsed.data.email,
-		password: parsed.data.password,
-	})
+	const destination = safeNextPath(nextPath)
 
-	if (error || !data.user?.email) {
+	try {
+		const supabase = await createClient()
+		const { data, error } = await withTimeout(
+			supabase.auth.signInWithPassword({
+				email: parsed.data.email,
+				password: parsed.data.password,
+			}),
+			5000,
+		)
+
+		if (!error && data.user?.email) {
+			return finishRemoteLogin(data.user, destination)
+		}
+
+		if (error && !isUnreachableError(error)) {
+			const local = await verifyLocalAccount(
+				parsed.data.email,
+				parsed.data.password,
+			)
+			if (!local) {
+				return {
+					ok: false,
+					error: 'Invalid email or password.',
+				}
+			}
+			await startLocalSession(local.userId)
+			redirect(destination)
+		}
+	} catch (err) {
+		if (!isUnreachableError(err)) {
+			return {
+				ok: false,
+				error: 'Invalid email or password.',
+			}
+		}
+	}
+
+	const local = await verifyLocalAccount(
+		parsed.data.email,
+		parsed.data.password,
+	)
+	if (!local) {
 		return {
 			ok: false,
 			error: 'Invalid email or password.',
 		}
 	}
 
-	const metadataName = data.user.user_metadata?.name
+	await startLocalSession(local.userId)
+	redirect(destination)
+}
+
+async function finishRemoteLogin (
+	user: {
+		id: string
+		email?: string
+		user_metadata?: Record<string, unknown>
+	},
+	destination: string,
+): Promise<AuthActionResult> {
+	if (!user.email) {
+		return {
+			ok: false,
+			error: 'Invalid email or password.',
+		}
+	}
+
+	const metadataName = user.user_metadata?.name
 	const name = typeof metadataName === 'string' && metadataName !== ''
 		? metadataName
-		: data.user.email.split('@')[0]
+		: user.email.split('@')[0]
 
 	const profile = await ensureAppUser({
-		id: data.user.id,
-		email: data.user.email,
+		id: user.id,
+		email: user.email,
 		name,
 	})
 
@@ -55,5 +117,22 @@ export async function login (
 		}
 	}
 
-	redirect('/')
+	redirect(destination)
+}
+
+function safeNextPath (value: string | undefined) {
+	if (!value || !value.startsWith('/') || value.startsWith('//')) {
+		return '/'
+	}
+	return value
+}
+
+function withTimeout<T> (work: Promise<T>, ms: number): Promise<T> {
+	let timer: ReturnType<typeof setTimeout> | undefined
+	const timeout = new Promise<never>((_, reject) => {
+		timer = setTimeout(() => reject(new Error('timeout')), ms)
+	})
+	return Promise.race([work, timeout]).finally(() => {
+		if (timer) clearTimeout(timer)
+	})
 }

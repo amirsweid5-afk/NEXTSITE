@@ -5,6 +5,17 @@ export const metadata = {
 	description: 'Log in to your NEXTSITE account.',
 }
 
-export default function LoginPage () {
-	return <LoginForm />
+interface LoginPageProps {
+	searchParams: Promise<{ next?: string | string[] }>
+}
+
+export default async function LoginPage ({
+	searchParams,
+}: LoginPageProps) {
+	const params = await searchParams
+	const nextValue = Array.isArray(params.next)
+		? params.next[0]
+		: params.next
+
+	return <LoginForm nextPath={nextValue} />
 }

@@ -1,5 +1,6 @@
 import 'server-only'
 
+import { readLocalSession } from '@/lib/auth/local-accounts'
 import { createClient } from '@/lib/supabase/server'
 import { type UserRole } from '@/lib/supabase/database'
 
@@ -37,7 +38,7 @@ async function loadProfile (): Promise<CurrentProfile | null> {
 	const user = auth?.data.user
 
 	if (!user) {
-		return null
+		return readLocalProfile()
 	}
 
 	const profileQuery = supabase
@@ -53,7 +54,7 @@ async function loadProfile (): Promise<CurrentProfile | null> {
 	])
 
 	if (!profileResult || profileResult.error || !profileResult.data) {
-		return null
+		return readLocalProfile()
 	}
 
 	const profile = profileResult.data
@@ -69,5 +70,19 @@ async function loadProfile (): Promise<CurrentProfile | null> {
 		email: profile.email,
 		role: profile.role,
 		isAdmin: profile.role === 'admin',
+	}
+}
+
+async function readLocalProfile (): Promise<CurrentProfile | null> {
+	const local = await readLocalSession()
+	if (!local) return null
+
+	return {
+		userId: local.userId,
+		authUserId: local.userId,
+		name: local.name,
+		email: local.email,
+		role: 'customer',
+		isAdmin: false,
 	}
 }

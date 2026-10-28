@@ -10,6 +10,7 @@ import {
 	isUnreachableError,
 	isUnreachableMessage,
 } from '@/lib/bookings/service-catalog'
+import { getCurrentProfile } from '@/lib/auth/get-current-profile'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 export interface CreateBookingResult {
@@ -30,6 +31,14 @@ export async function createBooking (
 		return {
 			ok: false,
 			error: 'Please check the form and try again.',
+		}
+	}
+
+	const profile = await getCurrentProfile()
+	if (!profile) {
+		return {
+			ok: false,
+			error: 'Sign in before sending a booking.',
 		}
 	}
 

@@ -17,10 +17,14 @@ interface SignInFormValues {
 	confirmPassword: string
 }
 
+interface SignInFormProps {
+	nextPath?: string
+}
+
 /**
  * New-account form. Passwords are hashed by Supabase Auth.
  */
-export function SignInForm () {
+export function SignInForm ({ nextPath = '/' }: SignInFormProps) {
 	const copy = useContent().auth
 	const [saveError, setSaveError] = useState<string | null>(null)
 	const [isConfirmed, setIsConfirmed] = useState(false)
@@ -56,7 +60,13 @@ export function SignInForm () {
 		setSaveError(null)
 		setIsConfirmed(false)
 
-		const result = await signIn(values)
+		let result
+		try {
+			result = await signIn(values, nextPath)
+		} catch {
+			setSaveError('This page is out of date. Refresh it, then try again.')
+			return
+		}
 
 		if (!result.ok) {
 			setSaveError(result.error ?? copy.signInError)
@@ -236,7 +246,11 @@ export function SignInForm () {
 				<p className="mt-6 text-center text-sm text-white/55">
 					{copy.hasAccount}{' '}
 					<Link
-						href="/login"
+						href={
+							nextPath === '/'
+								? '/login'
+								: '/login?next=' + encodeURIComponent(nextPath)
+						}
 						className="text-gold hover:text-highlight"
 					>
 						{copy.goLogin}

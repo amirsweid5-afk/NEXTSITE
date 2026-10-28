@@ -1,5 +1,7 @@
+import { redirect } from 'next/navigation'
 import { BookNowSection } from '@/components/book-now-section'
 import { BookingHero } from '@/components/booking-hero'
+import { getCurrentProfile } from '@/lib/auth/get-current-profile'
 import { getBookingServices } from '@/lib/bookings/get-booking-services'
 
 export const metadata = {
@@ -24,6 +26,14 @@ export default async function BookingPage ({
 	const requested = Array.isArray(params.service)
 		? params.service[0]
 		: params.service
+	const profile = await getCurrentProfile()
+	const nextPath = requested
+		? '/booking?service=' + encodeURIComponent(requested)
+		: '/booking'
+	if (!profile) {
+		redirect('/login?next=' + encodeURIComponent(nextPath))
+	}
+
 	const services = await getBookingServices()
 	const match = services.find((service) => service.slug === requested)
 
