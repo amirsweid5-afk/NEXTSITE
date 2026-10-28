@@ -38,7 +38,7 @@ export function AdminClientsPanel ({
 				value={query}
 				onChange={(event) => setQuery(event.target.value)}
 				placeholder="Search clients..."
-				className="w-full rounded-xl border border-white/10 bg-[var(--admin-surface)] px-4 py-2.5 text-sm text-white placeholder:text-white/35 focus:border-violet-400/50 focus:outline-none sm:max-w-md"
+				className="w-full rounded-xl border border-white/10 bg-[var(--admin-surface)] px-4 py-2.5 text-sm text-white placeholder:text-white/35 focus:border-cyan-300/50 focus:outline-none sm:max-w-md"
 			/>
 
 			{filtered.length === 0 ? (
@@ -85,7 +85,7 @@ export function AdminClientsPanel ({
 															: client.email
 													})
 												}}
-												className="mt-2 text-xs font-medium text-violet-300 hover:underline"
+												className="mt-2 text-xs font-medium text-cyan-300 hover:underline"
 											>
 												{isOpen ? 'Hide history' : 'View history'}
 											</button>
@@ -106,7 +106,7 @@ export function AdminClientsPanel ({
 										<td className="px-4 py-4 align-top text-sm text-white">
 											{client.bookingCount}
 										</td>
-										<td className="px-4 py-4 align-top text-sm text-violet-600 dark:text-violet-200">
+										<td className="px-4 py-4 align-top text-sm text-cyan-700 dark:text-cyan-100">
 											{formatUsd(client.totalPaid)}
 										</td>
 										<td className="px-4 py-4 align-top text-sm text-white/70">

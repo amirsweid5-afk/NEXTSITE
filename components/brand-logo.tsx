@@ -42,7 +42,10 @@ export function BrandLogo ({
 					fill
 					sizes="32px"
 					priority
-					className="object-contain object-center scale-[0.86]"
+					className={[
+						'object-contain object-center scale-[0.86]',
+						'[filter:hue-rotate(152deg)_saturate(1.45)_brightness(1.08)]',
+					].join(' ')}
 				/>
 			</span>
 		</span>

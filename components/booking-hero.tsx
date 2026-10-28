@@ -86,17 +86,17 @@ function PortalGlyph () {
 					>
 						<stop
 							offset="0%"
-							stopColor="#d3ac2c"
+							stopColor="#8eebf8"
 							stopOpacity="0.95"
 						/>
 						<stop
 							offset="42%"
-							stopColor="#e87812"
+							stopColor="#2ec4de"
 							stopOpacity="0.55"
 						/>
 						<stop
 							offset="100%"
-							stopColor="#e87812"
+							stopColor="#2ec4de"
 							stopOpacity="0"
 						/>
 					</radialGradient>
@@ -109,17 +109,17 @@ function PortalGlyph () {
 					>
 						<stop
 							offset="0%"
-							stopColor="#e87812"
+							stopColor="#2ec4de"
 							stopOpacity="0"
 						/>
 						<stop
 							offset="50%"
-							stopColor="#e87812"
+							stopColor="#2ec4de"
 							stopOpacity="0.9"
 						/>
 						<stop
 							offset="100%"
-							stopColor="#d3ac2c"
+							stopColor="#8eebf8"
 							stopOpacity="0"
 						/>
 					</linearGradient>
@@ -139,7 +139,7 @@ function PortalGlyph () {
 					cx="280"
 					cy="280"
 					r="168"
-					stroke="#e87812"
+					stroke="#2ec4de"
 					strokeOpacity="0.45"
 					strokeWidth="1.2"
 					strokeDasharray="3 10"
@@ -148,7 +148,7 @@ function PortalGlyph () {
 					cx="280"
 					cy="280"
 					r="118"
-					stroke="#d3ac2c"
+					stroke="#8eebf8"
 					strokeOpacity="0.28"
 					strokeWidth="1"
 				/>
@@ -170,13 +170,13 @@ function PortalGlyph () {
 					cx="280"
 					cy="280"
 					r="7"
-					fill="#e87812"
+					fill="#2ec4de"
 				/>
 
 				<path
 					className="booking-hero-ring"
 					d="M80 300 C 160 220, 240 380, 280 280 S 420 160, 500 240"
-					stroke="#e87812"
+					stroke="#2ec4de"
 					strokeWidth="1"
 					strokeDasharray="6 10"
 					opacity="0.45"
@@ -184,7 +184,7 @@ function PortalGlyph () {
 				<path
 					className="booking-hero-ring"
 					d="M70 220 C 180 140, 260 90, 360 130 S 490 210, 510 300"
-					stroke="#d3ac2c"
+					stroke="#8eebf8"
 					strokeWidth="1"
 					strokeDasharray="5 12"
 					opacity="0.35"
@@ -197,7 +197,7 @@ function PortalGlyph () {
 						cx={x}
 						cy={y}
 						r="1.8"
-						fill="#d3ac2c"
+						fill="#8eebf8"
 						style={{
 							animationDelay: `${index * 0.22}s`,
 						}}
@@ -251,7 +251,7 @@ export function BookingHero () {
 			className={[
 				'relative isolate overflow-hidden',
 				'min-h-[calc(100svh-4.5rem)]',
-				'bg-ink text-white',
+				'bg-transparent text-white',
 			].join(' ')}
 		>
 			<div
@@ -306,7 +306,7 @@ export function BookingHero () {
 							aria-hidden="true"
 							className={[
 								'h-1.5 w-1.5 rounded-full bg-orange',
-								'shadow-[0_0_10px_#e87812]',
+								'shadow-[0_0_10px_#2ec4de]',
 							].join(' ')}
 						/>
 						{copy.eyebrow}

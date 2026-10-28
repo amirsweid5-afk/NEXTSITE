@@ -38,7 +38,7 @@ export function AboutHero () {
 			className={[
 				'relative isolate overflow-hidden',
 				'min-h-[calc(100svh-4.5rem)]',
-				'bg-ink text-white',
+				'bg-transparent text-white',
 			].join(' ')}
 		>
 			<div
@@ -98,17 +98,17 @@ export function AboutHero () {
 						>
 							<stop
 								offset="0%"
-								stopColor="#e87812"
+								stopColor="#2ec4de"
 								stopOpacity="0"
 							/>
 							<stop
 								offset="50%"
-								stopColor="#e87812"
+								stopColor="#2ec4de"
 								stopOpacity="0.8"
 							/>
 							<stop
 								offset="100%"
-								stopColor="#d3ac2c"
+								stopColor="#8eebf8"
 								stopOpacity="0"
 							/>
 						</linearGradient>
@@ -129,7 +129,7 @@ export function AboutHero () {
 							cx={x}
 							cy={y}
 							r="1.8"
-							fill="#e87812"
+							fill="#2ec4de"
 							opacity="0.55"
 						/>
 					))}
@@ -159,7 +159,7 @@ export function AboutHero () {
 					>
 						<span
 							aria-hidden="true"
-							className="h-1.5 w-1.5 rounded-full bg-orange shadow-[0_0_10px_#e87812]"
+							className="h-1.5 w-1.5 rounded-full bg-orange shadow-[0_0_10px_#2ec4de]"
 						/>
 						{copy.eyebrow}
 					</p>
@@ -263,7 +263,7 @@ export function AboutHero () {
 						<path
 							className="about-hero-line"
 							d="M70 90 C 140 120, 180 160, 220 190"
-							stroke="#e87812"
+							stroke="#2ec4de"
 							strokeWidth="1"
 							strokeDasharray="4 8"
 							opacity="0.55"
@@ -271,7 +271,7 @@ export function AboutHero () {
 						<path
 							className="about-hero-line"
 							d="M490 70 C 430 110, 390 150, 350 180"
-							stroke="#d3ac2c"
+							stroke="#8eebf8"
 							strokeWidth="1"
 							strokeDasharray="4 8"
 							opacity="0.45"
@@ -279,7 +279,7 @@ export function AboutHero () {
 						<path
 							className="about-hero-line"
 							d="M80 360 C 150 330, 190 300, 240 280"
-							stroke="#e87812"
+							stroke="#2ec4de"
 							strokeWidth="1"
 							strokeDasharray="4 8"
 							opacity="0.4"
@@ -287,7 +287,7 @@ export function AboutHero () {
 						<path
 							className="about-hero-line"
 							d="M500 390 C 430 350, 390 310, 340 290"
-							stroke="#d3ac2c"
+							stroke="#8eebf8"
 							strokeWidth="1"
 							strokeDasharray="4 8"
 							opacity="0.4"
@@ -420,7 +420,7 @@ export function AboutHero () {
 									'hover:border-orange hover:shadow-[0_0_24px_rgba(232,120,18,0.25)]',
 								].join(' ')}
 							>
-								<span className="me-2 inline-block h-1.5 w-1.5 rounded-full bg-orange shadow-[0_0_8px_#e87812]" />
+								<span className="me-2 inline-block h-1.5 w-1.5 rounded-full bg-orange shadow-[0_0_8px_#2ec4de]" />
 								{label}
 							</div>
 						</div>

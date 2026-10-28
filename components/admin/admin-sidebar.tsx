@@ -50,7 +50,7 @@ export function AdminSidebar ({
 		>
 			<div className="flex h-16 items-center justify-between gap-2 border-b border-white/10 px-4">
 				{isCollapsed ? (
-					<span className="mx-auto text-sm font-semibold text-violet-500">
+					<span className="mx-auto text-sm font-semibold text-cyan-500">
 						N
 					</span>
 				) : (
@@ -58,7 +58,7 @@ export function AdminSidebar ({
 						<p className="text-sm font-semibold tracking-wide text-white">
 							NEXTSITE
 						</p>
-						<p className="text-[0.65rem] uppercase tracking-[0.18em] text-violet-500/90">
+						<p className="text-[0.65rem] uppercase tracking-[0.18em] text-cyan-500/90">
 							Admin Portal
 						</p>
 					</div>
@@ -100,7 +100,7 @@ export function AdminSidebar ({
 								'text-sm font-medium transition duration-200',
 								isCollapsed ? 'justify-center' : '',
 								isActive
-									? 'bg-violet-500/20 text-violet-600 dark:text-violet-600 dark:text-violet-200'
+									? 'bg-cyan-500/20 text-cyan-700 dark:text-cyan-700 dark:text-cyan-100'
 									: 'text-white/60 hover:bg-white/5 hover:text-white',
 							].join(' ')}
 						>

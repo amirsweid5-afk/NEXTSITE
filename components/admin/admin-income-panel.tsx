@@ -180,12 +180,12 @@ export function AdminIncomePanel ({
 					value={query}
 					onChange={(event) => setQuery(event.target.value)}
 					placeholder="Search income..."
-					className="w-full rounded-xl border border-white/10 bg-[var(--admin-surface)] px-4 py-2.5 text-sm text-white placeholder:text-white/35 focus:border-violet-400/50 focus:outline-none sm:max-w-md"
+					className="w-full rounded-xl border border-white/10 bg-[var(--admin-surface)] px-4 py-2.5 text-sm text-white placeholder:text-white/35 focus:border-cyan-300/50 focus:outline-none sm:max-w-md"
 				/>
 				<button
 					type="button"
 					onClick={openCreate}
-					className="rounded-full bg-violet-500 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white"
+					className="rounded-full bg-cyan-500 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white"
 				>
 					Add income
 				</button>
@@ -193,7 +193,7 @@ export function AdminIncomePanel ({
 
 			<p className="text-sm text-white/50">
 				{totals.count} records · Completed total{' '}
-				<span className="font-semibold text-violet-600 dark:text-violet-200">
+				<span className="font-semibold text-cyan-700 dark:text-cyan-100">
 					{formatUsd(totals.total)}
 				</span>
 			</p>
@@ -315,7 +315,7 @@ export function AdminIncomePanel ({
 							type="button"
 							disabled={isPending}
 							onClick={handleSave}
-							className="rounded-full bg-violet-500 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white disabled:opacity-50"
+							className="rounded-full bg-cyan-500 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white disabled:opacity-50"
 						>
 							{isPending ? 'Saving...' : 'Save'}
 						</button>
@@ -368,7 +368,7 @@ export function AdminIncomePanel ({
 										{record.paymentCurrency}
 									</td>
 									<td className="px-4 py-3">
-										<span className="inline-flex rounded-full bg-violet-500/15 px-3 py-1 text-xs capitalize text-violet-600 dark:text-violet-200">
+										<span className="inline-flex rounded-full bg-cyan-500/15 px-3 py-1 text-xs capitalize text-cyan-700 dark:text-cyan-100">
 											{record.status}
 										</span>
 									</td>
@@ -380,7 +380,7 @@ export function AdminIncomePanel ({
 											<button
 												type="button"
 												onClick={() => openEdit(record)}
-												className="text-xs font-medium text-violet-600 dark:text-violet-300 hover:underline"
+												className="text-xs font-medium text-cyan-700 dark:text-cyan-300 hover:underline"
 											>
 												Edit
 											</button>

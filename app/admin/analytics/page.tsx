@@ -93,7 +93,7 @@ export default async function AdminAnalyticsPage () {
 									<span className="text-sm text-white/75">
 										{item.name}
 									</span>
-									<span className="text-sm font-semibold text-violet-600 dark:text-violet-200">
+									<span className="text-sm font-semibold text-cyan-700 dark:text-cyan-100">
 										{item.count}
 									</span>
 								</li>
@@ -120,7 +120,7 @@ export default async function AdminAnalyticsPage () {
 									<span className="text-sm text-white/75">
 										{item.serviceName}
 									</span>
-									<span className="text-sm font-semibold text-violet-600 dark:text-violet-200">
+									<span className="text-sm font-semibold text-cyan-700 dark:text-cyan-100">
 										{formatUsd(item.amount)}
 									</span>
 								</li>

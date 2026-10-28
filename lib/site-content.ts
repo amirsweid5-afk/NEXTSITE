@@ -287,11 +287,11 @@ const ENGLISH: SiteContent = {
 	home: {
 		hero: {
 			brand: 'NEXTSITE',
-			title: 'Websites designed around your ideas.',
+			title: 'Your Vision. Our Code.',
 			description:
 				'Landing pages, static sites, and personal brands — built modern, fast, and unmistakably yours.',
-			ctaLabel: 'Book Now',
-			secondaryCtaLabel: 'View Services',
+			ctaLabel: 'Start Your Project',
+			secondaryCtaLabel: 'Explore Our Services',
 		},
 		services: {
 			eyebrow: 'Services',
@@ -717,11 +717,11 @@ const ARABIC: SiteContent = {
 	home: {
 		hero: {
 			brand: 'NEXTSITE',
-			title: 'مواقع مصمّمة حول أفكارك.',
+			title: 'رؤيتك. كودنا.',
 			description:
 				'صفحات هبوط ومواقع ثابتة وهويّات شخصية — حديثة وسريعة وبصمتك أنت.',
-			ctaLabel: 'احجز الآن',
-			secondaryCtaLabel: 'عرض الخدمات',
+			ctaLabel: 'ابدأ مشروعك',
+			secondaryCtaLabel: 'استكشف خدماتنا',
 		},
 		services: {
 			eyebrow: 'الخدمات',

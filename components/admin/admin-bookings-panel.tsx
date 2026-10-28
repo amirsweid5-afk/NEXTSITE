@@ -91,7 +91,7 @@ export function AdminBookingsPanel ({
 						setPage(1)
 					}}
 					placeholder="Search clients, email, phone, service..."
-					className="w-full rounded-xl border border-white/10 bg-[var(--admin-surface)] px-4 py-2.5 text-sm text-white placeholder:text-white/35 focus:border-violet-400/50 focus:outline-none sm:max-w-md"
+					className="w-full rounded-xl border border-white/10 bg-[var(--admin-surface)] px-4 py-2.5 text-sm text-white placeholder:text-white/35 focus:border-cyan-300/50 focus:outline-none sm:max-w-md"
 				/>
 				<select
 					value={statusFilter}
@@ -99,7 +99,7 @@ export function AdminBookingsPanel ({
 						setStatusFilter(event.target.value)
 						setPage(1)
 					}}
-					className="rounded-xl border border-white/10 bg-[var(--admin-surface)] px-4 py-2.5 text-sm text-white focus:border-violet-400/50 focus:outline-none"
+					className="rounded-xl border border-white/10 bg-[var(--admin-surface)] px-4 py-2.5 text-sm text-white focus:border-cyan-300/50 focus:outline-none"
 				>
 					<option value="all">All statuses</option>
 					<option value="pending">Pending</option>
@@ -169,7 +169,7 @@ export function AdminBookingsPanel ({
 																: booking.bookingId
 														})
 													}}
-													className="text-xs font-medium text-violet-300 hover:underline"
+													className="text-xs font-medium text-cyan-300 hover:underline"
 												>
 													{isOpen ? 'Hide details' : 'See details'}
 												</button>
@@ -213,7 +213,7 @@ export function AdminBookingsPanel ({
 																		status: 'confirmed',
 																	}))
 																}}
-																className="rounded-full bg-violet-500 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+																className="rounded-full bg-cyan-500 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
 															>
 																Accept
 															</button>
@@ -278,7 +278,7 @@ export function AdminBookingsPanel ({
 																		priceUsd,
 																	}))
 																}}
-																className="rounded-full bg-violet-500/90 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+																className="rounded-full bg-cyan-500/90 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
 															>
 																Save price
 															</button>
@@ -321,7 +321,7 @@ export function AdminBookingsPanel ({
 																		return result
 																	})
 																}}
-																className="rounded-full border border-violet-400/40 px-3 py-1.5 text-xs font-semibold text-violet-600 dark:text-violet-200 disabled:opacity-50"
+																className="rounded-full border border-cyan-300/40 px-3 py-1.5 text-xs font-semibold text-cyan-700 dark:text-cyan-100 disabled:opacity-50"
 															>
 																Add payment
 															</button>
@@ -337,7 +337,7 @@ export function AdminBookingsPanel ({
 																					dateStyle: 'medium',
 																				}).format(new Date(payment.paidAt))}
 																			</span>
-																			<span className="text-violet-600 dark:text-violet-200">
+																			<span className="text-cyan-700 dark:text-cyan-100">
 																				{formatUsd(payment.amountUsd)}
 																			</span>
 																		</li>
@@ -370,7 +370,7 @@ export function AdminBookingsPanel ({
 											</>
 										) : null}
 										<td className="px-4 py-4 align-top">
-											<span className="inline-flex rounded-full bg-violet-500/15 px-3 py-1 text-xs font-medium capitalize text-violet-600 dark:text-violet-200">
+											<span className="inline-flex rounded-full bg-cyan-500/15 px-3 py-1 text-xs font-medium capitalize text-cyan-700 dark:text-cyan-100">
 												{booking.status === 'confirmed'
 													? 'accepted'
 													: booking.status === 'cancelled'

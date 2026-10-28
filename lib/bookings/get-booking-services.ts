@@ -1,6 +1,10 @@
 import 'server-only'
 import { connection } from 'next/server'
 import { type BookingServiceOption } from '@/lib/bookings/booking-schema'
+import {
+	isOfflineClientError,
+	SERVICE_CATALOG,
+} from '@/lib/bookings/service-catalog'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 /**
@@ -16,7 +20,7 @@ export async function getBookingServices ():
 			.from('services')
 			.select('service_id, name, price')
 			.order('price', { ascending: true })
-		const pending = query.then((result) => result)
+		const pending = Promise.resolve(query)
 		void pending.catch(() => undefined)
 		let timer: ReturnType<typeof setTimeout> | undefined
 		const timeout = new Promise<never>((_, reject) => {
@@ -24,6 +28,10 @@ export async function getBookingServices ():
 		})
 		const { data, error } = await Promise.race([pending, timeout])
 		if (timer) clearTimeout(timer)
+
+		if (error && isOfflineClientError(error)) {
+			return SERVICE_CATALOG
+		}
 
 		if (error || !data) return []
 
@@ -33,6 +41,6 @@ export async function getBookingServices ():
 			price: Number(service.price),
 		}))
 	} catch {
-		return []
+		return SERVICE_CATALOG
 	}
 }

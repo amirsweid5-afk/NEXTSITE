@@ -201,14 +201,14 @@ export function AdminProjectPanel ({
 						value={query}
 						onChange={(event) => setQuery(event.target.value)}
 						placeholder="Search projects..."
-						className="w-full rounded-xl border border-white/10 bg-[var(--admin-surface)] px-4 py-2.5 text-sm text-white placeholder:text-white/35 focus:border-violet-400/50 focus:outline-none sm:max-w-md"
+						className="w-full rounded-xl border border-white/10 bg-[var(--admin-surface)] px-4 py-2.5 text-sm text-white placeholder:text-white/35 focus:border-cyan-300/50 focus:outline-none sm:max-w-md"
 					/>
 					<select
 						value={statusFilter}
 						onChange={(event) => {
 							setStatusFilter(event.target.value)
 						}}
-						className="rounded-xl border border-white/10 bg-[var(--admin-surface)] px-4 py-2.5 text-sm text-white focus:border-violet-400/50 focus:outline-none"
+						className="rounded-xl border border-white/10 bg-[var(--admin-surface)] px-4 py-2.5 text-sm text-white focus:border-cyan-300/50 focus:outline-none"
 					>
 						<option value="all">All statuses</option>
 						{PROJECT_STATUSES.map((status) => (
@@ -221,7 +221,7 @@ export function AdminProjectPanel ({
 				<button
 					type="button"
 					onClick={openCreate}
-					className="rounded-full bg-violet-500 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white"
+					className="rounded-full bg-cyan-500 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white"
 				>
 					Add project
 				</button>
@@ -384,7 +384,7 @@ export function AdminProjectPanel ({
 							type="button"
 							disabled={isPending}
 							onClick={handleSave}
-							className="rounded-full bg-violet-500 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white disabled:opacity-50"
+							className="rounded-full bg-cyan-500 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white disabled:opacity-50"
 						>
 							{isPending ? 'Saving...' : 'Save'}
 						</button>
@@ -444,7 +444,7 @@ export function AdminProjectPanel ({
 										{formatUsd(record.price)}
 									</td>
 									<td className="px-4 py-3 align-top">
-										<span className="inline-flex rounded-full bg-violet-500/15 px-3 py-1 text-xs capitalize text-violet-600 dark:text-violet-200">
+										<span className="inline-flex rounded-full bg-cyan-500/15 px-3 py-1 text-xs capitalize text-cyan-700 dark:text-cyan-100">
 											{record.status.replace('_', ' ')}
 										</span>
 									</td>
@@ -456,7 +456,7 @@ export function AdminProjectPanel ({
 											<button
 												type="button"
 												onClick={() => openEdit(record)}
-												className="text-xs font-medium text-violet-600 dark:text-violet-300 hover:underline"
+												className="text-xs font-medium text-cyan-700 dark:text-cyan-300 hover:underline"
 											>
 												Edit
 											</button>

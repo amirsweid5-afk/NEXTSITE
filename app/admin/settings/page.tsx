@@ -46,7 +46,7 @@ export default async function AdminSettingsPage () {
 							Role
 						</dt>
 						<dd className="mt-2">
-							<span className="inline-flex rounded-full bg-violet-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-violet-600 dark:text-violet-200">
+							<span className="inline-flex rounded-full bg-cyan-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-700 dark:text-cyan-100">
 								{profile.role}
 							</span>
 						</dd>

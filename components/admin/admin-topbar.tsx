@@ -43,7 +43,7 @@ export function AdminTopbar ({
 
 			<div className="flex items-center gap-3">
 				<ThemeToggle />
-				<span className="hidden rounded-full bg-violet-500/20 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-violet-600 dark:text-violet-600 dark:text-violet-200 sm:inline-flex">
+				<span className="hidden rounded-full bg-cyan-500/20 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-cyan-700 dark:text-cyan-700 dark:text-cyan-100 sm:inline-flex">
 					Admin
 				</span>
 				<div className="text-end">
@@ -56,7 +56,7 @@ export function AdminTopbar ({
 				</div>
 				<Link
 					href="/admin/settings"
-					className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-violet-500/30 text-sm font-semibold text-violet-700 dark:text-violet-100"
+					className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-cyan-500/30 text-sm font-semibold text-cyan-800 dark:text-cyan-100"
 					aria-label="Settings"
 				>
 					{adminName.slice(0, 1).toUpperCase()}

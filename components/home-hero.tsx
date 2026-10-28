@@ -60,7 +60,7 @@ export function HomeHero () {
 		<section
 			className={[
 				'relative isolate flex overflow-hidden',
-				'bg-ink text-white',
+				'bg-transparent text-white',
 				'sm:min-h-[calc(100svh-4.5rem)] sm:items-end',
 			].join(' ')}
 		>
@@ -91,17 +91,17 @@ export function HomeHero () {
 						>
 							<stop
 								offset="0%"
-								stopColor="#e87812"
+								stopColor="#2ec4de"
 								stopOpacity="0"
 							/>
 							<stop
 								offset="35%"
-								stopColor="#e87812"
+								stopColor="#2ec4de"
 								stopOpacity="0.35"
 							/>
 							<stop
 								offset="100%"
-								stopColor="#d3ac2c"
+								stopColor="#8eebf8"
 								stopOpacity="0.08"
 							/>
 						</linearGradient>
@@ -114,17 +114,17 @@ export function HomeHero () {
 						>
 							<stop
 								offset="0%"
-								stopColor="#e87812"
+								stopColor="#2ec4de"
 								stopOpacity="0"
 							/>
 							<stop
 								offset="50%"
-								stopColor="#e87812"
+								stopColor="#2ec4de"
 								stopOpacity="0.9"
 							/>
 							<stop
 								offset="100%"
-								stopColor="#d3ac2c"
+								stopColor="#8eebf8"
 								stopOpacity="0"
 							/>
 						</linearGradient>
@@ -144,7 +144,7 @@ export function HomeHero () {
 						<path
 							key={y}
 							d={`M0 ${y} H1440`}
-							stroke="#e87812"
+							stroke="#2ec4de"
 							strokeOpacity={0.12 + y / 2000}
 							strokeWidth="1"
 						/>
@@ -251,11 +251,11 @@ export function HomeHero () {
 							'inline-flex min-h-12 items-center',
 							'justify-center rounded-full',
 							'bg-orange px-8 text-sm font-semibold',
-							'uppercase tracking-[0.18em] text-ink',
-							'shadow-[0_0_32px_rgba(232,120,18,0.4)]',
+							'tracking-[0.06em] text-ink',
+							'shadow-[0_0_32px_rgba(46,196,222,0.4)]',
 							'transition duration-300',
 							'hover:bg-highlight',
-							'hover:shadow-[0_0_40px_rgba(209,172,44,0.45)]',
+							'hover:shadow-[0_0_40px_rgba(142,235,248,0.45)]',
 							'focus-visible:outline-2',
 							'focus-visible:outline-offset-4',
 						].join(' ')}
@@ -269,7 +269,7 @@ export function HomeHero () {
 							'justify-center rounded-full',
 							'border border-white/20 bg-white/5',
 							'px-8 text-sm font-semibold',
-							'uppercase tracking-[0.18em] text-white',
+							'tracking-[0.06em] text-white',
 							'backdrop-blur-sm transition duration-300',
 							'hover:border-orange/50 hover:bg-orange/10',
 							'hover:text-orange',

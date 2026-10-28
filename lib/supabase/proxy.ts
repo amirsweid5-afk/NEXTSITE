@@ -48,7 +48,12 @@ export async function updateSession (
 		},
 	)
 
-	await supabase.auth.getClaims()
+	await Promise.race([
+		supabase.auth.getClaims().catch(() => undefined),
+		new Promise((resolve) => {
+			setTimeout(resolve, 2500)
+		}),
+	])
 
 	return supabaseResponse
 }

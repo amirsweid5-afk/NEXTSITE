@@ -5,13 +5,13 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-	--ink: #010203;
-	--white: #f7f4ef;
-	--surface: color-mix(in srgb, #1d1d1f 97%, var(--white));
-	--stone: #3b3130;
-	--gold: #b16c04;
-	--highlight: #d3ac2c;
-	--orange: #e87812;
+	--ink: #071421;
+	--white: #f4fbfd;
+	--surface: color-mix(in srgb, #123044 96%, var(--white));
+	--stone: #1c4558;
+	--gold: #1498b8;
+	--highlight: #8eebf8;
+	--orange: #2ec4de;
 	--muted: var(--gold);
 	--accent: var(--highlight);
 	--line: var(--stone);
@@ -108,8 +108,8 @@ html {
 
 html[data-theme='light'] {
 	color-scheme: light;
-	--ink: #f7f4ef;
-	--white: #010203;
+	--ink: #e7f3f6;
+	--white: #071421;
 	--surface: color-mix(in srgb, var(--ink) 89%, var(--stone));
 	--background: var(--ink);
 	--foreground: var(--white);
@@ -118,7 +118,7 @@ html[data-theme='light'] {
 }
 
 html[data-theme='light'] .text-ink {
-	color: #010203;
+	color: #071421;
 }
 
 .theme-icon-moon {
@@ -135,32 +135,33 @@ html[data-theme='light'] .theme-icon-moon {
 
 /* Admin portal theme surfaces (follow data-theme like the public site). */
 .admin-portal {
-	--admin-bg: #0a0a0f;
-	--admin-surface: #14141c;
-	--admin-chrome: #121218;
-	--admin-topbar: color-mix(in srgb, #0e0e14 82%, transparent);
-	--admin-inset: #0a0a0f;
-	--admin-overlay: rgba(0, 0, 0, 0.6);
+	--admin-bg: transparent;
+	--admin-surface: #0d2433;
+	--admin-chrome: #0a1c2b;
+	--admin-topbar: color-mix(in srgb, #071421 78%, transparent);
+	--admin-inset: #081824;
+	--admin-overlay: rgba(4, 16, 24, 0.62);
 	--admin-chart-grid: rgba(255, 255, 255, 0.08);
 	--admin-chart-tick: rgba(255, 255, 255, 0.45);
-	--admin-chart-cursor: rgba(139, 92, 246, 0.08);
-	--admin-chart-tooltip-bg: #14141c;
-	--admin-chart-tooltip-border: rgba(255, 255, 255, 0.1);
-	--admin-chart-tooltip-fg: #ffffff;
-	background: var(--admin-bg);
+	--admin-chart-cursor: rgba(46, 196, 222, 0.12);
+	--admin-chart-tooltip-bg: #0d2433;
+	--admin-chart-tooltip-border: rgba(142, 235, 248, 0.2);
+	--admin-chart-tooltip-fg: #f4fbfd;
+	background: transparent;
 	color: var(--white);
 }
 
 html[data-theme='light'] .admin-portal {
-	--admin-bg: #f3f1f8;
+	background: var(--admin-bg);
+	--admin-bg: #e7f3f6;
 	--admin-surface: #ffffff;
 	--admin-chrome: #ffffff;
 	--admin-topbar: color-mix(in srgb, #ffffff 88%, transparent);
-	--admin-inset: #f7f5fc;
-	--admin-overlay: rgba(18, 18, 28, 0.35);
-	--admin-chart-grid: rgba(18, 18, 24, 0.08);
-	--admin-chart-tick: rgba(18, 18, 24, 0.45);
-	--admin-chart-cursor: rgba(124, 58, 237, 0.1);
+	--admin-inset: #f3fafb;
+	--admin-overlay: rgba(7, 20, 33, 0.35);
+	--admin-chart-grid: rgba(7, 20, 33, 0.08);
+	--admin-chart-tick: rgba(7, 20, 33, 0.45);
+	--admin-chart-cursor: rgba(20, 152, 184, 0.12);
 	--admin-chart-tooltip-bg: #ffffff;
 	--admin-chart-tooltip-border: rgba(18, 18, 24, 0.12);
 	--admin-chart-tooltip-fg: #121218;
@@ -193,10 +194,10 @@ html[lang='ar'] .uppercase {
 .home-hero-vignette {
 	background: linear-gradient(
 		to bottom,
-		color-mix(in srgb, var(--ink) 55%, transparent) 0%,
-		transparent 28%,
-		transparent 55%,
-		color-mix(in srgb, var(--ink) 88%, transparent) 100%
+		color-mix(in srgb, var(--ink) 22%, transparent) 0%,
+		transparent 24%,
+		transparent 68%,
+		color-mix(in srgb, var(--ink) 36%, transparent) 100%
 	);
 }
 
@@ -659,6 +660,18 @@ html[data-theme='light'] .home-hero-beam {
 
 .our-story-delay-9 {
 	transition-delay: 0.68s;
+}
+
+.globe-stage {
+	position: fixed;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	background: #071421;
+}
+
+html[data-theme='light'] .globe-stage {
+	background: transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {

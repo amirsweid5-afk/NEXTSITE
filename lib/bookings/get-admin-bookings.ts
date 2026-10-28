@@ -12,6 +12,7 @@ import {
 	type AdminRevenueSummary,
 	type MonthlyRevenuePoint,
 } from '@/lib/bookings/admin-dashboard-types'
+import { listOfflineBookingCards } from '@/lib/bookings/offline-bookings'
 import { createClient } from '@/lib/supabase/server'
 
 export type {
@@ -36,47 +37,66 @@ interface PaymentRow {
  */
 export async function getAdminRevenueDashboard ():
 	Promise<AdminRevenueDashboardData> {
-	const supabase = await createClient()
+	const [remote, offline] = await Promise.all([
+		loadRemoteBookings(),
+		listOfflineBookingCards(),
+	])
+	const seen = new Set(remote.map((booking) => booking.bookingId))
+	const bookings = [
+		...remote,
+		...offline.filter((booking) => !seen.has(booking.bookingId)),
+	].sort((left, right) => {
+		return right.createdAt.localeCompare(left.createdAt)
+	})
 
-	const { data, error } = await supabase
-		.from('bookings')
-		.select(`
-			booking_id,
-			description,
-			status,
-			created_at,
-			price_usd,
-			users (
-				name,
-				email,
-				phone
-			),
-			services (
-				name
-			),
-			booking_payments (
-				payment_id,
-				amount_usd,
-				paid_at,
-				note
-			)
-		`)
-		.order('created_at', { ascending: false })
-
-	if (error || !data) {
-		return {
-			bookings: [],
-			summary: {
-				totalRevenue: 0,
-				revenueThisMonth: 0,
-				pendingPayments: 0,
-				revenueByService: [],
-				monthlyRevenue: buildEmptyMonthlySeries(),
-			},
-		}
+	return {
+		bookings,
+		summary: buildRevenueSummary(bookings),
 	}
+}
 
-	const bookings: AdminBookingCard[] = data.flatMap((row) => {
+/**
+ * Loads bookings from the database, or nothing if it cannot be reached.
+ */
+async function loadRemoteBookings (): Promise<AdminBookingCard[]> {
+	try {
+		const supabase = await createClient()
+		const query = supabase
+			.from('bookings')
+			.select(`
+				booking_id,
+				description,
+				status,
+				created_at,
+				price_usd,
+				users (
+					name,
+					email,
+					phone
+				),
+				services (
+					name
+				),
+				booking_payments (
+					payment_id,
+					amount_usd,
+					paid_at,
+					note
+				)
+			`)
+			.order('created_at', { ascending: false })
+		const pending = Promise.resolve(query)
+		void pending.catch(() => undefined)
+		let timer: ReturnType<typeof setTimeout> | undefined
+		const timeout = new Promise<never>((_, reject) => {
+			timer = setTimeout(() => reject(new Error('timeout')), 4000)
+		})
+		const { data, error } = await Promise.race([pending, timeout])
+		if (timer) clearTimeout(timer)
+
+		if (error || !data) return []
+
+		return data.flatMap((row) => {
 		const user = Array.isArray(row.users) ? row.users[0] : row.users
 		const service = Array.isArray(row.services)
 			? row.services[0]
@@ -111,11 +131,9 @@ export async function getAdminRevenueDashboard ():
 			paymentStatus: getPaymentStatus(priceUsd, amountPaid),
 			payments: paymentRows,
 		}]
-	})
-
-	return {
-		bookings,
-		summary: buildRevenueSummary(bookings),
+		})
+	} catch {
+		return []
 	}
 }
 
@@ -198,10 +216,6 @@ function buildRevenueSummary (
 		revenueByService,
 		monthlyRevenue: buildMonthlySeries(byMonth, now),
 	}
-}
-
-function buildEmptyMonthlySeries (): MonthlyRevenuePoint[] {
-	return buildMonthlySeries(new Map(), new Date())
 }
 
 function buildMonthlySeries (

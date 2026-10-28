@@ -8,7 +8,7 @@ import { getSupabaseUrl } from '@/lib/supabase/env'
  *
  * Never import this module into Client Components.
  */
-export function createAdminClient () {
+export function createAdminClient (signal?: AbortSignal) {
 	const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
 	if (
@@ -23,5 +23,12 @@ export function createAdminClient () {
 			autoRefreshToken: false,
 			persistSession: false,
 		},
+		global: signal
+			? {
+				fetch: (input, init) => {
+					return fetch(input, { ...init, signal })
+				},
+			}
+			: undefined,
 	})
 }

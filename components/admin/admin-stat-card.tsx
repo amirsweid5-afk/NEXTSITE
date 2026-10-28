@@ -20,7 +20,7 @@ export function AdminStatCard ({
 			? 'text-emerald-300'
 			: accent === 'muted'
 				? 'text-white/70'
-				: 'text-violet-600 dark:text-violet-200'
+				: 'text-cyan-700 dark:text-cyan-100'
 
 	return (
 		<article className="rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5 shadow-[0_8px_30px_rgba(0,0,0,0.12)]">

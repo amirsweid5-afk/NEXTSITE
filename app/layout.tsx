@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Script from 'next/script'
 import { Berkshire_Swash, Cairo, Emilys_Candy } from 'next/font/google'
 import { cookies } from 'next/headers'
+import { GlobeBackdrop } from '@/components/globe-backdrop'
 import { LanguageProvider } from '@/components/language-provider'
 import { DEFAULT_LANGUAGE, isLanguage } from '@/lib/language'
 import './globals.css'
@@ -74,8 +75,11 @@ export default async function RootLayout ({
 						__html: BOOTSTRAP_SCRIPT,
 					}}
 				/>
+				<GlobeBackdrop />
 				<LanguageProvider initialLanguage={language}>
-					{children}
+					<div className="relative z-10 flex min-h-full flex-1 flex-col">
+						{children}
+					</div>
 				</LanguageProvider>
 			</body>
 		</html>

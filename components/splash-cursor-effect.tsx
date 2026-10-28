@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import SplashCursor from '@/components/SplashCursor'
 
 const THEME_COLOR_VARIABLE = '--orange'
-const FALLBACK_THEME_COLOR = '#e87812'
+const FALLBACK_THEME_COLOR = '#2ec4de'
 
 /**
  * Converts a CSS color value into a 6-digit hex string.

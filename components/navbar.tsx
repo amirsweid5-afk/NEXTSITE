@@ -135,7 +135,7 @@ export function Navbar ({ isAdmin = false }: NavbarProps) {
 			<header
 				className={[
 					'relative sticky top-0 z-50 border-b',
-					'border-line bg-ink/90',
+					'border-line bg-ink/75',
 					'backdrop-blur-md',
 				].join(' ')}
 			>
