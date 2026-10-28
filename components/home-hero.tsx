@@ -60,7 +60,7 @@ export function HomeHero () {
 		<section
 			className={[
 				'relative isolate flex overflow-hidden',
-				'bg-transparent text-white',
+				'bg-ink text-white',
 				'sm:min-h-[calc(100svh-4.5rem)] sm:items-end',
 			].join(' ')}
 		>
@@ -76,7 +76,7 @@ export function HomeHero () {
 				/>
 				<div className="home-hero-vignette absolute inset-0" />
 				<svg
-					className="home-hero-grid absolute inset-x-0 bottom-0 h-[58%] w-full opacity-30"
+					className="home-hero-grid absolute inset-x-0 bottom-0 h-[58%] w-full opacity-70"
 					viewBox="0 0 1440 520"
 					preserveAspectRatio="none"
 					fill="none"

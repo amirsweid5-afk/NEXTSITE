@@ -29,7 +29,7 @@ export function AuthScreen ({
 		<section
 			className={[
 				'relative isolate overflow-hidden',
-				'bg-transparent py-20 sm:py-24 lg:py-28',
+				'bg-ink py-20 sm:py-24 lg:py-28',
 			].join(' ')}
 		>
 			<div

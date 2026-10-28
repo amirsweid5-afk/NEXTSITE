@@ -157,7 +157,7 @@ export function OurStory () {
 			aria-labelledby="our-story-heading"
 			className={[
 				'relative isolate overflow-hidden',
-				'border-t border-white/10 bg-transparent',
+				'border-t border-white/10 bg-ink',
 				'py-20 sm:py-24 lg:py-28',
 			].join(' ')}
 		>

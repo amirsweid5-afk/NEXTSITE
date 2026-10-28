@@ -107,7 +107,7 @@ export function SiteFooter () {
 		<footer
 			className={[
 				'relative isolate mt-auto overflow-hidden',
-				'border-t border-white/10 bg-ink/45',
+				'border-t border-white/10 bg-ink',
 			].join(' ')}
 		>
 			<div
