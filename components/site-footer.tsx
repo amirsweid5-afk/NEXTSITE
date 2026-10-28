@@ -3,52 +3,11 @@
 import Link from 'next/link'
 import { useContent } from '@/components/language-provider'
 
-const SOCIAL_LINKS = [
-	{
-		href: 'https://instagram.com/',
-		label: 'Instagram',
-	},
-]
-
 const CONTACT = {
 	phone: '+961 70 552 181',
 	phoneHref: 'tel:+96170552181',
 	email: 'amirsweid5@gmail.com',
 	emailHref: 'mailto:amirsweid5@gmail.com',
-}
-
-function SocialIcon () {
-	return (
-		<svg
-			aria-hidden="true"
-			viewBox="0 0 24 24"
-			fill="none"
-			className="h-4 w-4"
-		>
-			<rect
-				x="3.5"
-				y="3.5"
-				width="17"
-				height="17"
-				rx="4"
-				stroke="currentColor"
-				strokeWidth="1.5"
-			/>
-			<circle
-				cx="12"
-				cy="12"
-				r="3.75"
-				stroke="currentColor"
-				strokeWidth="1.5"
-			/>
-			<circle
-				cx="17.25"
-				cy="6.75"
-				r="0.9"
-				fill="currentColor"
-			/>
-		</svg>
-	)
 }
 
 function PhoneIcon () {
@@ -257,26 +216,6 @@ export function SiteFooter () {
 						'px-6 py-6 sm:px-10 lg:px-12',
 					].join(' ')}
 				>
-					{SOCIAL_LINKS.map((social) => (
-						<a
-							key={social.label}
-							href={social.href}
-							target="_blank"
-							rel="noopener noreferrer"
-							aria-label={social.label}
-							className={[
-								'inline-flex h-10 w-10',
-								'items-center justify-center',
-								'rounded-full border border-white/10',
-								'text-white/55 transition duration-300',
-								'hover:border-orange/45 hover:text-orange',
-								'focus-visible:outline-2',
-								'focus-visible:outline-offset-4',
-							].join(' ')}
-						>
-							<SocialIcon />
-						</a>
-					))}
 					<p className="text-center text-xs tracking-wide text-white/40">
 						{copy.rights}
 					</p>

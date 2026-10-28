@@ -4,6 +4,7 @@ import { type BookingServiceOption } from '@/lib/bookings/booking-schema'
 import {
 	isOfflineClientError,
 	SERVICE_CATALOG,
+	serviceSlug,
 } from '@/lib/bookings/service-catalog'
 import { createAdminClient } from '@/lib/supabase/admin'
 
@@ -39,6 +40,7 @@ export async function getBookingServices ():
 			serviceId: service.service_id,
 			name: service.name,
 			price: Number(service.price),
+			slug: serviceSlug(service.name),
 		}))
 	} catch {
 		return SERVICE_CATALOG

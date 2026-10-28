@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import Link from 'next/link'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import { useContent } from '@/components/language-provider'
@@ -14,6 +15,7 @@ import { DEFAULT_PHONE_COUNTRY } from '@/lib/phone/countries'
 
 interface BookNowSectionProps {
 	services: BookingServiceOption[]
+	initialServiceId?: string
 }
 
 interface BookingFormValues {
@@ -23,12 +25,17 @@ interface BookingFormValues {
 	phone: string
 	serviceId: string
 	websiteDescription: string
+	budget: string
+	deadline: string
 }
 
 /**
  * Booking form that saves to the database and shows a confirmation.
  */
-export function BookNowSection ({ services }: BookNowSectionProps) {
+export function BookNowSection ({
+	services,
+	initialServiceId = '',
+}: BookNowSectionProps) {
 	const copy = useContent().booking.form
 	const [isConfirmed, setIsConfirmed] = useState(false)
 	const [saveError, setSaveError] = useState<string | null>(null)
@@ -41,9 +48,13 @@ export function BookNowSection ({ services }: BookNowSectionProps) {
 			countryError: copy.countryError,
 			serviceError: copy.serviceError,
 			websiteError: copy.websiteError,
+			budgetError: copy.budgetError,
+			deadlineError: copy.deadlineError,
 		})
 	}, [
+		copy.budgetError,
 		copy.countryError,
+		copy.deadlineError,
 		copy.emailError,
 		copy.fullNameError,
 		copy.phoneError,
@@ -59,8 +70,10 @@ export function BookNowSection ({ services }: BookNowSectionProps) {
 			email: '',
 			countryCode: DEFAULT_PHONE_COUNTRY.code,
 			phone: '',
-			serviceId: '',
+			serviceId: initialServiceId,
 			websiteDescription: '',
+			budget: '',
+			deadline: '',
 		},
 	})
 
@@ -68,7 +81,7 @@ export function BookNowSection ({ services }: BookNowSectionProps) {
 	const isValid = form.formState.isValid
 	const errors = form.formState.errors
 	const hasServices = services.length > 0
-	const canSubmit = hasServices && isValid && !isSubmitting
+	const canSubmit = !isSubmitting
 
 	async function handleSubmit (values: BookingFormValues) {
 		setIsConfirmed(false)
@@ -89,6 +102,8 @@ export function BookNowSection ({ services }: BookNowSectionProps) {
 			phone: '',
 			serviceId: '',
 			websiteDescription: '',
+			budget: '',
+			deadline: '',
 		})
 	}
 
@@ -98,7 +113,7 @@ export function BookNowSection ({ services }: BookNowSectionProps) {
 		'placeholder:text-white/35',
 		'transition duration-300',
 		'focus:border-orange/60 focus:bg-ink/80',
-		'focus:outline-none',
+		'focus-visible:outline-2 focus-visible:outline-offset-2',
 	].join(' ')
 
 	return (
@@ -289,6 +304,7 @@ export function BookNowSection ({ services }: BookNowSectionProps) {
 									: 'border-white/10',
 							].join(' ')}
 							{...form.register('serviceId')}
+							defaultValue={initialServiceId}
 						>
 							<option value="">
 								{copy.servicePlaceholder}
@@ -354,6 +370,146 @@ export function BookNowSection ({ services }: BookNowSectionProps) {
 						) : null}
 					</div>
 
+					<div className="mt-6 grid gap-6 sm:grid-cols-2">
+						<div>
+							<label
+								htmlFor="budget"
+								className="block text-sm font-medium text-white"
+							>
+								{copy.budget}
+								<span className="ms-2 text-white/45">
+									{copy.budgetPlaceholder}
+								</span>
+							</label>
+							<input
+								id="budget"
+								type="text"
+								inputMode="decimal"
+								autoComplete="off"
+								placeholder={copy.budgetPlaceholder}
+								aria-invalid={
+									errors.budget ? true : undefined
+								}
+								aria-describedby={
+									errors.budget ? 'budget-error' : undefined
+								}
+								className={[
+									inputClassName,
+									'mt-2 border-white/10',
+								].join(' ')}
+								{...form.register('budget')}
+								onChange={(event) => {
+									let raw = event.target.value
+									if (!raw.includes('$') && /\d/.test(raw)) {
+										raw = '$' + raw
+									}
+									const marked = raw.match(
+										/\$\s*(\d*(?:\.\d{0,2})?)/,
+									)
+									const amount = marked?.[1] ?? ''
+									event.target.value = amount === ''
+										? ''
+										: '$' + amount
+									void form.register('budget').onChange(event)
+								}}
+							/>
+							{errors.budget ? (
+								<p
+									id="budget-error"
+									role="alert"
+									className="mt-2 text-sm text-orange"
+								>
+									{errors.budget.message}
+								</p>
+							) : null}
+						</div>
+						<div>
+							<label
+								htmlFor="deadline"
+								className="block text-sm font-medium text-white"
+							>
+								{copy.deadline}
+								<span className="ms-2 text-white/45">
+									{copy.deadlinePlaceholder}
+								</span>
+							</label>
+							<div className="relative mt-2">
+								<input
+									id="deadline"
+									type="date"
+									aria-invalid={
+										errors.deadline ? true : undefined
+									}
+									aria-describedby={
+										errors.deadline
+											? 'deadline-error'
+											: undefined
+									}
+									className={[
+										inputClassName,
+										'booking-date border-white/10 pe-12',
+										'[color-scheme:dark]',
+									].join(' ')}
+									{...form.register('deadline')}
+								/>
+								<button
+									type="button"
+									aria-label={copy.deadline}
+									onClick={() => {
+										const field = document.getElementById(
+											'deadline',
+										)
+										if (
+											field instanceof HTMLInputElement
+											&& typeof field.showPicker === 'function'
+										) {
+											field.showPicker()
+										}
+									}}
+									className={[
+										'absolute inset-y-0 end-0',
+										'flex w-12 items-center justify-center',
+										'text-white/70',
+										'focus-visible:outline-2',
+										'focus-visible:outline-offset-2',
+									].join(' ')}
+								>
+									<svg
+										aria-hidden="true"
+										viewBox="0 0 24 24"
+										fill="none"
+										className="h-4 w-4"
+									>
+										<rect
+											x="4"
+											y="5"
+											width="16"
+											height="15"
+											rx="2"
+											stroke="currentColor"
+											strokeWidth="1.5"
+										/>
+										<path
+											d="M4 10h16M8 3.5v3M16 3.5v3"
+											stroke="currentColor"
+											strokeWidth="1.5"
+											strokeLinecap="round"
+										/>
+									</svg>
+								</button>
+							</div>
+							{errors.deadline ? (
+								<p
+									id="deadline-error"
+									role="alert"
+									className="mt-2 text-sm text-orange"
+								>
+									{errors.deadline.message}
+								</p>
+							) : null}
+						</div>
+					</div>
+
 					<button
 						type="submit"
 						disabled={!canSubmit}
@@ -396,15 +552,36 @@ export function BookNowSection ({ services }: BookNowSectionProps) {
 					) : null}
 
 					{isConfirmed ? (
-						<p
+						<div
 							role="status"
 							className={[
-								'mt-4 text-center text-sm',
-								'leading-6 text-highlight',
+								'mt-6 rounded-2xl border border-highlight/30',
+								'bg-ink/70 px-5 py-6 text-center',
 							].join(' ')}
 						>
-							{copy.confirmed}
-						</p>
+							<p className="text-base font-semibold text-highlight">
+								{copy.confirmedTitle}
+							</p>
+							<p className="mt-2 text-sm leading-6 text-white/75">
+								{copy.confirmedBody}
+							</p>
+							<p className="mt-2 text-sm leading-6 text-white/75">
+								{copy.confirmedThanks}
+							</p>
+							<Link
+								href="/"
+								className={[
+									'mt-5 inline-flex min-h-11 items-center',
+									'justify-center rounded-full',
+									'border border-white/20 px-6',
+									'text-sm font-semibold text-white',
+									'focus-visible:outline-2',
+									'focus-visible:outline-offset-4',
+								].join(' ')}
+							>
+								{copy.backHome}
+							</Link>
+						</div>
 					) : null}
 				</form>
 			</div>

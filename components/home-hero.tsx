@@ -263,7 +263,7 @@ export function HomeHero () {
 						{copy.ctaLabel}
 					</Link>
 					<Link
-						href="/#services"
+						href="/services"
 						className={[
 							'inline-flex min-h-12 items-center',
 							'justify-center rounded-full',

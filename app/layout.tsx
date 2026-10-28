@@ -30,7 +30,14 @@ export const metadata: Metadata = {
 		template: '%s · NEXTSITE',
 	},
 	description:
-		'Modern websites built around your ideas.',
+		'Modern, responsive websites designed around your goals.',
+	openGraph: {
+		title: 'NEXTSITE',
+		description:
+			'Modern, responsive websites designed around your goals.',
+		siteName: 'NEXTSITE',
+		type: 'website',
+	},
 }
 
 const BOOTSTRAP_SCRIPT = `(function () {
@@ -39,6 +46,10 @@ const BOOTSTRAP_SCRIPT = `(function () {
 		if (t === 'light' || t === 'dark') {
 			document.documentElement.setAttribute('data-theme', t);
 			document.documentElement.classList.toggle('dark', t === 'dark');
+		}
+		var g = localStorage.getItem('globe');
+		if (g === 'off') {
+			document.documentElement.setAttribute('data-globe', 'off');
 		}
 		var l = localStorage.getItem('lang');
 		if (l === 'ar' || l === 'en') {

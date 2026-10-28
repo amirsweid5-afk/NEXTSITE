@@ -1,3 +1,4 @@
+import { GlobeToggle } from '@/components/globe-toggle'
 import { LanguageToggle } from '@/components/language-toggle'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { requireAdmin } from '@/lib/admin/require-admin'
@@ -73,7 +74,8 @@ export default async function AdminSettingsPage () {
 						<p className="mt-1 text-xs text-white/40">
 							Light or dark appearance
 						</p>
-						<div className="mt-3">
+						<div className="mt-3 flex items-center gap-2">
+							<GlobeToggle />
 							<ThemeToggle />
 						</div>
 					</div>

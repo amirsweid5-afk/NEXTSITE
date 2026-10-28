@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { BrandLogo } from '@/components/brand-logo'
 import { LanguageToggle } from '@/components/language-toggle'
+import { GlobeToggle } from '@/components/globe-toggle'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { useContent } from '@/components/language-provider'
 
@@ -127,6 +128,7 @@ export function Navbar ({ isAdmin = false }: NavbarProps) {
 	const navItems: NavItem[] = [
 		{ href: '/', label: content.nav.home },
 		{ href: '/about-us', label: content.nav.aboutUs },
+		{ href: '/services', label: content.nav.services },
 		{ href: '/booking', label: content.nav.booking },
 	]
 
@@ -221,6 +223,7 @@ export function Navbar ({ isAdmin = false }: NavbarProps) {
 						) : null}
 						<div className="hidden items-center gap-2 md:flex">
 							<NavAuthLinks />
+							<GlobeToggle />
 							<ThemeToggle />
 						</div>
 						<button
@@ -343,7 +346,10 @@ export function Navbar ({ isAdmin = false }: NavbarProps) {
 							>
 								{content.themeToggle}
 							</p>
-							<ThemeToggle />
+							<div className="flex items-center gap-2">
+								<GlobeToggle />
+								<ThemeToggle />
+							</div>
 						</div>
 						<NavAuthLinks
 							isCompact

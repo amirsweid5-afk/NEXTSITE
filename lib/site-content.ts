@@ -3,6 +3,7 @@ import { type Language } from '@/lib/language'
 export interface NavContent {
 	home: string
 	aboutUs: string
+	services: string
 	booking: string
 	dashboard: string
 	bookNow: string
@@ -37,6 +38,7 @@ export interface ServiceItemContent {
 	id: string
 	title: string
 	description: string
+	features: string[]
 	priceLabel: string
 }
 
@@ -49,6 +51,7 @@ export interface FeatureItemContent {
 export interface SiteContent {
 	skipToContent: string
 	themeToggle: string
+	globeToggle: string
 	nav: NavContent
 	home: {
 		hero: {
@@ -76,6 +79,18 @@ export interface SiteContent {
 			title: string
 			description: string
 			ctaLabel: string
+		}
+		portfolio: {
+			eyebrow: string
+			title: string
+			description: string
+			conceptLabel: string
+			items: {
+				id: string
+				name: string
+				category: string
+				description: string
+			}[]
 		}
 		aiClip: {
 			label: string
@@ -134,6 +149,17 @@ export interface SiteContent {
 			traits: string[]
 			points: FeatureItemContent[]
 		}
+		process: {
+			eyebrow: string
+			title: string
+			description: string
+			ctaLabel: string
+			steps: {
+				step: string
+				title: string
+				description: string
+			}[]
+		}
 	}
 	booking: {
 		hero: BookingHeroContent
@@ -158,9 +184,18 @@ export interface SiteContent {
 			website: string
 			websitePlaceholder: string
 			websiteError: string
+			budget: string
+			budgetPlaceholder: string
+			budgetError: string
+			deadline: string
+			deadlinePlaceholder: string
+			deadlineError: string
 			submit: string
 			submitting: string
-			confirmed: string
+			confirmedTitle: string
+			confirmedBody: string
+			confirmedThanks: string
+			backHome: string
 			saveError: string
 			noServices: string
 		}
@@ -269,9 +304,11 @@ export interface SiteContent {
 const ENGLISH: SiteContent = {
 	skipToContent: 'Skip to content',
 	themeToggle: 'Toggle color theme',
+	globeToggle: 'Show or hide the background globe',
 	nav: {
 		home: 'Home',
 		aboutUs: 'About Us',
+		services: 'Services',
 		booking: 'Booking',
 		dashboard: 'Admin Portal',
 		bookNow: 'Book Now',
@@ -289,7 +326,7 @@ const ENGLISH: SiteContent = {
 			brand: 'NEXTSITE',
 			title: 'Your Vision. Our Code.',
 			description:
-				'Landing pages, static sites, and personal brands — built modern, fast, and unmistakably yours.',
+				'Build a stunning digital presence with modern, responsive websites designed around your goals.',
 			ctaLabel: 'Start Your Project',
 			secondaryCtaLabel: 'Explore Our Services',
 		},
@@ -298,27 +335,42 @@ const ENGLISH: SiteContent = {
 			title: 'What I Offer',
 			description:
 				'Professional websites designed to bring your ideas to life.',
-			bookNow: 'Book Now',
+			bookNow: 'Start Your Project',
 			items: [
 				{
 					id: 'landing-page',
-					title: 'Landing Page',
+					title: 'Landing Pages',
 					description:
-						'A focused, high-converting single-page site for businesses, products, or campaigns — clean, modern, and fully responsive.',
+						'A focused single-page site for a product, offer, or campaign.',
+					features: [
+						'One page built around a single goal',
+						'Readable on phones and desktops',
+						'A direct path to contact or booking',
+					],
 					priceLabel: 'Starting from $200',
 				},
 				{
 					id: 'static-website',
-					title: 'Static Website',
+					title: 'Static Websites',
 					description:
-						'A professional multi-page website for businesses, portfolios, or organizations — fast, modern, and built to last.',
+						'A multi-page site for a business or organization.',
+					features: [
+						'Several pages for your content',
+						'Fast pages without a heavy app',
+						'A structure visitors can browse',
+					],
 					priceLabel: 'Starting from $300',
 				},
 				{
 					id: 'personal-website',
-					title: 'Personal Website',
+					title: 'Personal Websites',
 					description:
-						'A personalized site for creators and professionals — designed to showcase your work, skills, and personal brand.',
+						'A site for your work, skills, and personal brand.',
+					features: [
+						'A home for your story and work',
+						'Clear sections for what you offer',
+						'A simple way for people to reach you',
+					],
 					priceLabel: 'Starting from $250',
 				},
 			],
@@ -327,40 +379,70 @@ const ENGLISH: SiteContent = {
 			eyebrow: 'Why Us',
 			title: 'Why Choose Us?',
 			description:
-				'More than just a website — we build a digital presence designed around you.',
+				'A straightforward way to plan, build, and launch a website.',
 			items: [
 				{
 					id: 'custom-designs',
-					title: 'Built for Your Brand',
+					title: 'Built Around Your Goals',
 					description:
-						'Every website is designed specifically for your brand, goals, and style — never just a generic template.',
+						'The site is planned around what you want visitors to do, not a generic template.',
 				},
 				{
 					id: 'fully-responsive',
-					title: 'Looks Great Everywhere',
+					title: 'Responsive by Design',
 					description:
-						'Every website is optimized to work smoothly and look great on phones, tablets, and desktops.',
-				},
-				{
-					id: 'fast-modern',
-					title: 'Fast. Clean. Professional.',
-					description:
-						'Modern, lightweight websites built with a focus on fast loading speeds and a smooth user experience.',
+						'Layouts stay readable on phones, tablets, and desktops.',
 				},
 				{
 					id: 'personal-support',
-					title: 'We’re Here for You',
+					title: 'Clear Communication',
 					description:
-						'Clear communication and personal support throughout the project, from the first idea to the final website.',
+						'You can follow the project from the first brief through launch.',
+				},
+				{
+					id: 'fast-modern',
+					title: 'Performance Matters',
+					description:
+						'Pages are kept lean so they load quickly and stay easy to use.',
 				},
 			],
 		},
 		bookingCta: {
 			eyebrow: 'Next Step',
-			title: 'Ready to Build Your Website?',
+			title: 'Your Next Big Idea Starts Here.',
 			description:
-				'Let’s bring your idea to life with a modern website designed for you.',
-			ctaLabel: 'Book Now',
+				'Tell us what you\'re building, and let\'s turn your idea into a website.',
+			ctaLabel: 'Start Your Project',
+		},
+		portfolio: {
+			eyebrow: 'Work',
+			title: 'Project directions',
+			description:
+				'These are labelled concept directions, not client case studies.',
+			conceptLabel: 'Concept',
+			items: [
+				{
+					id: 'campaign',
+					name: 'Campaign landing',
+					category: 'Landing Pages',
+					description:
+						'A single-page layout for presenting one offer.',
+				},
+				{
+					id: 'studio',
+					name: 'Business site',
+					category: 'Static Websites',
+					description:
+						'A multi-page structure with a clear path to services.',
+				},
+				{
+					id: 'personal',
+					name: 'Personal portfolio',
+					category: 'Personal Websites',
+					description:
+						'A personal site for showing work and contact details.',
+				},
+			],
 		},
 		aiClip: {
 			label: 'AI typing',
@@ -516,6 +598,39 @@ const ENGLISH: SiteContent = {
 				},
 			],
 		},
+		process: {
+			eyebrow: 'How We Work',
+			title: 'From idea to launch',
+			description:
+				'Four clear stages. Scope is confirmed before design and development begin.',
+			ctaLabel: 'Start Your Project',
+			steps: [
+				{
+					step: '01',
+					title: 'Tell Us Your Idea',
+					description:
+						'Share what you want the website to do and who it is for.',
+				},
+				{
+					step: '02',
+					title: 'Discuss the Project',
+					description:
+						'We confirm the pages, the service, and what is included.',
+				},
+				{
+					step: '03',
+					title: 'Design & Development',
+					description:
+						'The site is designed and built around that agreed scope.',
+				},
+				{
+					step: '04',
+					title: 'Review & Launch',
+					description:
+						'You review the result, request adjustments, and we prepare it to go live.',
+				},
+			],
+		},
 	},
 	booking: {
 		hero: {
@@ -568,10 +683,19 @@ const ENGLISH: SiteContent = {
 			websitePlaceholder:
 				'Describe the website you need, including its purpose, pages, features, or any ideas you have...',
 			websiteError: 'Please tell us about your website.',
+			budget: 'Budget',
+			budgetPlaceholder: 'Optional',
+			budgetError: 'Use numbers only.',
+			deadline: 'Preferred deadline',
+			deadlinePlaceholder: 'Optional',
+			deadlineError: 'Choose a date.',
 			submit: 'Submit Booking',
 			submitting: 'Saving your booking...',
-			confirmed:
-				'Booking submitted. Please wait for an admin to email you or contact you on WhatsApp.',
+			confirmedTitle: 'Your project request has been received!',
+			confirmedBody:
+				'Thank you for choosing NEXTSITE. We\'ve received your project details and will review your request.',
+			confirmedThanks: 'thank you for working with us',
+			backHome: 'Back to Home',
 			saveError:
 				'We could not save your booking. Please try again.',
 			noServices:
@@ -685,13 +809,16 @@ const ENGLISH: SiteContent = {
 		nav: [
 			{ href: '/', label: 'Home' },
 			{ href: '/about-us', label: 'About Us' },
-			{ href: '/#services', label: 'Services' },
+			{ href: '/services', label: 'Services' },
 			{ href: '/booking', label: 'Booking' },
 		],
 		serviceLinks: [
-			{ href: '/#services', label: 'Landing Pages' },
-			{ href: '/#services', label: 'Static Websites' },
-			{ href: '/#services', label: 'Personal Websites' },
+			{ href: '/booking?service=landing-page', label: 'Landing Pages' },
+			{ href: '/booking?service=static-website', label: 'Static Websites' },
+			{
+				href: '/booking?service=personal-website',
+				label: 'Personal Websites',
+			},
 		],
 	},
 }
@@ -699,9 +826,11 @@ const ENGLISH: SiteContent = {
 const ARABIC: SiteContent = {
 	skipToContent: 'تخطّ إلى المحتوى',
 	themeToggle: 'تبديل مظهر الألوان',
+	globeToggle: 'إظهار أو إخفاء الكرة في الخلفية',
 	nav: {
 		home: 'الرئيسية',
 		aboutUs: 'من نحن',
+		services: 'الخدمات',
 		booking: 'الحجز',
 		dashboard: 'بوابة الإدارة',
 		bookNow: 'احجز الآن',
@@ -719,7 +848,7 @@ const ARABIC: SiteContent = {
 			brand: 'NEXTSITE',
 			title: 'رؤيتك. كودنا.',
 			description:
-				'صفحات هبوط ومواقع ثابتة وهويّات شخصية — حديثة وسريعة وبصمتك أنت.',
+				'ابنِ حضوراً رقمياً واضحاً بمواقع حديثة ومتجاوبة مصمّمة حول أهدافك.',
 			ctaLabel: 'ابدأ مشروعك',
 			secondaryCtaLabel: 'استكشف خدماتنا',
 		},
@@ -728,27 +857,42 @@ const ARABIC: SiteContent = {
 			title: 'ماذا نقدّم',
 			description:
 				'مواقع احترافية مصمّمة لتحويل أفكارك إلى واقع.',
-			bookNow: 'احجز الآن',
+			bookNow: 'ابدأ مشروعك',
 			items: [
 				{
 					id: 'landing-page',
-					title: 'صفحة هبوط',
+					title: 'صفحات الهبوط',
 					description:
-						'موقع من صفحة واحدة مركّز وعالي التحويل للأعمال أو المنتجات أو الحملات — نظيف وحديث ومتجاوب بالكامل.',
+						'صفحة واحدة مركّزة لمنتج أو عرض أو حملة.',
+					features: [
+						'صفحة واحدة مبنية حول هدف واضح',
+						'مقروءة على الهاتف والحاسوب',
+						'طريق مباشر للتواصل أو الحجز',
+					],
 					priceLabel: 'يبدأ من 200 دولار',
 				},
 				{
 					id: 'static-website',
-					title: 'موقع ثابت',
+					title: 'المواقع الثابتة',
 					description:
-						'موقع احترافي متعدّد الصفحات للشركات أو المعارض أو المؤسسات — سريع وحديث ومبني ليدوم.',
+						'موقع متعدّد الصفحات لنشاط أو مؤسسة.',
+					features: [
+						'عدة صفحات لمحتواك',
+						'صفحات سريعة دون تطبيق ثقيل',
+						'هيكل يسهل على الزائر تصفحه',
+					],
 					priceLabel: 'يبدأ من 300 دولار',
 				},
 				{
 					id: 'personal-website',
-					title: 'موقع شخصي',
+					title: 'المواقع الشخصية',
 					description:
-						'موقع مخصّص للمبدعين والمحترفين — مصمّم لإبراز عملك ومهاراتك وعلامتك الشخصية.',
+						'موقع لعملك ومهاراتك وعلامتك الشخصية.',
+					features: [
+						'مكان لقصتك وأعمالك',
+						'أقسام واضحة لما تقدّمه',
+						'طريقة بسيطة للتواصل معك',
+					],
 					priceLabel: 'يبدأ من 250 دولار',
 				},
 			],
@@ -757,40 +901,67 @@ const ARABIC: SiteContent = {
 			eyebrow: 'لماذا نحن',
 			title: 'لماذا تختارنا؟',
 			description:
-				'أكثر من مجرد موقع — نبني حضوراً رقمياً مصمّماً حولك.',
+				'طريقة واضحة لتخطيط الموقع وبنائه وإطلاقه.',
 			items: [
 				{
 					id: 'custom-designs',
-					title: 'مصمّم لعلامتك',
+					title: 'مبني حول أهدافك',
 					description:
-						'كل موقع يُصمَّم خصيصاً لعلامتك وأهدافك وأسلوبك — وليس قالباً عاماً.',
+						'يُخطَّط الموقع حول ما تريد من الزائر أن يفعله، لا حول قالب عام.',
 				},
 				{
 					id: 'fully-responsive',
-					title: 'يبدو رائعاً في كل مكان',
+					title: 'متجاوب بالتصميم',
 					description:
-						'كل موقع محسّن ليعمل بسلاسة ويظهر بشكل ممتاز على الهاتف والجهاز اللوحي والحاسوب.',
-				},
-				{
-					id: 'fast-modern',
-					title: 'سريع. نظيف. احترافي.',
-					description:
-						'مواقع حديثة وخفيفة تركّز على سرعة التحميل وتجربة استخدام سلسة.',
+						'تبقى الصفحات مقروءة على الهاتف والجهاز اللوحي والحاسوب.',
 				},
 				{
 					id: 'personal-support',
-					title: 'نحن معك',
+					title: 'تواصل واضح',
 					description:
-						'تواصل واضح ودعم شخصي طوال المشروع، من الفكرة الأولى حتى الموقع النهائي.',
+						'يمكنك متابعة المشروع من أول شرح حتى الإطلاق.',
+				},
+				{
+					id: 'fast-modern',
+					title: 'الأداء مهم',
+					description:
+						'تُبنى الصفحات بخفة لتُحمَّل بسرعة وتبقى سهلة الاستخدام.',
 				},
 			],
 		},
 		bookingCta: {
 			eyebrow: 'الخطوة التالية',
-			title: 'جاهز لبناء موقعك؟',
+			title: 'فكرتك الكبيرة التالية تبدأ هنا.',
 			description:
-				'لنحوّل فكرتك إلى موقع حديث مصمّم لأجلك.',
-			ctaLabel: 'احجز الآن',
+				'أخبرنا بما تبنيه، ولنحوّل فكرتك إلى موقع.',
+			ctaLabel: 'ابدأ مشروعك',
+		},
+		portfolio: {
+			eyebrow: 'الأعمال',
+			title: 'اتجاهات مشاريع',
+			description:
+				'هذه اتجاهات مفاهيمية وليست دراسات لعملاء حقيقيين.',
+			conceptLabel: 'مفهوم',
+			items: [
+				{
+					id: 'campaign',
+					name: 'صفحة حملة',
+					category: 'صفحات الهبوط',
+					description: 'تخطيط من صفحة واحدة لعرض واحد.',
+				},
+				{
+					id: 'studio',
+					name: 'موقع أعمال',
+					category: 'المواقع الثابتة',
+					description: 'هيكل من عدة صفحات مع طريق واضح للخدمات.',
+				},
+				{
+					id: 'personal',
+					name: 'ملف شخصي',
+					category: 'المواقع الشخصية',
+					description: 'موقع شخصي لعرض العمل وبيانات التواصل.',
+				},
+			],
 		},
 		aiClip: {
 			label: 'كتابة بالذكاء الاصطناعي',
@@ -946,6 +1117,39 @@ const ARABIC: SiteContent = {
 				},
 			],
 		},
+		process: {
+			eyebrow: 'كيف نعمل',
+			title: 'من الفكرة إلى الإطلاق',
+			description:
+				'أربع مراحل واضحة. يُثبَّت نطاق العمل قبل التصميم والتطوير.',
+			ctaLabel: 'ابدأ مشروعك',
+			steps: [
+				{
+					step: '01',
+					title: 'أخبرنا بفكرتك',
+					description:
+						'شارك ما تريد أن يفعله الموقع ولمن هو.',
+				},
+				{
+					step: '02',
+					title: 'نناقش المشروع',
+					description:
+						'نؤكد الصفحات والخدمة وما يشمله العمل.',
+				},
+				{
+					step: '03',
+					title: 'التصميم والتطوير',
+					description:
+						'يُصمَّم الموقع ويُبنى حول النطاق المتفق عليه.',
+				},
+				{
+					step: '04',
+					title: 'المراجعة والإطلاق',
+					description:
+						'تراجع النتيجة، تطلب التعديلات، ثم نجهّزه للإطلاق.',
+				},
+			],
+		},
 	},
 	booking: {
 		hero: {
@@ -998,10 +1202,19 @@ const ARABIC: SiteContent = {
 			websitePlaceholder:
 				'صف الموقع الذي تحتاجه، بما في ذلك الغرض والصفحات والميزات أو أي أفكار لديك...',
 			websiteError: 'يرجى إخبارنا عن موقعك.',
+			budget: 'الميزانية',
+			budgetPlaceholder: 'اختياري',
+			budgetError: 'استخدم أرقاماً فقط.',
+			deadline: 'الموعد المفضّل',
+			deadlinePlaceholder: 'اختياري',
+			deadlineError: 'اختر تاريخاً.',
 			submit: 'إرسال الحجز',
 			submitting: 'جاري حفظ حجزك...',
-			confirmed:
-				'تم إرسال الحجز. يرجى انتظار تواصل المسؤول معك عبر البريد الإلكتروني أو واتساب.',
+			confirmedTitle: 'تم استلام طلب مشروعك!',
+			confirmedBody:
+				'شكراً لاختيارك NEXTSITE. استلمنا تفاصيل مشروعك وسنراجع طلبك.',
+			confirmedThanks: 'شكراً لتعاملكم معنا',
+			backHome: 'العودة إلى الرئيسية',
 			saveError:
 				'تعذر حفظ حجزك. يرجى المحاولة مرة أخرى.',
 			noServices:
@@ -1113,13 +1326,16 @@ const ARABIC: SiteContent = {
 		nav: [
 			{ href: '/', label: 'الرئيسية' },
 			{ href: '/about-us', label: 'من نحن' },
-			{ href: '/#services', label: 'الخدمات' },
+			{ href: '/services', label: 'الخدمات' },
 			{ href: '/booking', label: 'الحجز' },
 		],
 		serviceLinks: [
-			{ href: '/#services', label: 'صفحات الهبوط' },
-			{ href: '/#services', label: 'المواقع الثابتة' },
-			{ href: '/#services', label: 'المواقع الشخصية' },
+			{ href: '/booking?service=landing-page', label: 'صفحات الهبوط' },
+			{ href: '/booking?service=static-website', label: 'المواقع الثابتة' },
+			{
+				href: '/booking?service=personal-website',
+				label: 'المواقع الشخصية',
+			},
 		],
 	},
 }

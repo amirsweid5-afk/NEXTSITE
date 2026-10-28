@@ -5,16 +5,35 @@ import { getBookingServices } from '@/lib/bookings/get-booking-services'
 export const metadata = {
 	title: 'Booking',
 	description:
-		'Book your website project with NEXTSITE.',
+		'Tell NEXTSITE about your website project and send a booking request.',
+	openGraph: {
+		title: 'Booking · NEXTSITE',
+		description:
+			'Tell NEXTSITE about your website project and send a booking request.',
+	},
 }
 
-export default async function BookingPage () {
+interface BookingPageProps {
+	searchParams: Promise<{ service?: string | string[] }>
+}
+
+export default async function BookingPage ({
+	searchParams,
+}: BookingPageProps) {
+	const params = await searchParams
+	const requested = Array.isArray(params.service)
+		? params.service[0]
+		: params.service
 	const services = await getBookingServices()
+	const match = services.find((service) => service.slug === requested)
 
 	return (
 		<>
 			<BookingHero />
-			<BookNowSection services={services} />
+			<BookNowSection
+				services={services}
+				initialServiceId={match?.serviceId ?? ''}
+			/>
 		</>
 	)
 }

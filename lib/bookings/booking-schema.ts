@@ -8,6 +8,7 @@ export interface BookingServiceOption {
 	serviceId: string
 	name: string
 	price: number
+	slug: string
 }
 
 /**
@@ -20,6 +21,8 @@ export function createBookingSchema (copy: {
 	countryError: string
 	serviceError: string
 	websiteError: string
+	budgetError: string
+	deadlineError: string
 }) {
 	return z.object({
 		fullName: z.string().trim().min(1, copy.fullNameError).max(120),
@@ -48,6 +51,21 @@ export function createBookingSchema (copy: {
 			.trim()
 			.min(1, copy.websiteError)
 			.max(4000),
+		budget: z
+			.string()
+			.trim()
+			.max(13)
+			.refine(
+				(value) => value === '' || /^\$\d+(\.\d{1,2})?$/.test(value),
+				{ message: copy.budgetError },
+			),
+		deadline: z
+			.string()
+			.trim()
+			.refine(
+				(value) => value === '' || /^\d{4}-\d{2}-\d{2}$/.test(value),
+				{ message: copy.deadlineError },
+			),
 	})
 }
 
@@ -62,6 +80,17 @@ export const bookingInputSchema = z.object({
 	phone: z.string().trim().min(1).max(15).regex(/^\d+$/),
 	serviceId: z.uuid(),
 	websiteDescription: z.string().trim().min(1).max(4000),
+	budget: z
+		.string()
+		.trim()
+		.max(13)
+		.refine((value) => value === '' || /^\$\d+(\.\d{1,2})?$/.test(value)),
+	deadline: z
+		.string()
+		.trim()
+		.refine(
+			(value) => value === '' || /^\d{4}-\d{2}-\d{2}$/.test(value),
+		),
 })
 
 export type BookingInput = z.infer<typeof bookingInputSchema>

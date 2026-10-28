@@ -674,6 +674,19 @@ html[data-theme='light'] .globe-stage {
 	background: transparent;
 }
 
+html[data-globe='off'] .globe-stage {
+	display: none;
+}
+
+.booking-date::-webkit-calendar-picker-indicator {
+	opacity: 0;
+	display: none;
+}
+
+html[data-theme='light'] .booking-date {
+	color-scheme: light;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.home-hero-animate,
 	.home-hero-beam,

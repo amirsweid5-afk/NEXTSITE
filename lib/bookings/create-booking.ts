@@ -5,10 +5,10 @@ import {
 	type BookingInput,
 	toStoredPhone,
 } from '@/lib/bookings/booking-schema'
-import { insertOfflineBooking } from '@/lib/bookings/offline-bookings'
 import {
 	isOfflineClientError,
 	isUnreachableError,
+	isUnreachableMessage,
 } from '@/lib/bookings/service-catalog'
 import { createAdminClient } from '@/lib/supabase/admin'
 
@@ -40,8 +40,18 @@ export async function createBooking (
 		const supabase = createAdminClient(controller.signal)
 		return await saveRemoteBooking(supabase, parsed.data)
 	} catch (err) {
-		if (isUnreachableError(err)) {
-			return saveOffline(parsed.data)
+		if (
+			isUnreachableError(err)
+			|| (
+				err instanceof Error
+				&& isUnreachableMessage(err.message)
+			)
+		) {
+			return {
+				ok: false,
+				error:
+					'The booking was not saved because the database could not be reached. Your details are still in the form.',
+			}
 		}
 
 		if (err instanceof Error) {
@@ -68,7 +78,7 @@ async function saveRemoteBooking (
 	const email = input.email
 	const phone = toStoredPhone(input)
 	const serviceId = input.serviceId
-	const websiteDescription = input.websiteDescription
+	const websiteDescription = projectDetails(input)
 
 	const { data: service, error: serviceError } = await supabase
 		.from('services')
@@ -184,25 +194,15 @@ async function saveRemoteBooking (
 }
 
 /**
- * Keeps the request when the database host cannot be reached.
+ * Stores optional budget and deadline with the project description.
  */
-async function saveOffline (
-	input: BookingInput,
-): Promise<CreateBookingResult> {
-	const bookingId = await insertOfflineBooking({
-		fullName: input.fullName,
-		email: input.email,
-		phone: toStoredPhone(input),
-		serviceId: input.serviceId,
-		websiteDescription: input.websiteDescription,
-	})
-
-	if (!bookingId) {
-		return {
-			ok: false,
-			error: 'Please choose a valid service.',
-		}
+function projectDetails (input: BookingInput): string {
+	const lines = [input.websiteDescription]
+	if (input.budget !== '') {
+		lines.push('Budget: ' + input.budget)
 	}
-
-	return { ok: true, bookingId }
+	if (input.deadline !== '') {
+		lines.push('Preferred deadline: ' + input.deadline)
+	}
+	return lines.join('\n\n')
 }

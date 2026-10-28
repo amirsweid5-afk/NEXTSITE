@@ -173,14 +173,28 @@ export function ServicesSection () {
 									<h3 className="mt-6 text-xl font-semibold tracking-tight text-white">
 										{service.title}
 									</h3>
-									<p className="mt-3 flex-1 text-sm leading-6 text-white/60">
+									<p className="mt-3 text-sm leading-6 text-white/60">
 										{service.description}
 									</p>
+									<ul className="mt-4 flex-1 space-y-2">
+										{service.features.map((feature) => (
+											<li
+												key={feature}
+												className="flex gap-2 text-sm leading-6 text-white/75"
+											>
+												<span
+													aria-hidden="true"
+													className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-orange"
+												/>
+												{feature}
+											</li>
+										))}
+									</ul>
 									<p className="mt-6 text-sm font-medium tracking-wide text-orange">
 										{service.priceLabel}
 									</p>
 									<Link
-										href="/booking"
+										href={'/booking?service=' + service.id}
 										className={[
 											'mt-5 inline-flex min-h-11',
 											'items-center justify-center',

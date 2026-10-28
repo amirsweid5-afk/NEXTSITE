@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Menu } from 'lucide-react'
+import { GlobeToggle } from '@/components/globe-toggle'
 import { ThemeToggle } from '@/components/theme-toggle'
 
 interface AdminTopbarProps {
@@ -42,6 +43,7 @@ export function AdminTopbar ({
 			</div>
 
 			<div className="flex items-center gap-3">
+				<GlobeToggle />
 				<ThemeToggle />
 				<span className="hidden rounded-full bg-cyan-500/20 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-cyan-700 dark:text-cyan-700 dark:text-cyan-100 sm:inline-flex">
 					Admin

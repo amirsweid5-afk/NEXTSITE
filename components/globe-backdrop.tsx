@@ -87,8 +87,10 @@ export function GlobeBackdrop () {
 	useEffect(() => {
 		const canvas = canvasRef.current
 		if (!canvas) return
-		const ctx = canvas.getContext('2d')
-		if (!ctx) return
+		const context = canvas.getContext('2d')
+		if (!context) return
+		const canvasEl: HTMLCanvasElement = canvas
+		const pen: CanvasRenderingContext2D = context
 
 		const media = window.matchMedia(
 			'(prefers-reduced-motion: reduce)',
@@ -108,11 +110,11 @@ export function GlobeBackdrop () {
 
 		function resize () {
 			const ratio = Math.min(window.devicePixelRatio || 1, 2)
-			canvas.width = Math.floor(window.innerWidth * ratio)
-			canvas.height = Math.floor(window.innerHeight * ratio)
-			canvas.style.width = window.innerWidth + 'px'
-			canvas.style.height = window.innerHeight + 'px'
-			ctx.setTransform(ratio, 0, 0, ratio, 0, 0)
+			canvasEl.width = Math.floor(window.innerWidth * ratio)
+			canvasEl.height = Math.floor(window.innerHeight * ratio)
+			canvasEl.style.width = window.innerWidth + 'px'
+			canvasEl.style.height = window.innerHeight + 'px'
+			pen.setTransform(ratio, 0, 0, ratio, 0, 0)
 		}
 
 		function samples (build: (step: number) => Point) {
@@ -134,7 +136,7 @@ export function GlobeBackdrop () {
 			for (let index = 0; index < MERIDIANS; index += 1) {
 				const lon = (index / MERIDIANS) * TURN
 				strokeSide(
-					ctx,
+					pen,
 					samples((amount) => project(
 						-Math.PI / 2 + amount * Math.PI,
 						lon,
@@ -150,7 +152,7 @@ export function GlobeBackdrop () {
 			for (let index = 1; index < PARALLELS; index += 1) {
 				const lat = -Math.PI / 2 + (index / PARALLELS) * Math.PI
 				strokeSide(
-					ctx,
+					pen,
 					samples((amount) => project(
 						lat,
 						amount * TURN,
@@ -180,17 +182,20 @@ export function GlobeBackdrop () {
 				velocityYaw *= decay
 				velocityPitch *= decay
 			}
-			ctx.clearRect(0, 0, width, height)
+			pen.clearRect(0, 0, width, height)
+			const compact = width < 768
 			const cx = width / 2
-			const cy = height / 2
-			const radius = Math.min(width, height) * (0.36 + scroll * 0.05)
+			const cy = compact ? height * 0.68 : height / 2
+			const radius = Math.min(width, height) * (
+				compact ? 0.22 : 0.32 + scroll * 0.04
+			)
 			const tilt = scroll * Math.PI + pitch
 			const turn = spin + yaw
 			globeX = cx
 			globeY = cy
 			globeR = radius
 
-			const shell = ctx.createRadialGradient(
+			const shell = pen.createRadialGradient(
 				cx - radius * 0.32,
 				cy - radius * 0.36,
 				radius * 0.08,
@@ -201,24 +206,24 @@ export function GlobeBackdrop () {
 			shell.addColorStop(0, 'rgba(22, 110, 138, 0.9)')
 			shell.addColorStop(0.55, 'rgba(10, 52, 72, 0.88)')
 			shell.addColorStop(1, 'rgba(6, 28, 42, 0.84)')
-			ctx.beginPath()
-			ctx.arc(cx, cy, radius, 0, TURN)
-			ctx.fillStyle = shell
-			ctx.fill()
+			pen.beginPath()
+			pen.arc(cx, cy, radius, 0, TURN)
+			pen.fillStyle = shell
+			pen.fill()
 
-			ctx.lineWidth = 1.15
-			ctx.lineCap = 'round'
-			ctx.strokeStyle = 'rgba(32, 120, 148, 0.35)'
+			pen.lineWidth = 1.15
+			pen.lineCap = 'round'
+			pen.strokeStyle = 'rgba(32, 120, 148, 0.35)'
 			graticule(radius, turn, tilt, cx, cy, false)
-			ctx.strokeStyle = 'rgba(142, 235, 248, 0.72)'
+			pen.strokeStyle = 'rgba(142, 235, 248, 0.72)'
 			graticule(radius, turn, tilt, cx, cy, true)
 
 			if (scroll > 0.18) {
 				const ringAlpha = Math.sin(Math.min(1, scroll) * Math.PI)
-				ctx.strokeStyle = 'rgba(255, 214, 170, ' + (ringAlpha * 0.75) + ')'
-				ctx.lineWidth = 1.6
+				pen.strokeStyle = 'rgba(255, 214, 170, ' + (ringAlpha * 0.75) + ')'
+				pen.lineWidth = 1.6
 				strokeSide(
-					ctx,
+					pen,
 					samples((amount) => project(
 						0,
 						amount * TURN,
@@ -232,11 +237,11 @@ export function GlobeBackdrop () {
 				)
 			}
 
-			ctx.beginPath()
-			ctx.arc(cx, cy, radius, 0, TURN)
-			ctx.lineWidth = 1.2
-			ctx.strokeStyle = 'rgba(142, 235, 248, 0.45)'
-			ctx.stroke()
+			pen.beginPath()
+			pen.arc(cx, cy, radius, 0, TURN)
+			pen.lineWidth = 1.2
+			pen.strokeStyle = 'rgba(142, 235, 248, 0.45)'
+			pen.stroke()
 
 			frame = window.requestAnimationFrame(draw)
 		}
