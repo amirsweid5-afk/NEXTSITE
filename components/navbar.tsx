@@ -20,6 +20,45 @@ interface NavAuthLinksProps {
 }
 
 /**
+ * Builds one or two initials from a display name.
+ */
+function getInitials (name: string): string {
+	const parts = name.trim().split(/\s+/).filter(Boolean)
+	if (parts.length === 0) return '?'
+	const first = parts[0]?.[0] ?? ''
+	const last = parts.length > 1
+		? parts[parts.length - 1]?.[0] ?? ''
+		: parts[0]?.[1] ?? ''
+	return `${first}${last}`.toUpperCase()
+}
+
+interface NavUserAvatarProps {
+	name: string
+}
+
+/**
+ * Signed-in user mark shown in place of login and sign-up.
+ */
+function NavUserAvatar ({ name }: NavUserAvatarProps) {
+	return (
+		<span
+			role="img"
+			aria-label={name}
+			title={name}
+			className={[
+				'inline-flex size-10 shrink-0',
+				'items-center justify-center',
+				'rounded-full bg-gold',
+				'text-xs font-semibold uppercase',
+				'tracking-[0.08em] text-[#f7f4ef]',
+			].join(' ')}
+		>
+			{getInitials(name)}
+		</span>
+	)
+}
+
+/**
  * Login and Sign in actions shown beside the theme toggle.
  */
 function NavAuthLinks ({
@@ -82,12 +121,16 @@ function NavAuthLinks ({
 
 interface NavbarProps {
 	isAdmin?: boolean
+	userName?: string | null
 }
 
 /**
  * Site-wide navigation with a mobile sidebar menu.
  */
-export function Navbar ({ isAdmin = false }: NavbarProps) {
+export function Navbar ({
+	isAdmin = false,
+	userName = null,
+}: NavbarProps) {
 	const pathname = usePathname()
 	const content = useContent()
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -222,7 +265,11 @@ export function Navbar ({ isAdmin = false }: NavbarProps) {
 							</Link>
 						) : null}
 						<div className="hidden items-center gap-2 md:flex">
-							<NavAuthLinks />
+							{userName ? (
+								<NavUserAvatar name={userName} />
+							) : (
+								<NavAuthLinks />
+							)}
 							<GlobeToggle />
 							<ThemeToggle />
 						</div>
@@ -351,10 +398,14 @@ export function Navbar ({ isAdmin = false }: NavbarProps) {
 								<ThemeToggle />
 							</div>
 						</div>
-						<NavAuthLinks
-							isCompact
-							onNavigate={handleCloseMenu}
-						/>
+						{userName ? (
+							<NavUserAvatar name={userName} />
+						) : (
+							<NavAuthLinks
+								isCompact
+								onNavigate={handleCloseMenu}
+							/>
+						)}
 					</div>
 					{isAdmin ? (
 						<Link

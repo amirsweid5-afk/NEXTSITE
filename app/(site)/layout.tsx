@@ -15,7 +15,10 @@ export default async function SiteLayout ({
 		<>
 			<SplashCursorEffect />
 			<SkipToContent />
-			<Navbar isAdmin={profile?.isAdmin === true} />
+			<Navbar
+				isAdmin={profile?.isAdmin === true}
+				userName={profile?.name ?? null}
+			/>
 			<main id="main" className="flex flex-1 flex-col">
 				{children}
 			</main>
