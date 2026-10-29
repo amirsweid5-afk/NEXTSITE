@@ -153,7 +153,7 @@ export function ServicesSection () {
 										'transition duration-300 ease-out',
 										'hover:-translate-y-1.5',
 										'hover:border-orange/45',
-										'hover:shadow-[0_24px_60px_rgba(232,120,18,0.12)]',
+										'hover:shadow-[0_24px_60px_rgba(46,196,222,0.12)]',
 									].join(' ')}
 								>
 									<div
@@ -164,7 +164,7 @@ export function ServicesSection () {
 											'text-orange transition duration-300',
 											'group-hover:border-orange/60',
 											'group-hover:bg-orange/15',
-											'group-hover:shadow-[0_0_24px_rgba(232,120,18,0.25)]',
+											'group-hover:shadow-[0_0_24px_rgba(46,196,222,0.25)]',
 										].join(' ')}
 									>
 										<ServiceIcon type={icon} />
@@ -203,7 +203,7 @@ export function ServicesSection () {
 											'tracking-[0.18em] text-ink',
 											'transition duration-300',
 											'hover:bg-highlight',
-											'hover:shadow-[0_0_24px_rgba(209,172,44,0.35)]',
+											'hover:shadow-[0_0_24px_rgba(142,235,248,0.35)]',
 											'focus-visible:outline-2',
 											'focus-visible:outline-offset-4',
 										].join(' ')}

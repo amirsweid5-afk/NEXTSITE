@@ -3,6 +3,10 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import {
+	AccountDrawer,
+	ProfileMark,
+} from '@/components/account-drawer'
 import { BrandLogo } from '@/components/brand-logo'
 import { LanguageToggle } from '@/components/language-toggle'
 import { GlobeToggle } from '@/components/globe-toggle'
@@ -17,45 +21,6 @@ interface NavItem {
 interface NavAuthLinksProps {
 	onNavigate?: () => void
 	isCompact?: boolean
-}
-
-/**
- * Builds one or two initials from a display name.
- */
-function getInitials (name: string): string {
-	const parts = name.trim().split(/\s+/).filter(Boolean)
-	if (parts.length === 0) return '?'
-	const first = parts[0]?.[0] ?? ''
-	const last = parts.length > 1
-		? parts[parts.length - 1]?.[0] ?? ''
-		: parts[0]?.[1] ?? ''
-	return `${first}${last}`.toUpperCase()
-}
-
-interface NavUserAvatarProps {
-	name: string
-}
-
-/**
- * Signed-in user mark shown in place of login and sign-up.
- */
-function NavUserAvatar ({ name }: NavUserAvatarProps) {
-	return (
-		<span
-			role="img"
-			aria-label={name}
-			title={name}
-			className={[
-				'inline-flex size-10 shrink-0',
-				'items-center justify-center',
-				'rounded-full bg-gold',
-				'text-xs font-semibold uppercase',
-				'tracking-[0.08em] text-[#f7f4ef]',
-			].join(' ')}
-		>
-			{getInitials(name)}
-		</span>
-	)
 }
 
 /**
@@ -122,6 +87,9 @@ function NavAuthLinks ({
 interface NavbarProps {
 	isAdmin?: boolean
 	userName?: string | null
+	userEmail?: string | null
+	userPhone?: string
+	userAvatar?: string | null
 }
 
 /**
@@ -130,27 +98,56 @@ interface NavbarProps {
 export function Navbar ({
 	isAdmin = false,
 	userName = null,
+	userEmail = null,
+	userPhone = '',
+	userAvatar = null,
 }: NavbarProps) {
 	const pathname = usePathname()
 	const content = useContent()
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
+	const [isAccountOpen, setIsAccountOpen] = useState(false)
 	const [menuPathname, setMenuPathname] = useState(pathname)
+	const [profileName, setProfileName] = useState(userName ?? '')
+	const [profilePhone, setProfilePhone] = useState(userPhone)
+	const [profileAvatar, setProfileAvatar] = useState(userAvatar)
+	const [profileKey, setProfileKey] = useState(profileSnapshot(
+		userName,
+		userPhone,
+		userAvatar,
+	))
+	const nextProfileKey = profileSnapshot(
+		userName,
+		userPhone,
+		userAvatar,
+	)
+
+	if (nextProfileKey !== profileKey) {
+		setProfileKey(nextProfileKey)
+		setProfileName(userName ?? '')
+		setProfilePhone(userPhone)
+		setProfileAvatar(userAvatar)
+	}
 
 	if (pathname !== menuPathname) {
 		setMenuPathname(pathname)
 		setIsMenuOpen(false)
+		setIsAccountOpen(false)
 	}
 
 	useEffect(() => {
-		if (!isMenuOpen) return
+		if (!isMenuOpen && !isAccountOpen) return
 
 		const previousOverflow = document.body.style.overflow
 		document.body.style.overflow = 'hidden'
 
 		function handleKeyDown (event: KeyboardEvent) {
-			if (event.key === 'Escape') {
-				setIsMenuOpen(false)
+			if (event.key !== 'Escape') return
+			if (isAccountOpen) {
+				setIsAccountOpen(false)
+				document.getElementById('account-trigger')?.focus()
+				return
 			}
+			setIsMenuOpen(false)
 		}
 
 		window.addEventListener('keydown', handleKeyDown)
@@ -158,7 +155,7 @@ export function Navbar ({
 			document.body.style.overflow = previousOverflow
 			window.removeEventListener('keydown', handleKeyDown)
 		}
-	}, [isMenuOpen])
+	}, [isMenuOpen, isAccountOpen])
 
 	function handleToggleMenu () {
 		setIsMenuOpen((isOpen) => !isOpen)
@@ -167,6 +164,28 @@ export function Navbar ({
 	function handleCloseMenu () {
 		setIsMenuOpen(false)
 	}
+
+	function handleOpenAccount () {
+		setIsMenuOpen(false)
+		setIsAccountOpen(true)
+	}
+
+	function handleCloseAccount () {
+		setIsAccountOpen(false)
+		document.getElementById('account-trigger')?.focus()
+	}
+
+	function handleProfileChange (next: {
+		name: string
+		phone: string
+		avatar: string | null
+	}) {
+		setProfileName(next.name)
+		setProfilePhone(next.phone)
+		setProfileAvatar(next.avatar)
+	}
+
+	const isSignedIn = Boolean(userEmail)
 
 	const navItems: NavItem[] = [
 		{ href: '/', label: content.nav.home },
@@ -265,14 +284,36 @@ export function Navbar ({
 							</Link>
 						) : null}
 						<div className="hidden items-center gap-2 md:flex">
-							{userName ? (
-								<NavUserAvatar name={userName} />
-							) : (
-								<NavAuthLinks />
-							)}
+							{isSignedIn ? null : <NavAuthLinks />}
 							<GlobeToggle />
 							<ThemeToggle />
 						</div>
+						{isSignedIn && userEmail ? (
+							<button
+								id="account-trigger"
+								type="button"
+								onClick={handleOpenAccount}
+								aria-haspopup="dialog"
+								aria-expanded={isAccountOpen}
+								aria-controls="account-drawer"
+								aria-label={content.nav.account}
+								className={[
+									'inline-flex size-10 shrink-0',
+									'items-center justify-center',
+									'rounded-full',
+									'focus-visible:outline-2',
+									'focus-visible:outline-offset-4',
+									isAccountOpen
+										? 'ring-2 ring-orange'
+										: '',
+								].join(' ')}
+							>
+								<ProfileMark
+									name={profileName || userEmail}
+									avatar={profileAvatar}
+								/>
+							</button>
+						) : null}
 						<button
 							type="button"
 							className={[
@@ -398,9 +439,7 @@ export function Navbar ({
 								<ThemeToggle />
 							</div>
 						</div>
-						{userName ? (
-							<NavUserAvatar name={userName} />
-						) : (
+						{isSignedIn ? null : (
 							<NavAuthLinks
 								isCompact
 								onNavigate={handleCloseMenu}
@@ -434,6 +473,26 @@ export function Navbar ({
 					) : null}
 				</nav>
 			</aside>
+			{isSignedIn && userEmail ? (
+				<AccountDrawer
+					isOpen={isAccountOpen}
+					name={profileName || userEmail}
+					email={userEmail}
+					phone={profilePhone}
+					avatar={profileAvatar}
+					isAdmin={isAdmin}
+					onClose={handleCloseAccount}
+					onProfileChange={handleProfileChange}
+				/>
+			) : null}
 		</>
 	)
+}
+
+function profileSnapshot (
+	name: string | null,
+	phone: string,
+	avatar: string | null,
+) {
+	return `${name ?? ''}|${phone}|${avatar ?? ''}`
 }

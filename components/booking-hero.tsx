@@ -66,7 +66,7 @@ function PortalGlyph () {
 				className={[
 					'booking-hero-rise absolute bottom-0 left-1/2',
 					'h-[70%] w-24 -translate-x-1/2',
-					'bg-[linear-gradient(to_top,rgba(232,120,18,0.35),rgba(209,172,44,0.08)_55%,transparent)]',
+					'bg-[linear-gradient(to_top,rgba(46,196,222,0.35),rgba(142,235,248,0.08)_55%,transparent)]',
 					'blur-xl',
 				].join(' ')}
 			/>
@@ -224,7 +224,7 @@ function StepChip ({ step }: StepChipProps) {
 				'shadow-[0_12px_40px_rgba(0,0,0,0.45)]',
 				'backdrop-blur-md transition duration-300',
 				'hover:-translate-y-1 hover:border-orange',
-				'hover:shadow-[0_0_24px_rgba(232,120,18,0.25)]',
+				'hover:shadow-[0_0_24px_rgba(46,196,222,0.25)]',
 			].join(' ')}
 		>
 			<p className="text-[0.65rem] font-medium tracking-[0.2em] text-orange">
@@ -325,7 +325,7 @@ export function BookingHero () {
 						<span
 							className={[
 								'text-orange',
-								'drop-shadow-[0_0_24px_rgba(232,120,18,0.45)]',
+								'drop-shadow-[0_0_24px_rgba(46,196,222,0.45)]',
 							].join(' ')}
 						>
 							{copy.titleAccent}
@@ -356,10 +356,10 @@ export function BookingHero () {
 								'justify-center rounded-full',
 								'bg-orange px-7 text-sm font-semibold',
 								'tracking-wide text-ink',
-								'shadow-[0_0_28px_rgba(232,120,18,0.35)]',
+								'shadow-[0_0_28px_rgba(46,196,222,0.35)]',
 								'transition duration-300',
 								'hover:bg-highlight',
-								'hover:shadow-[0_0_36px_rgba(209,172,44,0.45)]',
+								'hover:shadow-[0_0_36px_rgba(142,235,248,0.45)]',
 								'focus-visible:outline-2',
 								'focus-visible:outline-offset-4',
 							].join(' ')}

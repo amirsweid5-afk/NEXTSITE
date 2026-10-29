@@ -9,12 +9,50 @@ export interface NavContent {
 	bookNow: string
 	login: string
 	signIn: string
+	account: string
 	menu: string
 	close: string
 	primary: string
 	toggleLanguage: string
 	english: string
 	arabic: string
+}
+
+export interface AccountPanelContent {
+	title: string
+	close: string
+	changeProfile: string
+	removePhoto: string
+	photoError: string
+	photoSaving: string
+	manageAccount: string
+	manageHint: string
+	switchToLogin: string
+	switchToSignIn: string
+	bookProject: string
+	signOut: string
+	copyEmail: string
+	copied: string
+	customer: string
+	admin: string
+	back: string
+	name: string
+	nameError: string
+	phone: string
+	phonePlaceholder: string
+	phoneError: string
+	currentPassword: string
+	currentPasswordError: string
+	newPassword: string
+	passwordError: string
+	confirmPassword: string
+	confirmPasswordError: string
+	passwordHint: string
+	save: string
+	saving: string
+	saved: string
+	saveError: string
+	signedOut: string
 }
 
 export interface BookingHeroStep {
@@ -53,6 +91,7 @@ export interface SiteContent {
 	themeToggle: string
 	globeToggle: string
 	nav: NavContent
+	accountPanel: AccountPanelContent
 	home: {
 		hero: {
 			brand: string
@@ -314,12 +353,49 @@ const ENGLISH: SiteContent = {
 		bookNow: 'Book Now',
 		login: 'Login',
 		signIn: 'Sign in',
+		account: 'Account',
 		menu: 'Menu',
 		close: 'Close',
 		primary: 'Primary',
 		toggleLanguage: 'Toggle language',
 		english: 'EN',
 		arabic: 'AR',
+	},
+	accountPanel: {
+		title: 'Your account',
+		close: 'Close account menu',
+		changeProfile: 'Change profile',
+		removePhoto: 'Remove photo',
+		photoError: 'Choose a JPG, PNG, or WebP image under 2 MB.',
+		photoSaving: 'Saving photo...',
+		manageAccount: 'Manage account',
+		manageHint: 'Name, phone, and password',
+		switchToLogin: 'Login with another account',
+		switchToSignIn: 'Sign in with another account',
+		bookProject: 'Book a project',
+		signOut: 'Sign out',
+		copyEmail: 'Copy email',
+		copied: 'Copied',
+		customer: 'Customer',
+		admin: 'Admin',
+		back: 'Back',
+		name: 'Name',
+		nameError: 'Enter your name.',
+		phone: 'Phone',
+		phonePlaceholder: 'Optional phone number',
+		phoneError: 'Enter a valid phone number.',
+		currentPassword: 'Current password (optional)',
+		currentPasswordError: 'Current password is incorrect.',
+		newPassword: 'New password',
+		passwordError: 'Password must be at least 8 characters.',
+		confirmPassword: 'Confirm new password',
+		confirmPasswordError: 'Passwords do not match.',
+		passwordHint: 'Leave the password blank to keep the current one.',
+		save: 'Save changes',
+		saving: 'Saving...',
+		saved: 'Account updated.',
+		saveError: 'Could not save your account. Please try again.',
+		signedOut: 'Your session ended. Log in again.',
 	},
 	home: {
 		hero: {
@@ -836,12 +912,49 @@ const ARABIC: SiteContent = {
 		bookNow: 'احجز الآن',
 		login: 'دخول',
 		signIn: 'تسجيل',
+		account: 'الحساب',
 		menu: 'القائمة',
 		close: 'إغلاق',
 		primary: 'رئيسي',
 		toggleLanguage: 'تبديل اللغة',
 		english: 'EN',
 		arabic: 'AR',
+	},
+	accountPanel: {
+		title: 'حسابك',
+		close: 'إغلاق الحساب',
+		changeProfile: 'تغيير الصورة',
+		removePhoto: 'إزالة الصورة',
+		photoError: 'اختر صورة JPG أو PNG أو WebP أقل من 2 ميغابايت.',
+		photoSaving: 'جارٍ حفظ الصورة...',
+		manageAccount: 'إدارة الحساب',
+		manageHint: 'الاسم والهاتف وكلمة المرور',
+		switchToLogin: 'الدخول بحساب آخر',
+		switchToSignIn: 'التسجيل بحساب آخر',
+		bookProject: 'احجز مشروعاً',
+		signOut: 'تسجيل الخروج',
+		copyEmail: 'نسخ البريد',
+		copied: 'تم النسخ',
+		customer: 'عميل',
+		admin: 'مدير',
+		back: 'رجوع',
+		name: 'الاسم',
+		nameError: 'أدخل اسمك.',
+		phone: 'الهاتف',
+		phonePlaceholder: 'رقم هاتف اختياري',
+		phoneError: 'أدخل رقم هاتف صالحاً.',
+		currentPassword: 'كلمة المرور الحالية (اختياري)',
+		currentPasswordError: 'كلمة المرور الحالية غير صحيحة.',
+		newPassword: 'كلمة مرور جديدة',
+		passwordError: 'يجب أن تكون كلمة المرور 8 أحرف على الأقل.',
+		confirmPassword: 'تأكيد كلمة المرور',
+		confirmPasswordError: 'كلمتا المرور غير متطابقتين.',
+		passwordHint: 'اترك كلمة المرور فارغة للإبقاء على الحالية.',
+		save: 'حفظ التغييرات',
+		saving: 'جارٍ الحفظ...',
+		saved: 'تم تحديث الحساب.',
+		saveError: 'تعذر حفظ الحساب. حاول مرة أخرى.',
+		signedOut: 'انتهت الجلسة. سجّل الدخول مرة أخرى.',
 	},
 	home: {
 		hero: {

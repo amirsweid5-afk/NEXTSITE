@@ -186,7 +186,7 @@ export function WhyChooseUs () {
 										'transition duration-300 ease-out',
 										'hover:-translate-y-1.5',
 										'hover:border-gold/45',
-										'hover:shadow-[0_24px_60px_rgba(209,172,44,0.12)]',
+										'hover:shadow-[0_24px_60px_rgba(142,235,248,0.12)]',
 									].join(' ')}
 								>
 									<div
@@ -197,7 +197,7 @@ export function WhyChooseUs () {
 											'text-highlight transition duration-300',
 											'group-hover:border-gold/60',
 											'group-hover:bg-gold/15',
-											'group-hover:shadow-[0_0_24px_rgba(209,172,44,0.25)]',
+											'group-hover:shadow-[0_0_24px_rgba(142,235,248,0.25)]',
 										].join(' ')}
 									>
 										<FeatureIcon type={icon} />

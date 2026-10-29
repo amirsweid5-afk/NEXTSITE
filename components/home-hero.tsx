@@ -71,7 +71,7 @@ export function HomeHero () {
 				<div
 					className={[
 						'absolute inset-0',
-						'bg-[radial-gradient(ellipse_80%_55%_at_50%_115%,rgba(232,120,18,0.38),transparent_55%),radial-gradient(ellipse_60%_40%_at_80%_10%,rgba(209,172,44,0.16),transparent_50%),radial-gradient(ellipse_50%_35%_at_12%_20%,rgba(177,108,4,0.14),transparent_55%)]',
+						'bg-[radial-gradient(ellipse_80%_55%_at_50%_115%,rgba(46,196,222,0.38),transparent_55%),radial-gradient(ellipse_60%_40%_at_80%_10%,rgba(142,235,248,0.16),transparent_50%),radial-gradient(ellipse_50%_35%_at_12%_20%,rgba(20,152,184,0.14),transparent_55%)]',
 					].join(' ')}
 				/>
 				<div className="home-hero-vignette absolute inset-0" />
@@ -160,7 +160,7 @@ export function HomeHero () {
 					className={[
 						'home-hero-beam absolute left-1/2 bottom-0',
 						'h-[72%] w-[min(42rem,90vw)] -translate-x-1/2',
-						'bg-[linear-gradient(to_top,rgba(232,120,18,0.22),rgba(209,172,44,0.06)_45%,transparent_78%)]',
+						'bg-[linear-gradient(to_top,rgba(46,196,222,0.22),rgba(142,235,248,0.06)_45%,transparent_78%)]',
 						'blur-2xl',
 					].join(' ')}
 				/>

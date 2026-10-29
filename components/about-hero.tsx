@@ -80,12 +80,12 @@ export function AboutHero () {
 					/>
 					<path
 						d="M40 180 C 220 80, 480 220, 720 140 S 1040 40, 1180 120"
-						stroke="rgba(232,120,18,0.25)"
+						stroke="rgba(46,196,222,0.25)"
 						strokeWidth="1"
 					/>
 					<path
 						d="M160 760 C 380 640, 560 780, 820 660 S 1080 540, 1200 600"
-						stroke="rgba(209,172,44,0.2)"
+						stroke="rgba(142,235,248,0.2)"
 						strokeWidth="1"
 					/>
 					<defs>
@@ -174,7 +174,7 @@ export function AboutHero () {
 						].join(' ')}
 					>
 						{copy.titleLead}{' '}
-						<span className="text-orange drop-shadow-[0_0_24px_rgba(232,120,18,0.45)]">
+						<span className="text-orange drop-shadow-[0_0_24px_rgba(46,196,222,0.45)]">
 							{copy.titleAccent}
 						</span>
 					</h1>
@@ -203,9 +203,9 @@ export function AboutHero () {
 								'justify-center rounded-full',
 								'bg-orange px-7 text-sm font-semibold',
 								'tracking-wide text-ink',
-								'shadow-[0_0_28px_rgba(232,120,18,0.35)]',
+								'shadow-[0_0_28px_rgba(46,196,222,0.35)]',
 								'transition duration-300',
-								'hover:bg-highlight hover:shadow-[0_0_36px_rgba(209,172,44,0.45)]',
+								'hover:bg-highlight hover:shadow-[0_0_36px_rgba(142,235,248,0.45)]',
 								'focus-visible:outline-2',
 								'focus-visible:outline-offset-4',
 							].join(' ')}
@@ -417,7 +417,7 @@ export function AboutHero () {
 									'text-white shadow-[0_12px_40px_rgba(0,0,0,0.45)]',
 									'backdrop-blur-md transition',
 									'duration-300 hover:-translate-y-1',
-									'hover:border-orange hover:shadow-[0_0_24px_rgba(232,120,18,0.25)]',
+									'hover:border-orange hover:shadow-[0_0_24px_rgba(46,196,222,0.25)]',
 								].join(' ')}
 							>
 								<span className="me-2 inline-block h-1.5 w-1.5 rounded-full bg-orange shadow-[0_0_8px_#2ec4de]" />

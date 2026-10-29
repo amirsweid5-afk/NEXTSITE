@@ -18,6 +18,9 @@ export default async function SiteLayout ({
 			<Navbar
 				isAdmin={profile?.isAdmin === true}
 				userName={profile?.name ?? null}
+				userEmail={profile?.email ?? null}
+				userPhone={profile?.phone ?? ''}
+				userAvatar={profile?.avatar ?? null}
 			/>
 			<main id="main" className="flex flex-1 flex-col">
 				{children}

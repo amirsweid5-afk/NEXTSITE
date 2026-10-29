@@ -1,6 +1,7 @@
 import 'server-only'
 
 import { readLocalSession } from '@/lib/auth/local-accounts'
+import { isProfilePhoto } from '@/lib/profile-photo'
 import { createClient } from '@/lib/supabase/server'
 import { type UserRole } from '@/lib/supabase/database'
 
@@ -9,6 +10,8 @@ export interface CurrentProfile {
 	authUserId: string
 	name: string
 	email: string
+	phone: string
+	avatar: string | null
 	role: UserRole
 	isAdmin: boolean
 }
@@ -43,7 +46,7 @@ async function loadProfile (): Promise<CurrentProfile | null> {
 
 	const profileQuery = supabase
 		.from('users')
-		.select('user_id, auth_user_id, name, email, role')
+		.select('user_id, auth_user_id, name, email, phone, role')
 		.eq('auth_user_id', user.id)
 		.maybeSingle()
 	const profileResult = await Promise.race([
@@ -68,9 +71,17 @@ async function loadProfile (): Promise<CurrentProfile | null> {
 		authUserId: profile.auth_user_id,
 		name: profile.name,
 		email: profile.email,
+		phone: profile.phone ?? '',
+		avatar: readAvatar(user.user_metadata),
 		role: profile.role,
 		isAdmin: profile.role === 'admin',
 	}
+}
+
+function readAvatar (metadata: unknown): string | null {
+	if (typeof metadata !== 'object' || metadata === null) return null
+	if (!('avatar' in metadata)) return null
+	return isProfilePhoto(metadata.avatar) ? metadata.avatar : null
 }
 
 async function readLocalProfile (): Promise<CurrentProfile | null> {
@@ -82,7 +93,9 @@ async function readLocalProfile (): Promise<CurrentProfile | null> {
 		authUserId: local.userId,
 		name: local.name,
 		email: local.email,
-		role: 'customer',
-		isAdmin: false,
+		phone: local.phone,
+		avatar: local.avatar,
+		role: local.role,
+		isAdmin: local.role === 'admin',
 	}
 }

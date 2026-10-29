@@ -521,7 +521,7 @@ export function BookNowSection ({
 							'tracking-[0.18em] text-ink',
 							'transition duration-300 ease-out',
 							'hover:bg-highlight',
-							'hover:shadow-[0_0_24px_rgba(209,172,44,0.35)]',
+							'hover:shadow-[0_0_24px_rgba(142,235,248,0.35)]',
 							'focus-visible:outline-2',
 							'focus-visible:outline-offset-4',
 							'disabled:cursor-not-allowed',

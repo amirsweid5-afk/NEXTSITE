@@ -246,7 +246,7 @@ export function OurMission () {
 										'transition duration-300 ease-out',
 										'hover:-translate-y-1.5',
 										'hover:border-orange/45',
-										'hover:shadow-[0_24px_60px_rgba(232,120,18,0.12)]',
+										'hover:shadow-[0_24px_60px_rgba(46,196,222,0.12)]',
 									].join(' ')}
 								>
 									<div
@@ -257,7 +257,7 @@ export function OurMission () {
 											'text-orange transition duration-300',
 											'group-hover:border-orange/60',
 											'group-hover:bg-orange/15',
-											'group-hover:shadow-[0_0_24px_rgba(232,120,18,0.25)]',
+											'group-hover:shadow-[0_0_24px_rgba(46,196,222,0.25)]',
 										].join(' ')}
 									>
 										<ValueIcon type={icon} />

@@ -21,6 +21,9 @@ interface LocalAccount {
 	name: string
 	salt: string
 	passwordHash: string
+	phone?: string
+	avatar?: string
+	role?: 'customer' | 'admin'
 }
 
 interface LocalSession {
@@ -38,7 +41,16 @@ export interface LocalProfile {
 	userId: string
 	email: string
 	name: string
+	phone: string
+	avatar: string | null
+	role: 'customer' | 'admin'
 }
+
+export type LocalAccountError =
+	| 'name'
+	| 'password-current'
+	| 'signed-out'
+	| 'save'
 
 let queue: Promise<unknown> = Promise.resolve()
 
@@ -69,6 +81,35 @@ async function writeAccounts (file: AccountFile) {
 async function hashPassword (password: string, salt: string) {
 	const derived = await scryptAsync(password, salt, 32) as Buffer
 	return derived.toString('hex')
+}
+
+function toProfile (account: LocalAccount): LocalProfile {
+	const avatar = account.avatar
+	const hasPhoto = typeof avatar === 'string'
+		&& avatar.startsWith('data:image/jpeg;base64,')
+		&& avatar.length <= 80_000
+
+	return {
+		userId: account.id,
+		email: account.email,
+		name: account.name,
+		phone: account.phone ?? '',
+		avatar: hasPhoto ? avatar : null,
+		role: account.role === 'admin' ? 'admin' : 'customer',
+	}
+}
+
+async function isCurrentPassword (
+	account: LocalAccount,
+	password: string,
+) {
+	const actual = Buffer.from(
+		await hashPassword(password, account.salt),
+		'hex',
+	)
+	const expected = Buffer.from(account.passwordHash, 'hex')
+	if (actual.length !== expected.length) return false
+	return timingSafeEqual(actual, expected)
 }
 
 /**
@@ -104,11 +145,7 @@ export async function createLocalAccount (input: {
 		await writeAccounts(file)
 		return {
 			ok: true as const,
-			profile: {
-				userId: account.id,
-				email: account.email,
-				name: account.name,
-			},
+			profile: toProfile(account),
 		}
 	})
 }
@@ -125,19 +162,9 @@ export async function verifyLocalAccount (
 	const account = file.accounts.find((item) => item.email === normalized)
 	if (!account) return null
 
-	const actual = Buffer.from(
-		await hashPassword(password, account.salt),
-		'hex',
-	)
-	const expected = Buffer.from(account.passwordHash, 'hex')
-	if (actual.length !== expected.length) return null
-	if (!timingSafeEqual(actual, expected)) return null
-
-	return {
-		userId: account.id,
-		email: account.email,
-		name: account.name,
-	}
+	const matches = await isCurrentPassword(account, password)
+	if (!matches) return null
+	return toProfile(account)
 }
 
 /**
@@ -167,6 +194,31 @@ export async function startLocalSession (userId: string) {
 }
 
 /**
+ * Ends the local session so another account can sign in.
+ */
+export async function endLocalSession () {
+	const cookieStore = await cookies()
+	const token = cookieStore.get(SESSION_COOKIE)?.value
+	cookieStore.set(SESSION_COOKIE, '', {
+		httpOnly: true,
+		sameSite: 'lax',
+		secure: process.env.NODE_ENV === 'production',
+		path: '/',
+		maxAge: 0,
+	})
+
+	if (!token) return
+
+	await enqueue(async () => {
+		const file = await readAccounts()
+		file.sessions = file.sessions.filter((session) => {
+			return session.token !== token
+		})
+		await writeAccounts(file)
+	})
+}
+
+/**
  * Reads the signed-in local account from the session cookie.
  */
 export async function readLocalSession (): Promise<LocalProfile | null> {
@@ -184,9 +236,75 @@ export async function readLocalSession (): Promise<LocalProfile | null> {
 	const account = file.accounts.find((item) => item.id === session.userId)
 	if (!account) return null
 
-	return {
-		userId: account.id,
-		email: account.email,
-		name: account.name,
-	}
+	return toProfile(account)
+}
+
+/**
+ * Updates the signed-in local account name, phone, or password.
+ */
+export async function updateLocalProfile (input: {
+	userId: string
+	name: string
+	phone: string
+	currentPassword: string
+	newPassword: string
+}): Promise<{ ok: true } | { ok: false, error: LocalAccountError }> {
+	const name = input.name.trim()
+	const phone = input.phone.trim()
+	if (name === '') return { ok: false, error: 'name' }
+
+	return enqueue(async () => {
+		const file = await readAccounts()
+		const account = file.accounts.find((item) => {
+			return item.id === input.userId
+		})
+		if (!account) return { ok: false as const, error: 'signed-out' as const }
+
+		if (input.newPassword !== '') {
+			if (input.currentPassword !== '') {
+				const matches = await isCurrentPassword(
+					account,
+					input.currentPassword,
+				)
+				if (!matches) {
+					return {
+						ok: false as const,
+						error: 'password-current' as const,
+					}
+				}
+			}
+			account.salt = randomBytes(16).toString('hex')
+			account.passwordHash = await hashPassword(
+				input.newPassword,
+				account.salt,
+			)
+		}
+
+		account.name = name
+		account.phone = phone
+		await writeAccounts(file)
+		return { ok: true as const }
+	})
+}
+
+/**
+ * Saves or clears the local account profile photo.
+ */
+export async function updateLocalAvatar (input: {
+	userId: string
+	avatar: string | null
+}): Promise<{ ok: true } | { ok: false, error: LocalAccountError }> {
+	return enqueue(async () => {
+		const file = await readAccounts()
+		const account = file.accounts.find((item) => {
+			return item.id === input.userId
+		})
+		if (!account) return { ok: false as const, error: 'signed-out' as const }
+
+		if (input.avatar) account.avatar = input.avatar
+		else delete account.avatar
+
+		await writeAccounts(file)
+		return { ok: true as const }
+	})
 }

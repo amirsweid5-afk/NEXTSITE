@@ -269,7 +269,7 @@ export function OurVision () {
 										'transition duration-300 ease-out',
 										'hover:-translate-y-1',
 										'hover:border-highlight/40',
-										'hover:shadow-[0_20px_50px_rgba(209,172,44,0.1)]',
+										'hover:shadow-[0_20px_50px_rgba(142,235,248,0.1)]',
 									].join(' ')}
 								>
 									<span
