@@ -1,6 +1,5 @@
 'use server'
 
-import { redirect } from 'next/navigation'
 import {
 	signInInputSchema,
 	type AuthActionResult,
@@ -42,7 +41,7 @@ export async function signIn (
 				},
 			},
 		})
-		const { data, error } = await withTimeout(pending, 5000)
+		const { data, error } = await withTimeout(pending, 1500)
 
 		if (error) {
 			if (!isUnreachableError(error)) {
@@ -52,7 +51,6 @@ export async function signIn (
 			return finishRemoteSignUp(data, parsed.data, destination)
 		}
 	} catch (err) {
-		if (isNextRedirect(err)) throw err
 		if (!isUnreachableError(err)) {
 			const message = err instanceof Error
 				? err.message
@@ -71,7 +69,10 @@ export async function signIn (
 	}
 
 	await startLocalSession(created.profile.userId)
-	redirect(destination)
+	return {
+		ok: true,
+		redirectTo: destination,
+	}
 }
 
 async function finishRemoteSignUp (
@@ -108,16 +109,10 @@ async function finishRemoteSignUp (
 		}
 	}
 
-	redirect(destination)
-}
-
-function isNextRedirect (err: unknown): boolean {
-	if (typeof err !== 'object' || err === null || !('digest' in err)) {
-		return false
+	return {
+		ok: true,
+		redirectTo: destination,
 	}
-	const digest = err.digest
-	return typeof digest === 'string'
-		&& digest.startsWith('NEXT_REDIRECT')
 }
 
 function safeNextPath (value: string | undefined) {

@@ -64,8 +64,12 @@ export function SignInForm ({ nextPath = '/' }: SignInFormProps) {
 		try {
 			result = await signIn(values, nextPath)
 		} catch (err) {
-			if (isNextRedirect(err)) throw err
-			setSaveError('This page is out of date. Refresh it, then try again.')
+			const path = readRedirectPath(err)
+			if (path) {
+				window.location.assign(path)
+				return
+			}
+			setSaveError(copy.signInError)
 			return
 		}
 
@@ -77,6 +81,11 @@ export function SignInForm ({ nextPath = '/' }: SignInFormProps) {
 		if (result.needsConfirmation) {
 			setIsConfirmed(true)
 			form.reset()
+			return
+		}
+
+		if (result.redirectTo) {
+			window.location.assign(result.redirectTo)
 		}
 	}
 
@@ -262,11 +271,15 @@ export function SignInForm ({ nextPath = '/' }: SignInFormProps) {
 	)
 }
 
-function isNextRedirect (err: unknown): boolean {
+function readRedirectPath (err: unknown): string | null {
 	if (typeof err !== 'object' || err === null || !('digest' in err)) {
-		return false
+		return null
 	}
 	const digest = err.digest
-	return typeof digest === 'string'
-		&& digest.startsWith('NEXT_REDIRECT')
+	if (typeof digest !== 'string' || !digest.startsWith('NEXT_REDIRECT')) {
+		return null
+	}
+	const path = digest.split(';').slice(2, -2).join(';')
+	if (!path.startsWith('/') || path.startsWith('//')) return null
+	return path
 }
