@@ -16,6 +16,8 @@ import { DEFAULT_PHONE_COUNTRY } from '@/lib/phone/countries'
 interface BookNowSectionProps {
 	services: BookingServiceOption[]
 	initialServiceId?: string
+	isSignedIn?: boolean
+	returnPath?: string
 }
 
 interface BookingFormValues {
@@ -35,6 +37,8 @@ interface BookingFormValues {
 export function BookNowSection ({
 	services,
 	initialServiceId = '',
+	isSignedIn = false,
+	returnPath = '/booking',
 }: BookNowSectionProps) {
 	const copy = useContent().booking.form
 	const [isConfirmed, setIsConfirmed] = useState(false)
@@ -81,9 +85,11 @@ export function BookNowSection ({
 	const isValid = form.formState.isValid
 	const errors = form.formState.errors
 	const hasServices = services.length > 0
-	const canSubmit = !isSubmitting
+	const canSubmit = isSignedIn && !isSubmitting
+	const authNext = encodeURIComponent(returnPath)
 
 	async function handleSubmit (values: BookingFormValues) {
+		if (!isSignedIn) return
 		setIsConfirmed(false)
 		setSaveError(null)
 
@@ -584,6 +590,68 @@ export function BookNowSection ({
 						</div>
 					) : null}
 				</form>
+			{isSignedIn ? null : (
+				<div
+					className={[
+						'fixed inset-0 z-40 flex items-center',
+						'justify-center px-6',
+					].join(' ')}
+				>
+					<button
+						type="button"
+						tabIndex={-1}
+						aria-hidden="true"
+						className="absolute inset-0 bg-ink/70 backdrop-blur-sm"
+					/>
+					<div
+						role="alertdialog"
+						aria-modal="true"
+						aria-labelledby="booking-auth-title"
+						className={[
+							'relative z-10 w-full max-w-sm',
+							'rounded-2xl border border-white/15',
+							'bg-surface px-6 py-7 text-center',
+							'shadow-[0_24px_60px_rgba(0,0,0,0.45)]',
+						].join(' ')}
+					>
+						<p
+							id="booking-auth-title"
+							className="text-base font-semibold leading-7 text-white"
+						>
+							{copy.signInRequired}
+						</p>
+						<div className="mt-6 flex flex-col gap-3">
+							<Link
+								href={'/login?next=' + authNext}
+								className={[
+									'inline-flex min-h-11 items-center',
+									'justify-center rounded-full',
+									'bg-gold px-5 text-xs font-semibold',
+									'uppercase tracking-[0.16em] text-white',
+									'focus-visible:outline-2',
+									'focus-visible:outline-offset-4',
+								].join(' ')}
+							>
+								{copy.goLogin}
+							</Link>
+							<Link
+								href={'/sign-in?next=' + authNext}
+								className={[
+									'inline-flex min-h-11 items-center',
+									'justify-center rounded-full',
+									'border border-white/15 px-5',
+									'text-xs font-semibold uppercase',
+									'tracking-[0.16em] text-white',
+									'focus-visible:outline-2',
+									'focus-visible:outline-offset-4',
+								].join(' ')}
+							>
+								{copy.goSignIn}
+							</Link>
+						</div>
+					</div>
+				</div>
+			)}
 			</div>
 		</section>
 	)

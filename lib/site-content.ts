@@ -237,6 +237,9 @@ export interface SiteContent {
 			backHome: string
 			saveError: string
 			noServices: string
+			signInRequired: string
+			goLogin: string
+			goSignIn: string
 		}
 	}
 	dashboard: {
@@ -776,6 +779,10 @@ const ENGLISH: SiteContent = {
 				'We could not save your booking. Please try again.',
 			noServices:
 				'Services are unavailable right now. Please try again shortly.',
+			signInRequired:
+				'You must be signed in or logged in to book.',
+			goLogin: 'Login',
+			goSignIn: 'Sign in',
 		},
 	},
 	dashboard: {
@@ -1332,6 +1339,10 @@ const ARABIC: SiteContent = {
 				'تعذر حفظ حجزك. يرجى المحاولة مرة أخرى.',
 			noServices:
 				'الخدمات غير متاحة حالياً. يرجى المحاولة بعد قليل.',
+			signInRequired:
+				'يجب تسجيل الدخول أو إنشاء حساب للحجز.',
+			goLogin: 'دخول',
+			goSignIn: 'تسجيل',
 		},
 	},
 	dashboard: {

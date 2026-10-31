@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation'
 import { BookNowSection } from '@/components/book-now-section'
 import { BookingHero } from '@/components/booking-hero'
 import { getCurrentProfile } from '@/lib/auth/get-current-profile'
@@ -27,13 +26,9 @@ export default async function BookingPage ({
 		? params.service[0]
 		: params.service
 	const profile = await getCurrentProfile()
-	const nextPath = requested
+	const returnPath = requested
 		? '/booking?service=' + encodeURIComponent(requested)
 		: '/booking'
-	if (!profile) {
-		redirect('/login?next=' + encodeURIComponent(nextPath))
-	}
-
 	const services = await getBookingServices()
 	const match = services.find((service) => service.slug === requested)
 
@@ -43,6 +38,8 @@ export default async function BookingPage ({
 			<BookNowSection
 				services={services}
 				initialServiceId={match?.serviceId ?? ''}
+				isSignedIn={profile !== null}
+				returnPath={returnPath}
 			/>
 		</>
 	)
