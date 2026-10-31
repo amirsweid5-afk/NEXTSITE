@@ -32,20 +32,8 @@ export async function getCurrentProfile (): Promise<CurrentProfile | null> {
  */
 async function loadProfile (): Promise<CurrentProfile | null> {
 	const local = await readLocalProfile()
-	const remote = await loadRemoteProfile()
-
-	if (local && remote) {
-		const sameEmail = local.email.toLowerCase() === remote.email.toLowerCase()
-		if (!sameEmail) return local
-		const isAdmin = remote.isAdmin || local.role === 'admin'
-		return {
-			...remote,
-			role: isAdmin ? 'admin' : remote.role,
-			isAdmin,
-		}
-	}
-
-	return local ?? remote
+	if (local) return local
+	return loadRemoteProfile()
 }
 
 /**

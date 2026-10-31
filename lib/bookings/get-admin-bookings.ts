@@ -89,7 +89,7 @@ async function loadRemoteBookings (): Promise<AdminBookingCard[]> {
 		void pending.catch(() => undefined)
 		let timer: ReturnType<typeof setTimeout> | undefined
 		const timeout = new Promise<never>((_, reject) => {
-			timer = setTimeout(() => reject(new Error('timeout')), 4000)
+			timer = setTimeout(() => reject(new Error('timeout')), 800)
 		})
 		const { data, error } = await Promise.race([pending, timeout])
 		if (timer) clearTimeout(timer)

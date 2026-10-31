@@ -135,7 +135,7 @@ html[data-theme='light'] .theme-icon-moon {
 
 /* Admin portal theme surfaces (follow data-theme like the public site). */
 .admin-portal {
-	--admin-bg: transparent;
+	--admin-bg: #071421;
 	--admin-surface: #0d2433;
 	--admin-chrome: #0a1c2b;
 	--admin-topbar: color-mix(in srgb, #071421 78%, transparent);
@@ -147,7 +147,7 @@ html[data-theme='light'] .theme-icon-moon {
 	--admin-chart-tooltip-bg: #0d2433;
 	--admin-chart-tooltip-border: rgba(142, 235, 248, 0.2);
 	--admin-chart-tooltip-fg: #f4fbfd;
-	background: transparent;
+	background: var(--admin-bg);
 	color: var(--white);
 }
 
