@@ -69,6 +69,7 @@ export interface AuthActionResult {
 	ok: boolean
 	error?: string
 	needsConfirmation?: boolean
+	redirectTo?: string
 }
 
 /**

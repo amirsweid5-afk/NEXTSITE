@@ -63,7 +63,8 @@ export function SignInForm ({ nextPath = '/' }: SignInFormProps) {
 		let result
 		try {
 			result = await signIn(values, nextPath)
-		} catch {
+		} catch (err) {
+			if (isNextRedirect(err)) throw err
 			setSaveError('This page is out of date. Refresh it, then try again.')
 			return
 		}
@@ -259,4 +260,13 @@ export function SignInForm ({ nextPath = '/' }: SignInFormProps) {
 			</form>
 		</AuthScreen>
 	)
+}
+
+function isNextRedirect (err: unknown): boolean {
+	if (typeof err !== 'object' || err === null || !('digest' in err)) {
+		return false
+	}
+	const digest = err.digest
+	return typeof digest === 'string'
+		&& digest.startsWith('NEXT_REDIRECT')
 }

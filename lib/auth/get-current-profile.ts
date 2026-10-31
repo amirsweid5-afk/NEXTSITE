@@ -31,6 +31,27 @@ export async function getCurrentProfile (): Promise<CurrentProfile | null> {
  * Loads the profile, and gives up quickly if auth cannot be reached.
  */
 async function loadProfile (): Promise<CurrentProfile | null> {
+	const local = await readLocalProfile()
+	const remote = await loadRemoteProfile()
+
+	if (local && remote) {
+		const sameEmail = local.email.toLowerCase() === remote.email.toLowerCase()
+		if (!sameEmail) return local
+		const isAdmin = remote.isAdmin || local.role === 'admin'
+		return {
+			...remote,
+			role: isAdmin ? 'admin' : remote.role,
+			isAdmin,
+		}
+	}
+
+	return local ?? remote
+}
+
+/**
+ * Loads a Supabase Auth profile when that session can be reached.
+ */
+async function loadRemoteProfile (): Promise<CurrentProfile | null> {
 	const supabase = await createClient()
 	const auth = await Promise.race([
 		supabase.auth.getUser().catch(() => null),
@@ -40,9 +61,7 @@ async function loadProfile (): Promise<CurrentProfile | null> {
 	])
 	const user = auth?.data.user
 
-	if (!user) {
-		return readLocalProfile()
-	}
+	if (!user) return null
 
 	const profileQuery = supabase
 		.from('users')
@@ -57,7 +76,7 @@ async function loadProfile (): Promise<CurrentProfile | null> {
 	])
 
 	if (!profileResult || profileResult.error || !profileResult.data) {
-		return readLocalProfile()
+		return null
 	}
 
 	const profile = profileResult.data

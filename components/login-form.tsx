@@ -49,13 +49,19 @@ export function LoginForm ({ nextPath = '/' }: LoginFormProps) {
 		let result
 		try {
 			result = await login(values, nextPath)
-		} catch {
+		} catch (err) {
+			if (isNextRedirect(err)) throw err
 			setSaveError('This page is out of date. Refresh it, then try again.')
 			return
 		}
 
 		if (!result.ok) {
 			setSaveError(result.error ?? copy.loginError)
+			return
+		}
+
+		if (result.redirectTo) {
+			window.location.assign(result.redirectTo)
 		}
 	}
 
@@ -171,4 +177,13 @@ export function LoginForm ({ nextPath = '/' }: LoginFormProps) {
 			</form>
 		</AuthScreen>
 	)
+}
+
+function isNextRedirect (err: unknown): boolean {
+	if (typeof err !== 'object' || err === null || !('digest' in err)) {
+		return false
+	}
+	const digest = err.digest
+	return typeof digest === 'string'
+		&& digest.startsWith('NEXT_REDIRECT')
 }

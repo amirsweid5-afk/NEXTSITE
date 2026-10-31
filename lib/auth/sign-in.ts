@@ -52,6 +52,7 @@ export async function signIn (
 			return finishRemoteSignUp(data, parsed.data, destination)
 		}
 	} catch (err) {
+		if (isNextRedirect(err)) throw err
 		if (!isUnreachableError(err)) {
 			const message = err instanceof Error
 				? err.message
@@ -108,6 +109,15 @@ async function finishRemoteSignUp (
 	}
 
 	redirect(destination)
+}
+
+function isNextRedirect (err: unknown): boolean {
+	if (typeof err !== 'object' || err === null || !('digest' in err)) {
+		return false
+	}
+	const digest = err.digest
+	return typeof digest === 'string'
+		&& digest.startsWith('NEXT_REDIRECT')
 }
 
 function safeNextPath (value: string | undefined) {

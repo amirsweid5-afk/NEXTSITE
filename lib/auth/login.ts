@@ -1,6 +1,5 @@
 'use server'
 
-import { redirect } from 'next/navigation'
 import {
 	loginInputSchema,
 	type AuthActionResult,
@@ -10,7 +9,6 @@ import {
 	startLocalSession,
 	verifyLocalAccount,
 } from '@/lib/auth/local-accounts'
-import { isUnreachableError } from '@/lib/bookings/service-catalog'
 import { createClient } from '@/lib/supabase/server'
 
 /**
@@ -30,6 +28,18 @@ export async function login (
 	}
 
 	const destination = safeNextPath(nextPath)
+	const local = await verifyLocalAccount(
+		parsed.data.email,
+		parsed.data.password,
+	)
+
+	if (local) {
+		await startLocalSession(local.userId)
+		return {
+			ok: true,
+			redirectTo: local.role === 'admin' ? '/admin' : destination,
+		}
+	}
 
 	try {
 		const supabase = await createClient()
@@ -44,43 +54,17 @@ export async function login (
 		if (!error && data.user?.email) {
 			return finishRemoteLogin(data.user, destination)
 		}
-
-		if (error && !isUnreachableError(error)) {
-			const local = await verifyLocalAccount(
-				parsed.data.email,
-				parsed.data.password,
-			)
-			if (!local) {
-				return {
-					ok: false,
-					error: 'Invalid email or password.',
-				}
-			}
-			await startLocalSession(local.userId)
-			redirect(destination)
-		}
-	} catch (err) {
-		if (!isUnreachableError(err)) {
-			return {
-				ok: false,
-				error: 'Invalid email or password.',
-			}
-		}
-	}
-
-	const local = await verifyLocalAccount(
-		parsed.data.email,
-		parsed.data.password,
-	)
-	if (!local) {
+	} catch {
 		return {
 			ok: false,
 			error: 'Invalid email or password.',
 		}
 	}
 
-	await startLocalSession(local.userId)
-	redirect(destination)
+	return {
+		ok: false,
+		error: 'Invalid email or password.',
+	}
 }
 
 async function finishRemoteLogin (
@@ -117,7 +101,10 @@ async function finishRemoteLogin (
 		}
 	}
 
-	redirect(destination)
+	return {
+		ok: true,
+		redirectTo: destination,
+	}
 }
 
 function safeNextPath (value: string | undefined) {
