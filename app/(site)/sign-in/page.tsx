@@ -1,7 +1,7 @@
 import { SignInForm } from '@/components/sign-in-form'
 
 export const metadata = {
-	title: 'Sign in',
+	title: 'Register',
 	description: 'Create your NEXTSITE account.',
 }
 

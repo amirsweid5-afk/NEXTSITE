@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { isAllowedBookingDeadline } from '@/lib/bookings/deadline'
 import {
 	formatInternationalPhone,
 	getPhoneCountry,
@@ -63,7 +64,7 @@ export function createBookingSchema (copy: {
 			.string()
 			.trim()
 			.refine(
-				(value) => value === '' || /^\d{4}-\d{2}-\d{2}$/.test(value),
+				isAllowedBookingDeadline,
 				{ message: copy.deadlineError },
 			),
 	})
@@ -88,9 +89,7 @@ export const bookingInputSchema = z.object({
 	deadline: z
 		.string()
 		.trim()
-		.refine(
-			(value) => value === '' || /^\d{4}-\d{2}-\d{2}$/.test(value),
-		),
+		.refine(isAllowedBookingDeadline),
 })
 
 export type BookingInput = z.infer<typeof bookingInputSchema>

@@ -1,4 +1,5 @@
 import { AdminShell } from '@/components/admin/admin-shell'
+import { AdminEnglishLock } from '@/components/language-provider'
 import { requireAdmin } from '@/lib/admin/require-admin'
 
 export const metadata = {
@@ -14,11 +15,13 @@ export default async function AdminLayout ({
 	const profile = await requireAdmin()
 
 	return (
-		<AdminShell
-			adminName={profile.name}
-			adminEmail={profile.email}
-		>
-			{children}
-		</AdminShell>
+		<AdminEnglishLock>
+			<AdminShell
+				adminName={profile.name}
+				adminEmail={profile.email}
+			>
+				{children}
+			</AdminShell>
+		</AdminEnglishLock>
 	)
 }

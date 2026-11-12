@@ -355,7 +355,7 @@ const ENGLISH: SiteContent = {
 		dashboard: 'Admin Portal',
 		bookNow: 'Book Now',
 		login: 'Login',
-		signIn: 'Sign in',
+		signIn: 'Register',
 		account: 'Account',
 		menu: 'Menu',
 		close: 'Close',
@@ -374,7 +374,7 @@ const ENGLISH: SiteContent = {
 		manageAccount: 'Manage account',
 		manageHint: 'Name, phone, and password',
 		switchToLogin: 'Login with another account',
-		switchToSignIn: 'Sign in with another account',
+		switchToSignIn: 'Register with another account',
 		bookProject: 'Book a project',
 		signOut: 'Sign out',
 		copyEmail: 'Copy email',
@@ -766,8 +766,9 @@ const ENGLISH: SiteContent = {
 			budgetPlaceholder: 'Optional',
 			budgetError: 'Use numbers only.',
 			deadline: 'Preferred deadline',
-			deadlinePlaceholder: 'Optional',
-			deadlineError: 'Choose a date.',
+			deadlinePlaceholder: '8 days from today or later',
+			deadlineError:
+				'Choose a date at least 8 days from today.',
 			submit: 'Submit Booking',
 			submitting: 'Saving your booking...',
 			confirmedTitle: 'Your project request has been received!',
@@ -782,7 +783,7 @@ const ENGLISH: SiteContent = {
 			signInRequired:
 				'You must be signed in or logged in to book.',
 			goLogin: 'Login',
-			goSignIn: 'Sign in',
+			goSignIn: 'Register',
 		},
 	},
 	dashboard: {
@@ -852,7 +853,7 @@ const ENGLISH: SiteContent = {
 		loginDescription:
 			'Enter your email and password to access your account.',
 		signInEyebrow: 'Join NEXTSITE',
-		signInTitle: 'Sign in',
+		signInTitle: 'Register',
 		signInDescription:
 			'Create your account to book projects and save your details.',
 		fullName: 'Full Name',
@@ -871,7 +872,7 @@ const ENGLISH: SiteContent = {
 		confirmPasswordError: 'Passwords do not match.',
 		loginSubmit: 'Login',
 		loginSubmitting: 'Logging in...',
-		signInSubmit: 'Sign in',
+		signInSubmit: 'Register',
 		signInSubmitting: 'Creating your account...',
 		loginError: 'Invalid email or password.',
 		signInError: 'Could not create your account. Please try again.',
@@ -880,7 +881,7 @@ const ENGLISH: SiteContent = {
 		hasAccount: 'Already have an account?',
 		noAccount: 'Need an account?',
 		goLogin: 'Login',
-		goSignIn: 'Sign in',
+		goSignIn: 'Register',
 	},
 	footer: {
 		tagline: 'Modern websites built around your ideas.',
@@ -918,7 +919,7 @@ const ARABIC: SiteContent = {
 		dashboard: 'بوابة الإدارة',
 		bookNow: 'احجز الآن',
 		login: 'دخول',
-		signIn: 'تسجيل',
+		signIn: 'سجّل',
 		account: 'الحساب',
 		menu: 'القائمة',
 		close: 'إغلاق',
@@ -937,7 +938,7 @@ const ARABIC: SiteContent = {
 		manageAccount: 'إدارة الحساب',
 		manageHint: 'الاسم والهاتف وكلمة المرور',
 		switchToLogin: 'الدخول بحساب آخر',
-		switchToSignIn: 'التسجيل بحساب آخر',
+		switchToSignIn: 'سجّل بحساب آخر',
 		bookProject: 'احجز مشروعاً',
 		signOut: 'تسجيل الخروج',
 		copyEmail: 'نسخ البريد',
@@ -1326,8 +1327,9 @@ const ARABIC: SiteContent = {
 			budgetPlaceholder: 'اختياري',
 			budgetError: 'استخدم أرقاماً فقط.',
 			deadline: 'الموعد المفضّل',
-			deadlinePlaceholder: 'اختياري',
-			deadlineError: 'اختر تاريخاً.',
+			deadlinePlaceholder: 'بعد 8 أيام على الأقل',
+			deadlineError:
+				'اختر تاريخاً يبعد 8 أيام على الأقل عن اليوم.',
 			submit: 'إرسال الحجز',
 			submitting: 'جاري حفظ حجزك...',
 			confirmedTitle: 'تم استلام طلب مشروعك!',
@@ -1342,7 +1344,7 @@ const ARABIC: SiteContent = {
 			signInRequired:
 				'يجب تسجيل الدخول أو إنشاء حساب للحجز.',
 			goLogin: 'دخول',
-			goSignIn: 'تسجيل',
+			goSignIn: 'سجّل',
 		},
 	},
 	dashboard: {
@@ -1410,7 +1412,7 @@ const ARABIC: SiteContent = {
 		loginDescription:
 			'أدخل بريدك الإلكتروني وكلمة المرور للوصول إلى حسابك.',
 		signInEyebrow: 'انضم إلى NEXTSITE',
-		signInTitle: 'تسجيل',
+		signInTitle: 'سجّل',
 		signInDescription:
 			'أنشئ حسابك لحجز المشاريع وحفظ بياناتك.',
 		fullName: 'الاسم الكامل',
@@ -1429,7 +1431,7 @@ const ARABIC: SiteContent = {
 		confirmPasswordError: 'كلمتا المرور غير متطابقتين.',
 		loginSubmit: 'دخول',
 		loginSubmitting: 'جاري تسجيل الدخول...',
-		signInSubmit: 'تسجيل',
+		signInSubmit: 'سجّل',
 		signInSubmitting: 'جاري إنشاء حسابك...',
 		loginError: 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
 		signInError: 'تعذر إنشاء حسابك. يرجى المحاولة مرة أخرى.',
@@ -1438,7 +1440,7 @@ const ARABIC: SiteContent = {
 		hasAccount: 'لديك حساب بالفعل؟',
 		noAccount: 'تحتاج إلى حساب؟',
 		goLogin: 'دخول',
-		goSignIn: 'تسجيل',
+		goSignIn: 'سجّل',
 	},
 	footer: {
 		tagline: 'مواقع حديثة مبنية حول أفكارك.',

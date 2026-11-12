@@ -3,6 +3,8 @@
 import {
 	createContext,
 	useContext,
+	useEffect,
+	useRef,
 	useState,
 	type ReactNode,
 } from 'react'
@@ -74,4 +76,36 @@ export function useLanguage (): LanguageContextValue {
  */
 export function useContent (): SiteContent {
 	return useLanguage().content
+}
+
+/**
+ * Keeps the admin portal in English without changing the public site.
+ */
+export function AdminEnglishLock ({
+	children,
+}: {
+	children: ReactNode
+}) {
+	const parent = useLanguage()
+	const previous = useRef<Language>(parent.language)
+
+	useEffect(() => {
+		previous.current = parent.language
+		applyLanguage('en')
+		return () => {
+			applyLanguage(previous.current)
+		}
+	}, [])
+
+	const value: LanguageContextValue = {
+		language: 'en',
+		content: SITE_CONTENT.en,
+		setLanguage: parent.setLanguage,
+	}
+
+	return (
+		<LanguageContext.Provider value={value}>
+			{children}
+		</LanguageContext.Provider>
+	)
 }

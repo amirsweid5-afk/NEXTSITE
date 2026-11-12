@@ -5,6 +5,7 @@ import {
 	type BookingInput,
 	toStoredPhone,
 } from '@/lib/bookings/booking-schema'
+import { isAllowedBookingDeadline } from '@/lib/bookings/deadline'
 import {
 	isOfflineClientError,
 	isUnreachableError,
@@ -31,6 +32,14 @@ export async function createBooking (
 		return {
 			ok: false,
 			error: 'Please check the form and try again.',
+		}
+	}
+
+	if (!isAllowedBookingDeadline(parsed.data.deadline)) {
+		return {
+			ok: false,
+			error:
+				'Choose a deadline at least 8 days from today.',
 		}
 	}
 

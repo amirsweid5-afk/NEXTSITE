@@ -1,5 +1,4 @@
 import { GlobeToggle } from '@/components/globe-toggle'
-import { LanguageToggle } from '@/components/language-toggle'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { requireAdmin } from '@/lib/admin/require-admin'
 
@@ -59,25 +58,14 @@ export default async function AdminSettingsPage () {
 				<h2 className="text-sm font-semibold text-white">
 					Portal Preferences
 				</h2>
-				<div className="mt-5 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-					<div>
-						<p className="text-sm text-white/70">Language</p>
-						<p className="mt-1 text-xs text-white/40">
-							Controls public site copy when you leave the portal
-						</p>
-						<div className="mt-3">
-							<LanguageToggle />
-						</div>
-					</div>
-					<div>
-						<p className="text-sm text-white/70">Theme</p>
-						<p className="mt-1 text-xs text-white/40">
-							Light or dark appearance
-						</p>
-						<div className="mt-3 flex items-center gap-2">
-							<GlobeToggle />
-							<ThemeToggle />
-						</div>
+				<div className="mt-5">
+					<p className="text-sm text-white/70">Theme</p>
+					<p className="mt-1 text-xs text-white/40">
+						Light or dark appearance
+					</p>
+					<div className="mt-3 flex items-center gap-2">
+						<GlobeToggle />
+						<ThemeToggle />
 					</div>
 				</div>
 			</section>

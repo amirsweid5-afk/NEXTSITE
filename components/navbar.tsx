@@ -24,7 +24,7 @@ interface NavAuthLinksProps {
 }
 
 /**
- * Login and Sign in actions shown beside the theme toggle.
+ * Login and Register actions shown beside the theme toggle.
  */
 function NavAuthLinks ({
 	onNavigate,

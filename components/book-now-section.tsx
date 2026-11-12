@@ -11,6 +11,7 @@ import {
 	createBookingSchema,
 	type BookingServiceOption,
 } from '@/lib/bookings/booking-schema'
+import { minBookingDeadlineIso } from '@/lib/bookings/deadline'
 import { DEFAULT_PHONE_COUNTRY } from '@/lib/phone/countries'
 
 interface BookNowSectionProps {
@@ -87,6 +88,7 @@ export function BookNowSection ({
 	const hasServices = services.length > 0
 	const canSubmit = isSignedIn && !isSubmitting
 	const authNext = encodeURIComponent(returnPath)
+	const minDeadline = minBookingDeadlineIso()
 
 	async function handleSubmit (values: BookingFormValues) {
 		if (!isSignedIn) return
@@ -443,6 +445,7 @@ export function BookNowSection ({
 								<input
 									id="deadline"
 									type="date"
+									min={minDeadline}
 									aria-invalid={
 										errors.deadline ? true : undefined
 									}
