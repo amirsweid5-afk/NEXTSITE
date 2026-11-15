@@ -62,10 +62,10 @@
 	--color-accent: var(--accent);
 	--color-line: var(--line);
 	--color-wash: var(--wash);
-	--font-sans: var(--font-playfair-display-sc), ui-serif, Georgia, serif;
-	--font-mono: var(--font-playfair-display-sc), ui-serif, Georgia, serif;
-	--font-heading: var(--font-playfair-display-sc), ui-serif, Georgia, serif;
-	--font-brand: var(--font-playfair-display-sc), ui-serif, Georgia, serif;
+	--font-sans: "Plain Digits", var(--font-playfair-display-sc), ui-serif, Georgia, serif;
+	--font-mono: "Plain Digits", var(--font-playfair-display-sc), ui-serif, Georgia, serif;
+	--font-heading: "Plain Digits", var(--font-playfair-display-sc), ui-serif, Georgia, serif;
+	--font-brand: "Plain Digits", var(--font-playfair-display-sc), ui-serif, Georgia, serif;
 	--color-sidebar-ring: var(--sidebar-ring);
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -100,6 +100,89 @@
 	--radius-2xl: calc(var(--radius) * 1.8);
 	--radius-3xl: calc(var(--radius) * 2.2);
 	--radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/*
+ * Digits stay on a plain bold face. Playfair Display SC
+ * redraws numbers, so 0–9 (and Arabic digits) use Segoe UI
+ * Bold or Arial Bold at every text weight.
+ */
+@font-face {
+	font-family: "Plain Digits";
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src:
+		local("Segoe UI Bold"),
+		local("SegoeUI-Bold"),
+		local("Arial Bold"),
+		local("Arial-BoldMT");
+	unicode-range: U+0030-0039, U+0660-0669, U+06F0-06F9;
+}
+
+@font-face {
+	font-family: "Plain Digits";
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src:
+		local("Segoe UI Bold"),
+		local("SegoeUI-Bold"),
+		local("Arial Bold"),
+		local("Arial-BoldMT");
+	unicode-range: U+0030-0039, U+0660-0669, U+06F0-06F9;
+}
+
+@font-face {
+	font-family: "Plain Digits";
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src:
+		local("Segoe UI Bold"),
+		local("SegoeUI-Bold"),
+		local("Arial Bold"),
+		local("Arial-BoldMT");
+	unicode-range: U+0030-0039, U+0660-0669, U+06F0-06F9;
+}
+
+@font-face {
+	font-family: "Plain Digits";
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src:
+		local("Segoe UI Bold"),
+		local("SegoeUI-Bold"),
+		local("Arial Bold"),
+		local("Arial-BoldMT");
+	unicode-range: U+0030-0039, U+0660-0669, U+06F0-06F9;
+}
+
+@font-face {
+	font-family: "Plain Digits";
+	font-style: italic;
+	font-weight: 400;
+	font-display: swap;
+	src:
+		local("Segoe UI Bold"),
+		local("SegoeUI-Bold"),
+		local("Arial Bold"),
+		local("Arial-BoldMT");
+	unicode-range: U+0030-0039, U+0660-0669, U+06F0-06F9;
+}
+
+@font-face {
+	font-family: "Plain Digits";
+	font-style: italic;
+	font-weight: 700;
+	font-display: swap;
+	src:
+		local("Segoe UI Bold"),
+		local("SegoeUI-Bold"),
+		local("Arial Bold"),
+		local("Arial-BoldMT");
+	unicode-range: U+0030-0039, U+0660-0669, U+06F0-06F9;
 }
 
 html {
@@ -168,13 +251,13 @@ html[data-theme='light'] .admin-portal {
 }
 
 body {
-	font-family: var(--font-playfair-display-sc), ui-serif, Georgia, serif;
+	font-family: "Plain Digits", var(--font-playfair-display-sc), ui-serif, Georgia, serif;
 	font-weight: 400;
 	font-style: normal;
 }
 
 html[lang='ar'] body {
-	font-family: var(--font-cairo), var(--font-playfair-display-sc), ui-serif, Georgia, serif;
+	font-family: "Plain Digits", var(--font-cairo), var(--font-playfair-display-sc), ui-serif, Georgia, serif;
 }
 
 html[lang='ar'] .uppercase {
@@ -211,7 +294,7 @@ html[lang='ar'] .uppercase {
 }
 
 .home-hero-brand {
-	font-family: var(--font-berkshire-swash), cursive;
+	font-family: "Plain Digits", var(--font-berkshire-swash), cursive;
 }
 
 .site-card {
@@ -226,6 +309,37 @@ html[lang='ar'] .uppercase {
 	transform: translateY(-0.35rem);
 	border-color: color-mix(in srgb, var(--orange) 45%, transparent);
 	box-shadow: 0 22px 52px rgba(46, 196, 222, 0.14);
+}
+
+.scroll-reveal {
+	opacity: 0;
+	transform: translateY(1.25rem);
+	transition:
+		opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+		transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-reveal.is-visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.scroll-reveal-delay-1 { transition-delay: 0.06s; }
+.scroll-reveal-delay-2 { transition-delay: 0.12s; }
+.scroll-reveal-delay-3 { transition-delay: 0.18s; }
+.scroll-reveal-delay-4 { transition-delay: 0.24s; }
+
+@keyframes page-loader-slide {
+	0% { transform: translateX(-120%); }
+	100% { transform: translateX(320%); }
+}
+
+.page-loader-bar {
+	animation: page-loader-slide 1.15s ease-in-out infinite;
+}
+
+.page-enter {
+	animation: home-fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 html[data-theme='light'] .home-hero-grid {
@@ -785,6 +899,15 @@ html[data-theme='light'] .booking-date {
 
 	.site-card:hover {
 		transform: none;
+	}
+
+	.scroll-reveal,
+	.page-enter,
+	.page-loader-bar {
+		animation: none !important;
+		opacity: 1 !important;
+		transform: none !important;
+		transition: none !important;
 	}
 }
 

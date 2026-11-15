@@ -1,3 +1,4 @@
+import { ServicesComparison } from '@/components/services-comparison'
 import { ServicesSection } from '@/components/services-section'
 
 export const metadata = {
@@ -12,5 +13,10 @@ export const metadata = {
 }
 
 export default function ServicesPage () {
-	return <ServicesSection />
+	return (
+		<>
+			<ServicesSection />
+			<ServicesComparison />
+		</>
+	)
 }

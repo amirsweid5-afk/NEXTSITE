@@ -11,7 +11,6 @@ import {
 	isUnreachableError,
 	isUnreachableMessage,
 } from '@/lib/bookings/service-catalog'
-import { getCurrentProfile } from '@/lib/auth/get-current-profile'
 import { insertOfflineBooking } from '@/lib/bookings/offline-bookings'
 import { createAdminClient } from '@/lib/supabase/admin'
 
@@ -21,12 +20,34 @@ export interface CreateBookingResult {
 	error?: string
 }
 
+interface CreateBookingPayload {
+	fullName: string
+	email: string
+	countryCode: string
+	phone: string
+	serviceId: string
+	websiteDescription: string
+	budget: string
+	deadline: string
+	website?: string
+}
+
 /**
  * Saves a public booking request as a user and booking row.
+ * Guests may book without an account; honeypot blocks bots.
  */
 export async function createBooking (
 	input: unknown,
 ): Promise<CreateBookingResult> {
+	const raw = input as CreateBookingPayload
+
+	if (
+		typeof raw?.website === 'string'
+		&& raw.website.trim() !== ''
+	) {
+		return { ok: true, bookingId: 'ignored' }
+	}
+
 	const parsed = bookingInputSchema.safeParse(input)
 
 	if (!parsed.success) {
@@ -41,14 +62,6 @@ export async function createBooking (
 			ok: false,
 			error:
 				'Choose a deadline at least 7 days from today.',
-		}
-	}
-
-	const profile = await getCurrentProfile()
-	if (!profile) {
-		return {
-			ok: false,
-			error: 'Sign in before sending a booking.',
 		}
 	}
 

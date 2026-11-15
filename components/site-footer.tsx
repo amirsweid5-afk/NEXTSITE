@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useContent } from '@/components/language-provider'
+import { useMarketingContent } from '@/hooks/use-marketing-content'
 
 const CONTACT = {
 	phone: '+961 70 552 181',
@@ -61,6 +62,12 @@ function EmailIcon () {
  */
 export function SiteFooter () {
 	const copy = useContent().footer
+	const legal = useMarketingContent().footerLegal
+	const navExtras = [
+		...copy.nav,
+		{ href: '/portfolio', label: legal.portfolio },
+		{ href: '/faq', label: legal.faq },
+	]
 
 	return (
 		<footer
@@ -119,8 +126,8 @@ export function SiteFooter () {
 							{copy.navigate}
 						</p>
 						<ul className="mt-5 space-y-3">
-							{copy.nav.map((item) => (
-								<li key={item.label}>
+							{navExtras.map((item) => (
+								<li key={item.href}>
 									<Link
 										href={item.href}
 										className={[
@@ -212,13 +219,25 @@ export function SiteFooter () {
 				<div
 					className={[
 						'mx-auto flex max-w-7xl',
-						'flex-col items-center gap-4',
-						'px-6 py-6 sm:px-10 lg:px-12',
+						'flex-col items-center justify-between gap-4',
+						'px-6 py-6 sm:flex-row sm:px-10 lg:px-12',
 					].join(' ')}
 				>
-					<p className="text-center text-xs tracking-wide text-white/40">
+					<p className="text-center text-xs tracking-wide text-white/40 sm:text-start">
 						{copy.rights}
 					</p>
+					<ul className="flex flex-wrap items-center justify-center gap-4 text-xs text-white/45">
+						<li>
+							<Link href="/privacy" className="hover:text-orange">
+								{legal.privacy}
+							</Link>
+						</li>
+						<li>
+							<Link href="/terms" className="hover:text-orange">
+								{legal.terms}
+							</Link>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</footer>

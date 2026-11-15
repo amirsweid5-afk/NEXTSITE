@@ -13,6 +13,7 @@ import { CursorEffectToggle } from '@/components/cursor-effect-toggle'
 import { GlobeToggle } from '@/components/globe-toggle'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { useContent } from '@/components/language-provider'
+import { useMarketingContent } from '@/hooks/use-marketing-content'
 
 interface NavItem {
 	href: string
@@ -105,6 +106,7 @@ export function Navbar ({
 }: NavbarProps) {
 	const pathname = usePathname()
 	const content = useContent()
+	const marketing = useMarketingContent()
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 	const [isAccountOpen, setIsAccountOpen] = useState(false)
 	const [menuPathname, setMenuPathname] = useState(pathname)
@@ -192,6 +194,8 @@ export function Navbar ({
 		{ href: '/', label: content.nav.home },
 		{ href: '/about-us', label: content.nav.aboutUs },
 		{ href: '/services', label: content.nav.services },
+		{ href: '/portfolio', label: marketing.nav.portfolio },
+		{ href: '/faq', label: marketing.nav.faq },
 		{ href: '/booking', label: content.nav.booking },
 	]
 
@@ -206,59 +210,70 @@ export function Navbar ({
 			>
 				<div
 					className={[
-						'mx-auto flex h-[4.5rem]',
-						'max-w-7xl items-center',
-						'justify-between gap-4 px-6',
+						'relative mx-auto flex h-[4.5rem]',
+						'max-w-7xl items-center px-6',
 						'sm:px-10 lg:px-12',
 					].join(' ')}
 				>
-					<BrandLogo />
+					<div className="z-10 flex items-center gap-3 lg:gap-4">
+						<BrandLogo />
+						<span
+							aria-hidden="true"
+							className="hidden h-7 w-px shrink-0 bg-white/20 md:block"
+						/>
+					</div>
 
-					<div className="flex items-center gap-3 md:flex-1 md:justify-end md:gap-8">
-						<div className="hidden md:block">
-							<LanguageToggle />
-						</div>
-						<nav
-							id="site-nav"
-							aria-label={content.nav.primary}
-							className="hidden md:block"
+					<nav
+						id="site-nav"
+						aria-label={content.nav.primary}
+						className={[
+							'absolute left-1/2 top-1/2 hidden',
+							'-translate-x-1/2 -translate-y-1/2',
+							'px-8 md:block',
+						].join(' ')}
+					>
+						<ul
+							className={[
+								'flex flex-row flex-nowrap items-center',
+								'gap-6 lg:gap-8',
+							].join(' ')}
 						>
-							<ul
-								className={[
-									'flex flex-row items-center',
-									'gap-8',
-								].join(' ')}
-							>
-								{navItems.map((item) => {
-									const isActive =
-										pathname === item.href
-									return (
-										<li key={item.href}>
-											<Link
-												href={item.href}
-												aria-current={
-													isActive
-														? 'page'
-														: undefined
-												}
-												className={[
-													'block py-2 text-xs',
-													'font-medium uppercase',
-													'tracking-[0.2em]',
-													'focus-visible:outline-2',
-													'focus-visible:outline-offset-4',
-													isActive
-														? 'text-orange'
-														: 'text-white/55 hover:text-orange',
-												].join(' ')}
-											>
-												{item.label}
-											</Link>
-										</li>
-									)
-								})}
-							</ul>
-						</nav>
+							{navItems.map((item) => {
+								const isActive =
+									pathname === item.href
+								return (
+									<li key={item.href} className="shrink-0">
+										<Link
+											href={item.href}
+											aria-current={
+												isActive
+													? 'page'
+													: undefined
+											}
+											className={[
+												'block whitespace-nowrap py-2',
+												'text-xs font-medium uppercase',
+												'tracking-[0.2em]',
+												'focus-visible:outline-2',
+												'focus-visible:outline-offset-4',
+												isActive
+													? 'text-orange'
+													: 'text-white/55 hover:text-orange',
+											].join(' ')}
+										>
+											{item.label}
+										</Link>
+									</li>
+								)
+							})}
+						</ul>
+					</nav>
+
+					<div className="z-10 ms-auto flex items-center gap-2 md:gap-3">
+						<span
+							aria-hidden="true"
+							className="hidden h-7 w-px shrink-0 bg-white/20 md:block"
+						/>
 
 						{isAdmin ? (
 							<Link
@@ -270,52 +285,35 @@ export function Navbar ({
 								}
 								className={[
 									'hidden min-h-10 items-center',
-									'rounded-full border border-gold/50',
-									'bg-gold/15 px-5 text-xs',
-									'font-semibold uppercase',
-									'tracking-[0.18em] text-highlight',
-									'transition duration-300',
+									'whitespace-nowrap rounded-full',
+									'border border-gold/50 bg-gold/15',
+									'px-4 text-[0.65rem] font-semibold',
+									'uppercase tracking-[0.12em]',
+									'text-highlight transition duration-300',
 									'hover:border-gold hover:bg-gold/25',
 									'focus-visible:outline-2',
 									'focus-visible:outline-offset-4',
+									'lg:px-5 lg:text-xs lg:tracking-[0.14em]',
 									'md:inline-flex',
 								].join(' ')}
 							>
 								{content.nav.dashboard}
 							</Link>
 						) : null}
-						<div className="hidden items-center gap-2 md:flex">
-							{isSignedIn ? null : <NavAuthLinks />}
+
+						{isSignedIn ? null : (
+							<div className="hidden md:block">
+								<NavAuthLinks />
+							</div>
+						)}
+
+						<div className="hidden items-center gap-4 md:flex">
+							<LanguageToggle />
 							<CursorEffectToggle />
 							<GlobeToggle />
 							<ThemeToggle />
 						</div>
-						{isSignedIn && userEmail ? (
-							<button
-								id="account-trigger"
-								type="button"
-								onClick={handleOpenAccount}
-								aria-haspopup="dialog"
-								aria-expanded={isAccountOpen}
-								aria-controls="account-drawer"
-								aria-label={content.nav.account}
-								className={[
-									'inline-flex size-10 shrink-0',
-									'items-center justify-center',
-									'rounded-full',
-									'focus-visible:outline-2',
-									'focus-visible:outline-offset-4',
-									isAccountOpen
-										? 'ring-2 ring-orange'
-										: '',
-								].join(' ')}
-							>
-								<ProfileMark
-									name={profileName || userEmail}
-									avatar={profileAvatar}
-								/>
-							</button>
-						) : null}
+
 						<button
 							type="button"
 							className={[
@@ -336,6 +334,33 @@ export function Navbar ({
 								? content.nav.close
 								: content.nav.menu}
 						</button>
+
+						{isSignedIn && userEmail ? (
+							<button
+								id="account-trigger"
+								type="button"
+								onClick={handleOpenAccount}
+								aria-haspopup="dialog"
+								aria-expanded={isAccountOpen}
+								aria-controls="account-drawer"
+								aria-label={content.nav.account}
+								className={[
+									'ms-1 inline-flex size-10 shrink-0',
+									'items-center justify-center',
+									'rounded-full',
+									'focus-visible:outline-2',
+									'focus-visible:outline-offset-4',
+									isAccountOpen
+										? 'ring-2 ring-orange'
+										: '',
+								].join(' ')}
+							>
+								<ProfileMark
+									name={profileName || userEmail}
+									avatar={profileAvatar}
+								/>
+							</button>
+						) : null}
 					</div>
 				</div>
 			</header>
@@ -346,7 +371,7 @@ export function Navbar ({
 				aria-label={content.nav.close}
 				onClick={handleCloseMenu}
 				className={[
-					'fixed inset-x-0 bottom-0 top-[4.5rem]',
+	'fixed inset-x-0 bottom-0 top-[4.5rem]',
 					'z-40 bg-ink/70 backdrop-blur-sm',
 					'transition-opacity duration-300',
 					'md:hidden',
@@ -388,9 +413,9 @@ export function Navbar ({
 												: undefined
 										}
 										className={[
-											'block rounded-lg px-3 py-3',
-											'text-sm font-medium uppercase',
-											'tracking-[0.18em]',
+											'block whitespace-nowrap rounded-lg',
+											'px-3 py-3 text-sm font-medium',
+											'uppercase tracking-[0.14em]',
 											'focus-visible:outline-2',
 											'focus-visible:outline-offset-4',
 											isActive
@@ -410,37 +435,11 @@ export function Navbar ({
 							'border-white/10 pt-6',
 						].join(' ')}
 					>
-						<div>
-							<p
-								className={[
-									'mb-3 text-xs font-medium',
-									'uppercase tracking-[0.18em]',
-									'text-white/40',
-								].join(' ')}
-							>
-								{content.nav.toggleLanguage}
-							</p>
+						<div className="flex items-center gap-4">
 							<LanguageToggle />
-						</div>
-						<div
-							className={[
-								'flex items-center',
-								'justify-between gap-3',
-							].join(' ')}
-						>
-							<p
-								className={[
-									'text-xs font-medium uppercase',
-									'tracking-[0.18em] text-white/40',
-								].join(' ')}
-							>
-								{content.themeToggle}
-							</p>
-							<div className="flex items-center gap-2">
-								<CursorEffectToggle />
-								<GlobeToggle />
-								<ThemeToggle />
-							</div>
+							<CursorEffectToggle />
+							<GlobeToggle />
+							<ThemeToggle />
 						</div>
 						{isSignedIn ? null : (
 							<NavAuthLinks
@@ -461,10 +460,10 @@ export function Navbar ({
 							className={[
 								'mt-auto inline-flex min-h-11',
 								'items-center justify-center',
-								'rounded-full border border-gold/50',
-								'bg-gold/15 px-5 text-xs',
-								'font-semibold uppercase',
-								'tracking-[0.18em] text-highlight',
+								'whitespace-nowrap rounded-full',
+								'border border-gold/50 bg-gold/15',
+								'px-5 text-xs font-semibold uppercase',
+								'tracking-[0.14em] text-highlight',
 								'transition duration-300',
 								'hover:border-gold hover:bg-gold/25',
 								'focus-visible:outline-2',

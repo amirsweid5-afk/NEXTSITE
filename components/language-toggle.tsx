@@ -1,60 +1,51 @@
 'use client'
 
 import { useLanguage } from '@/components/language-provider'
-import { type Language } from '@/lib/language'
 
 /**
- * Switches site copy between English and Arabic.
+ * Icon control that switches site copy between English and Arabic.
  */
 export function LanguageToggle () {
 	const { language, content, setLanguage } = useLanguage()
 
-	function handleSelectLanguage (nextLanguage: Language) {
-		if (nextLanguage === language) return
-		setLanguage(nextLanguage)
+	function handleToggleLanguage () {
+		setLanguage(language === 'en' ? 'ar' : 'en')
 	}
 
 	return (
-		<div
-			role="group"
+		<button
+			type="button"
+			onClick={handleToggleLanguage}
 			aria-label={content.nav.toggleLanguage}
-			className="inline-flex items-center gap-1"
+			title={
+				language === 'en'
+					? content.nav.arabic
+					: content.nav.english
+			}
+			className={[
+				'inline-flex h-10 w-10',
+				'shrink-0 items-center justify-center',
+				'rounded-full border border-white/15',
+				'bg-transparent text-white transition duration-300',
+				'hover:border-orange/45 hover:text-orange',
+				'focus-visible:outline-2',
+				'focus-visible:outline-offset-4',
+			].join(' ')}
 		>
-			<button
-				type="button"
-				onClick={() => handleSelectLanguage('en')}
-				aria-pressed={language === 'en'}
-				className={[
-					'rounded-sm px-1.5 py-1 text-xs',
-					'font-medium tracking-[0.16em]',
-					'focus-visible:outline-2',
-					'focus-visible:outline-offset-4',
-					language === 'en'
-						? 'text-orange'
-						: 'text-white/45 hover:text-orange',
-				].join(' ')}
-			>
-				{content.nav.english}
-			</button>
-			<span aria-hidden="true" className="text-white/25">
-				|
+			<span className="sr-only">
+				{language === 'en'
+					? content.nav.arabic
+					: content.nav.english}
 			</span>
-			<button
-				type="button"
-				onClick={() => handleSelectLanguage('ar')}
-				aria-pressed={language === 'ar'}
+			<span
+				aria-hidden="true"
 				className={[
-					'rounded-sm px-1.5 py-1 text-xs',
-					'font-medium tracking-[0.16em]',
-					'focus-visible:outline-2',
-					'focus-visible:outline-offset-4',
-					language === 'ar'
-						? 'text-orange'
-						: 'text-white/45 hover:text-orange',
+					'text-sm font-semibold leading-none',
+					'tracking-tight',
 				].join(' ')}
 			>
-				{content.nav.arabic}
-			</button>
-		</div>
+				{language === 'en' ? 'ع' : 'E'}
+			</span>
+		</button>
 	)
 }

@@ -24,6 +24,7 @@ import {
 	toDeadlineDisplay,
 } from '@/lib/bookings/deadline'
 import { updateBooking } from '@/lib/bookings/update-booking'
+import { useMarketingContent } from '@/hooks/use-marketing-content'
 import { DEFAULT_PHONE_COUNTRY } from '@/lib/phone/countries'
 
 interface BookNowSectionProps {
@@ -56,9 +57,11 @@ export function BookNowSection ({
 	myBookings = [],
 }: BookNowSectionProps) {
 	const copy = useContent().booking.form
+	const extras = useMarketingContent().bookingExtras
 	const [isConfirmed, setIsConfirmed] = useState(false)
 	const [saveError, setSaveError] = useState<string | null>(null)
 	const [bookings, setBookings] = useState(myBookings)
+	const [budgetRangeId, setBudgetRangeId] = useState('unsure')
 	const [editingBookingId, setEditingBookingId] = useState<string | null>(
 		null,
 	)
@@ -103,8 +106,7 @@ export function BookNowSection ({
 	const isSubmitting = form.formState.isSubmitting
 	const errors = form.formState.errors
 	const hasServices = services.length > 0
-	const canSubmit = isSignedIn && !isSubmitting
-	const authNext = encodeURIComponent(returnPath)
+	const canSubmit = !isSubmitting && hasServices
 	const deadlineValue = form.watch('deadline')
 	const showDeadlineWarning = isDeadlineWarningNeeded(deadlineValue ?? '')
 	const isEditing = editingBookingId !== null
@@ -160,7 +162,10 @@ export function BookNowSection ({
 	}
 
 	async function handleSubmit (values: BookingFormValues) {
-		if (!isSignedIn) return
+		if (editingBookingId && !isSignedIn) {
+			setSaveError(copy.signInRequired)
+			return
+		}
 		if (isDeadlineWarningNeeded(values.deadline)) {
 			setSaveError(copy.deadlineWarning)
 			return
@@ -173,9 +178,13 @@ export function BookNowSection ({
 			setSaveError(copy.deadlineError)
 			return
 		}
+		const honeypot = (
+			document.getElementById('company-website') as HTMLInputElement | null
+		)?.value ?? ''
 		const payload = {
 			...values,
 			deadline: deadlineIso,
+			website: honeypot,
 		}
 
 		if (editingBookingId) {
@@ -223,7 +232,7 @@ export function BookNowSection ({
 		const service = services.find((item) => {
 			return item.serviceId === values.serviceId
 		})
-		if (result.bookingId && service) {
+		if (isSignedIn && result.bookingId && service) {
 			setBookings((current) => [{
 				bookingId: result.bookingId as string,
 				fullName: values.fullName,
@@ -242,6 +251,7 @@ export function BookNowSection ({
 		}
 
 		setIsConfirmed(true)
+		setBudgetRangeId('unsure')
 		resetFormValues()
 	}
 
@@ -301,6 +311,11 @@ export function BookNowSection ({
 					<p className="mt-4 text-base leading-7 text-white/65 sm:text-lg sm:leading-8">
 						{copy.description}
 					</p>
+					{!isSignedIn ? (
+						<p className="mt-3 text-sm text-highlight/90">
+							{extras.guestHint}
+						</p>
+					) : null}
 					{isEditing ? (
 						<button
 							type="button"
@@ -316,8 +331,8 @@ export function BookNowSection ({
 					onSubmit={form.handleSubmit(handleSubmit)}
 					noValidate
 					className={[
-						'site-card mt-12 rounded-2xl border border-white/10',
-						'bg-surface/80 p-6 sm:p-8',
+						'site-card relative mt-12 rounded-2xl',
+						'border border-white/10 bg-surface/80 p-6 sm:p-8',
 					].join(' ')}
 				>
 					<div>
@@ -440,7 +455,7 @@ export function BookNowSection ({
 							htmlFor="service"
 							className="block text-sm font-medium text-white"
 						>
-							{copy.service}
+							{extras.projectType}
 						</label>
 						<select
 							id="service"
@@ -526,112 +541,152 @@ export function BookNowSection ({
 						) : null}
 					</div>
 
-					<div className="mt-6 grid gap-6 sm:grid-cols-2">
-						<div>
-							<label
-								htmlFor="budget"
-								className="block text-sm font-medium text-white"
-							>
-								{copy.budget}
-								<span className="ms-2 text-white/45">
-									{copy.budgetPlaceholder}
-								</span>
-							</label>
-							<input
-								id="budget"
-								type="text"
-								inputMode="decimal"
-								autoComplete="off"
-								placeholder={copy.budgetPlaceholder}
-								aria-invalid={
-									errors.budget ? true : undefined
-								}
-								aria-describedby={
-									errors.budget ? 'budget-error' : undefined
-								}
-								className={[
-									inputClassName,
-									'mt-2 border-white/10',
-								].join(' ')}
-								{...form.register('budget')}
-								onChange={(event) => {
-									let raw = event.target.value
-									if (!raw.includes('$') && /\d/.test(raw)) {
-										raw = '$' + raw
-									}
-									const marked = raw.match(
-										/\$\s*(\d*(?:\.\d{0,2})?)/,
-									)
-									const amount = marked?.[1] ?? ''
-									event.target.value = amount === ''
-										? ''
-										: '$' + amount
-									void form.register('budget').onChange(event)
-								}}
-							/>
-							{errors.budget ? (
-								<p
-									id="budget-error"
-									role="alert"
-									className="mt-2 text-sm text-orange"
+					<div
+						className="pointer-events-none absolute -left-[9999px] h-0 w-0 overflow-hidden opacity-0"
+						aria-hidden="true"
+					>
+						<label htmlFor="company-website">
+							{extras.honeypotLabel}
+						</label>
+						<input
+							id="company-website"
+							type="text"
+							name="website"
+							tabIndex={-1}
+							autoComplete="off"
+						/>
+					</div>
+
+					<div className="mt-6">
+						<p className="block text-sm font-medium text-white">
+							{extras.budgetRange}
+						</p>
+						<div className="mt-3 grid gap-2 sm:grid-cols-2">
+							{extras.budgetRanges.map((range) => (
+								<button
+									key={range.id}
+									type="button"
+									onClick={() => {
+										setBudgetRangeId(range.id)
+										form.setValue('budget', range.value, {
+											shouldValidate: true,
+											shouldDirty: true,
+										})
+									}}
+									className={[
+										'rounded-xl border px-4 py-3 text-start',
+										'text-sm transition',
+										budgetRangeId === range.id
+											? 'border-orange/50 bg-orange/10 text-white'
+											: 'border-white/10 bg-ink/40 text-white/70 hover:border-orange/30',
+									].join(' ')}
 								>
-									{errors.budget.message}
-								</p>
-							) : null}
+									{range.label}
+								</button>
+							))}
 						</div>
-						<div>
-							<label
-								htmlFor="deadline"
-								className="block text-sm font-medium text-white"
+						<label
+							htmlFor="budget"
+							className="mt-4 block text-xs text-white/45"
+						>
+							{extras.budgetCustom}
+						</label>
+						<input
+							id="budget"
+							type="text"
+							inputMode="decimal"
+							autoComplete="off"
+							placeholder={copy.budgetPlaceholder}
+							aria-invalid={
+								errors.budget ? true : undefined
+							}
+							aria-describedby={
+								errors.budget ? 'budget-error' : undefined
+							}
+							className={[
+								inputClassName,
+								'mt-2 border-white/10',
+							].join(' ')}
+							{...form.register('budget')}
+							onChange={(event) => {
+								setBudgetRangeId('custom')
+								let raw = event.target.value
+								if (!raw.includes('$') && /\d/.test(raw)) {
+									raw = '$' + raw
+								}
+								const marked = raw.match(
+									/\$\s*(\d*(?:\.\d{0,2})?)/,
+								)
+								const amount = marked?.[1] ?? ''
+								event.target.value = amount === ''
+									? ''
+									: '$' + amount
+								void form.register('budget').onChange(event)
+							}}
+						/>
+						{errors.budget ? (
+							<p
+								id="budget-error"
+								role="alert"
+								className="mt-2 text-sm text-orange"
 							>
-								{copy.deadline}
-							</label>
-							<input
-								id="deadline"
-								type="text"
-								inputMode="numeric"
-								autoComplete="off"
-								placeholder={copy.deadlinePlaceholder}
-								aria-invalid={
-									errors.deadline
-										|| showDeadlineWarning
-										? true
-										: undefined
-								}
-								aria-describedby={
-									errors.deadline
-										|| showDeadlineWarning
-										? 'deadline-error'
-										: undefined
-								}
-								className={[
-									inputClassName,
-									'mt-2 border-white/10',
-									showDeadlineWarning
-										? 'border-orange/70'
-										: '',
-								].join(' ')}
-								{...deadlineField}
-								onChange={handleDeadlineChange}
-							/>
-							{errors.deadline ? (
-								<p
-									id="deadline-error"
-									role="alert"
-									className="mt-2 text-sm text-orange"
-								>
-									{errors.deadline.message}
-								</p>
-							) : showDeadlineWarning ? (
-								<p
-									id="deadline-error"
-									role="alert"
-									className="mt-2 text-sm text-orange"
-								>
-									{copy.deadlineWarning}
-								</p>
-							) : null}
-						</div>
+								{errors.budget.message}
+							</p>
+						) : null}
+					</div>
+
+					<div className="mt-6">
+						<label
+							htmlFor="deadline"
+							className="block text-sm font-medium text-white"
+						>
+							{copy.deadline}
+						</label>
+						<input
+							id="deadline"
+							type="text"
+							inputMode="numeric"
+							autoComplete="off"
+							placeholder={copy.deadlinePlaceholder}
+							aria-invalid={
+								errors.deadline
+									|| showDeadlineWarning
+									? true
+									: undefined
+							}
+							aria-describedby={
+								errors.deadline
+									|| showDeadlineWarning
+									? 'deadline-error'
+									: undefined
+							}
+							className={[
+								inputClassName,
+								'mt-2 border-white/10',
+								showDeadlineWarning
+									? 'border-orange/70'
+									: '',
+							].join(' ')}
+							{...deadlineField}
+							onChange={handleDeadlineChange}
+						/>
+						{errors.deadline ? (
+							<p
+								id="deadline-error"
+								role="alert"
+								className="mt-2 text-sm text-orange"
+							>
+								{errors.deadline.message}
+							</p>
+						) : showDeadlineWarning ? (
+							<p
+								id="deadline-error"
+								role="alert"
+								className="mt-2 text-sm text-orange"
+							>
+								{copy.deadlineWarning}
+							</p>
+						) : null}
 					</div>
 
 					<button
@@ -716,68 +771,19 @@ export function BookNowSection ({
 						</div>
 					) : null}
 				</form>
-			{isSignedIn ? null : (
+
 				<div
 					className={[
-						'fixed inset-0 z-40 flex items-center',
-						'justify-center px-6',
+						'mx-auto mt-10 max-w-md rounded-2xl',
+						'border border-orange/40 bg-ink/80',
+						'px-6 py-5 text-center',
+						'shadow-[0_12px_36px_rgba(0,0,0,0.3)]',
 					].join(' ')}
 				>
-					<button
-						type="button"
-						tabIndex={-1}
-						aria-hidden="true"
-						className="absolute inset-0 bg-ink/70 backdrop-blur-sm"
-					/>
-					<div
-						role="alertdialog"
-						aria-modal="true"
-						aria-labelledby="booking-auth-title"
-						className={[
-							'relative z-10 w-full max-w-sm',
-							'rounded-2xl border border-white/15',
-							'bg-surface px-6 py-7 text-center',
-							'shadow-[0_24px_60px_rgba(0,0,0,0.45)]',
-						].join(' ')}
-					>
-						<p
-							id="booking-auth-title"
-							className="text-base font-semibold leading-7 text-white"
-						>
-							{copy.signInRequired}
-						</p>
-						<div className="mt-6 flex flex-col gap-3">
-							<Link
-								href={'/login?next=' + authNext}
-								className={[
-									'inline-flex min-h-11 items-center',
-									'justify-center rounded-full',
-									'bg-gold px-5 text-xs font-semibold',
-									'uppercase tracking-[0.16em] text-white',
-									'focus-visible:outline-2',
-									'focus-visible:outline-offset-4',
-								].join(' ')}
-							>
-								{copy.goLogin}
-							</Link>
-							<Link
-								href={'/sign-in?next=' + authNext}
-								className={[
-									'inline-flex min-h-11 items-center',
-									'justify-center rounded-full',
-									'border border-white/15 px-5',
-									'text-xs font-semibold uppercase',
-									'tracking-[0.16em] text-white',
-									'focus-visible:outline-2',
-									'focus-visible:outline-offset-4',
-								].join(' ')}
-							>
-								{copy.goSignIn}
-							</Link>
-						</div>
-					</div>
+					<p className="text-lg font-semibold tracking-wide text-white">
+						WISH : 76/722/832
+					</p>
 				</div>
-			)}
 			</div>
 		</section>
 	)

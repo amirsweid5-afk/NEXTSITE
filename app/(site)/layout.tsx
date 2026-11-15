@@ -20,7 +20,7 @@ export default async function SiteLayout ({
 				userPhone={profile?.phone ?? ''}
 				userAvatar={profile?.avatar ?? null}
 			/>
-			<main id="main" className="flex flex-1 flex-col">
+			<main id="main" className="page-enter flex flex-1 flex-col">
 				{children}
 			</main>
 			<SiteFooter />

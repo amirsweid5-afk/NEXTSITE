@@ -1,5 +1,6 @@
 import { AboutHero } from '@/components/about-hero'
 import { HowWeWork } from '@/components/how-we-work'
+import { MeetTheTeam } from '@/components/meet-the-team'
 import { OurMission } from '@/components/our-mission'
 import { OurStory } from '@/components/our-story'
 import { OurVision } from '@/components/our-vision'
@@ -20,6 +21,7 @@ export default function AboutUsPage () {
 		<>
 			<AboutHero />
 			<OurStory />
+			<MeetTheTeam />
 			<OurMission />
 			<OurVision />
 			<HowWeWork />

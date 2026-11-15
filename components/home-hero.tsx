@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useContent } from '@/components/language-provider'
+import { WebsiteMockup } from '@/components/website-mockup'
 
 const TYPE_DELAY_MS = 180
 const TYPE_INTERVAL_MS = 110
@@ -182,103 +183,109 @@ export function HomeHero () {
 
 			<div
 				className={[
-					'relative z-10 mx-auto w-full max-w-6xl',
-					'px-6 py-16 sm:px-10 sm:pb-20 sm:pt-20',
-					'lg:px-12 lg:pb-24',
+					'relative z-10 mx-auto grid w-full max-w-6xl',
+					'gap-12 px-6 py-16 sm:px-10 sm:pb-20 sm:pt-20',
+					'lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:px-12 lg:pb-24',
 				].join(' ')}
 			>
-				<h1
-					dir="ltr"
-					className={[
-						'relative max-w-5xl font-brand home-hero-brand',
-						'leading-[1.05] tracking-normal',
-						'text-[clamp(3.25rem,11vw,8.5rem)]',
-					].join(' ')}
-				>
-					<span className="sr-only">{copy.brand}</span>
-					<span className="invisible select-none" aria-hidden="true">
-						{copy.brand}
-					</span>
-					<span
-						aria-hidden="true"
-						className="absolute inset-0"
+				<div>
+					<h1
+						dir="ltr"
+						className={[
+							'relative max-w-5xl font-brand home-hero-brand',
+							'leading-[1.05] tracking-normal',
+							'text-[clamp(3.25rem,11vw,8.5rem)]',
+						].join(' ')}
 					>
+						<span className="sr-only">{copy.brand}</span>
+						<span className="invisible select-none" aria-hidden="true">
+							{copy.brand}
+						</span>
 						<span
+							aria-hidden="true"
+							className="absolute inset-0"
+						>
+							<span
+								className={[
+									'home-hero-title text-transparent',
+									'bg-clip-text',
+								].join(' ')}
+							>
+								{typedBrand}
+							</span>
+							{isTyping ? (
+								<span className="home-hero-caret" />
+							) : null}
+						</span>
+					</h1>
+
+					<p
+						className={[
+							'home-hero-animate home-hero-delay-2',
+							'mt-6 max-w-xl text-2xl font-medium',
+							'sm:mt-8',
+							'leading-snug tracking-tight text-white',
+							'sm:text-3xl lg:text-[2rem]',
+						].join(' ')}
+					>
+						{copy.title}
+					</p>
+
+					<p
+						className={[
+							'home-hero-animate home-hero-delay-3',
+							'mt-5 max-w-lg text-base leading-7',
+							'text-white/65 sm:text-lg sm:leading-8',
+						].join(' ')}
+					>
+						{copy.description}
+					</p>
+
+					<div
+						className={[
+							'home-hero-animate home-hero-delay-4',
+							'mt-9 flex flex-wrap items-center gap-3',
+						].join(' ')}
+					>
+						<Link
+							href="/booking"
 							className={[
-								'home-hero-title text-transparent',
-								'bg-clip-text',
+								'inline-flex min-h-12 items-center',
+								'justify-center rounded-full',
+								'bg-orange px-8 text-sm font-semibold',
+								'tracking-[0.06em] text-ink',
+								'shadow-[0_0_32px_rgba(46,196,222,0.4)]',
+								'transition duration-300',
+								'hover:bg-highlight',
+								'hover:shadow-[0_0_40px_rgba(142,235,248,0.45)]',
+								'focus-visible:outline-2',
+								'focus-visible:outline-offset-4',
 							].join(' ')}
 						>
-							{typedBrand}
-						</span>
-						{isTyping ? (
-							<span className="home-hero-caret" />
-						) : null}
-					</span>
-				</h1>
+							{copy.ctaLabel}
+						</Link>
+						<Link
+							href="/services"
+							className={[
+								'inline-flex min-h-12 items-center',
+								'justify-center rounded-full',
+								'border border-white/20 bg-white/5',
+								'px-8 text-sm font-semibold',
+								'tracking-[0.06em] text-white',
+								'backdrop-blur-sm transition duration-300',
+								'hover:border-orange/50 hover:bg-orange/10',
+								'hover:text-orange',
+								'focus-visible:outline-2',
+								'focus-visible:outline-offset-4',
+							].join(' ')}
+						>
+							{copy.secondaryCtaLabel}
+						</Link>
+					</div>
+				</div>
 
-				<p
-					className={[
-						'home-hero-animate home-hero-delay-2',
-						'mt-6 max-w-xl text-2xl font-medium',
-						'sm:mt-8',
-						'leading-snug tracking-tight text-white',
-						'sm:text-3xl lg:text-[2rem]',
-					].join(' ')}
-				>
-					{copy.title}
-				</p>
-
-				<p
-					className={[
-						'home-hero-animate home-hero-delay-3',
-						'mt-5 max-w-lg text-base leading-7',
-						'text-white/65 sm:text-lg sm:leading-8',
-					].join(' ')}
-				>
-					{copy.description}
-				</p>
-
-				<div
-					className={[
-						'home-hero-animate home-hero-delay-4',
-						'mt-9 flex flex-wrap items-center gap-3',
-					].join(' ')}
-				>
-					<Link
-						href="/booking"
-						className={[
-							'inline-flex min-h-12 items-center',
-							'justify-center rounded-full',
-							'bg-orange px-8 text-sm font-semibold',
-							'tracking-[0.06em] text-ink',
-							'shadow-[0_0_32px_rgba(46,196,222,0.4)]',
-							'transition duration-300',
-							'hover:bg-highlight',
-							'hover:shadow-[0_0_40px_rgba(142,235,248,0.45)]',
-							'focus-visible:outline-2',
-							'focus-visible:outline-offset-4',
-						].join(' ')}
-					>
-						{copy.ctaLabel}
-					</Link>
-					<Link
-						href="/services"
-						className={[
-							'inline-flex min-h-12 items-center',
-							'justify-center rounded-full',
-							'border border-white/20 bg-white/5',
-							'px-8 text-sm font-semibold',
-							'tracking-[0.06em] text-white',
-							'backdrop-blur-sm transition duration-300',
-							'hover:border-orange/50 hover:bg-orange/10',
-							'hover:text-orange',
-							'focus-visible:outline-2',
-							'focus-visible:outline-offset-4',
-						].join(' ')}
-					>
-						{copy.secondaryCtaLabel}
-					</Link>
+				<div className="home-hero-animate home-hero-delay-3 hidden lg:block">
+					<WebsiteMockup />
 				</div>
 			</div>
 		</section>

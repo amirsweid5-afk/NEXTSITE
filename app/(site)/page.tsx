@@ -1,5 +1,6 @@
 import { BookingCta } from '@/components/booking-cta'
 import { HomeHero } from '@/components/home-hero'
+import { HowItWorksSection } from '@/components/how-it-works-section'
 import { PortfolioSection } from '@/components/portfolio-section'
 import { WhyChooseUs } from '@/components/why-choose-us'
 
@@ -19,6 +20,7 @@ export default function HomePage () {
 		<>
 			<HomeHero />
 			<WhyChooseUs />
+			<HowItWorksSection />
 			<PortfolioSection />
 			<BookingCta />
 		</>
