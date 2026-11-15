@@ -45,7 +45,7 @@ export default async function AdminAnalyticsPage () {
 			</div>
 
 			<div className="grid gap-4 xl:grid-cols-2">
-				<section className="rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5">
+				<section className="site-card rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5">
 					<h2 className="text-sm font-semibold text-white">
 						Booking Trends
 					</h2>
@@ -61,7 +61,7 @@ export default async function AdminAnalyticsPage () {
 					</div>
 				</section>
 
-				<section className="rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5">
+				<section className="site-card rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5">
 					<h2 className="text-sm font-semibold text-white">
 						Revenue Trends
 					</h2>
@@ -75,7 +75,7 @@ export default async function AdminAnalyticsPage () {
 			</div>
 
 			<div className="grid gap-4 xl:grid-cols-2">
-				<section className="rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5">
+				<section className="site-card rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5">
 					<h2 className="text-sm font-semibold text-white">
 						Service Popularity
 					</h2>
@@ -102,7 +102,7 @@ export default async function AdminAnalyticsPage () {
 					)}
 				</section>
 
-				<section className="rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5">
+				<section className="site-card rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5">
 					<h2 className="text-sm font-semibold text-white">
 						Revenue by Service
 					</h2>

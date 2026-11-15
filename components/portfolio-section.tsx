@@ -38,8 +38,9 @@ export function PortfolioSection () {
 						<li key={item.id}>
 							<article
 								className={[
-									'flex h-full flex-col rounded-2xl',
-									'border border-white/10 bg-surface/80 p-6',
+									'site-card flex h-full flex-col',
+									'rounded-2xl border border-white/10',
+									'bg-surface/80 p-6',
 								].join(' ')}
 							>
 								<p className="text-xs font-medium uppercase tracking-[0.18em] text-orange">

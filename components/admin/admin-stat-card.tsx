@@ -23,7 +23,7 @@ export function AdminStatCard ({
 				: 'text-cyan-700 dark:text-cyan-100'
 
 	return (
-		<article className="rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5 shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
+		<article className="site-card rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5">
 			<p className="text-sm text-white/50">{label}</p>
 			<p className={`mt-3 text-3xl font-semibold tracking-tight ${valueClass}`}>
 				{value}

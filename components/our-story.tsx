@@ -28,9 +28,8 @@ function StoryVisual ({
 
 				<div
 					className={[
-						'relative overflow-hidden rounded-2xl',
+						'site-card relative overflow-hidden rounded-2xl',
 						'border border-white/10 bg-surface/90',
-						'shadow-[0_24px_60px_rgba(0,0,0,0.45)]',
 					].join(' ')}
 				>
 					<div className="border-b border-white/10 px-6 py-5">

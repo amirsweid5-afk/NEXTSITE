@@ -99,9 +99,8 @@ export function SignInForm ({ nextPath = '/' }: SignInFormProps) {
 				onSubmit={form.handleSubmit(handleSubmit)}
 				noValidate
 				className={[
-					'mt-12 rounded-2xl border border-white/10',
+					'site-card mt-12 rounded-2xl border border-white/10',
 					'bg-surface/80 p-6 sm:p-8',
-					'shadow-[0_20px_50px_rgba(0,0,0,0.35)]',
 				].join(' ')}
 			>
 				<div>

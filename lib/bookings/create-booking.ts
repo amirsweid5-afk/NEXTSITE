@@ -12,6 +12,7 @@ import {
 	isUnreachableMessage,
 } from '@/lib/bookings/service-catalog'
 import { getCurrentProfile } from '@/lib/auth/get-current-profile'
+import { insertOfflineBooking } from '@/lib/bookings/offline-bookings'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 export interface CreateBookingResult {
@@ -39,7 +40,7 @@ export async function createBooking (
 		return {
 			ok: false,
 			error:
-				'Choose a deadline at least 8 days from today.',
+				'Choose a deadline at least 7 days from today.',
 		}
 	}
 
@@ -65,11 +66,7 @@ export async function createBooking (
 				&& isUnreachableMessage(err.message)
 			)
 		) {
-			return {
-				ok: false,
-				error:
-					'The booking was not saved because the database could not be reached. Your details are still in the form.',
-			}
+			return saveOfflineBooking(parsed.data)
 		}
 
 		if (err instanceof Error) {
@@ -83,6 +80,31 @@ export async function createBooking (
 	} finally {
 		clearTimeout(timer)
 	}
+}
+
+async function saveOfflineBooking (
+	input: BookingInput,
+): Promise<CreateBookingResult> {
+	const bookingId = await insertOfflineBooking({
+		fullName: input.fullName,
+		email: input.email,
+		phone: toStoredPhone(input),
+		countryCode: input.countryCode,
+		localPhone: input.phone,
+		serviceId: input.serviceId,
+		websiteDescription: input.websiteDescription,
+		budget: input.budget,
+		deadline: input.deadline,
+	})
+
+	if (!bookingId) {
+		return {
+			ok: false,
+			error: 'Could not save your booking.',
+		}
+	}
+
+	return { ok: true, bookingId }
 }
 
 /**

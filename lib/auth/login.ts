@@ -7,6 +7,7 @@ import {
 import { ensureAppUser } from '@/lib/auth/ensure-app-user'
 import {
 	startLocalSession,
+	upsertLocalAccount,
 	verifyLocalAccount,
 } from '@/lib/auth/local-accounts'
 import { createClient } from '@/lib/supabase/server'
@@ -52,7 +53,11 @@ export async function login (
 		)
 
 		if (!error && data.user?.email) {
-			return finishRemoteLogin(data.user, destination)
+			return finishRemoteLogin(
+				data.user,
+				parsed.data.password,
+				destination,
+			)
 		}
 	} catch {
 		return {
@@ -73,6 +78,7 @@ async function finishRemoteLogin (
 		email?: string
 		user_metadata?: Record<string, unknown>
 	},
+	password: string,
 	destination: string,
 ): Promise<AuthActionResult> {
 	if (!user.email) {
@@ -87,23 +93,22 @@ async function finishRemoteLogin (
 		? metadataName
 		: user.email.split('@')[0]
 
-	const profile = await ensureAppUser({
+	await ensureAppUser({
 		id: user.id,
 		email: user.email,
 		name,
 	})
 
-	if (!profile.ok) {
-		return {
-			ok: false,
-			error: profile.error
-				?? 'Could not open your account. Please try again.',
-		}
-	}
+	const local = await upsertLocalAccount({
+		email: user.email,
+		name,
+		password,
+	})
+	await startLocalSession(local.userId)
 
 	return {
 		ok: true,
-		redirectTo: destination,
+		redirectTo: local.role === 'admin' ? '/admin' : destination,
 	}
 }
 

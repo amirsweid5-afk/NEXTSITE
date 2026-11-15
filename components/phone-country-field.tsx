@@ -1,12 +1,17 @@
 'use client'
 
 import { useEffect, useId, useRef, useState } from 'react'
+import { CountryFlag } from '@/components/country-flag'
 import {
 	DEFAULT_PHONE_COUNTRY,
 	PHONE_COUNTRIES,
 	getPhoneCountry,
 	type PhoneCountry,
 } from '@/lib/phone/countries'
+import {
+	formatPhoneDisplay,
+	phoneDisplayPlaceholder,
+} from '@/lib/phone/format-phone-display'
 
 interface PhoneCountryFieldProps {
 	label: string
@@ -93,14 +98,16 @@ export function PhoneCountryField ({
 			<div className="relative mt-2 flex gap-2">
 				<button
 					type="button"
-					aria-label={countryLabel}
+					aria-label={
+						`${selected.name} +${selected.dialCode}`
+					}
 					aria-haspopup="listbox"
 					aria-expanded={isOpen}
 					aria-controls={listId}
 					onClick={() => setIsOpen((open) => !open)}
 					className={[
 						'inline-flex min-h-[2.875rem] shrink-0',
-						'items-center gap-2 rounded-xl border',
+						'items-center gap-2.5 rounded-xl border',
 						'bg-ink/60 px-3 text-sm text-white',
 						'transition duration-300',
 						'hover:border-orange/40',
@@ -111,17 +118,13 @@ export function PhoneCountryField ({
 							: 'border-white/10',
 					].join(' ')}
 				>
-					<span aria-hidden="true" className="text-base">
-						{selected.flag}
-					</span>
+					<CountryFlag
+						code={selected.code}
+						name={selected.name}
+						className="h-5 w-8"
+					/>
 					<span className="font-medium tracking-wide">
 						+{selected.dialCode}
-					</span>
-					<span
-						aria-hidden="true"
-						className="text-white/45"
-					>
-						▾
 					</span>
 				</button>
 
@@ -130,16 +133,25 @@ export function PhoneCountryField ({
 					type="tel"
 					inputMode="numeric"
 					autoComplete="tel-national"
-					placeholder={phonePlaceholder}
-					value={phoneValue}
+					placeholder={
+						phoneDisplayPlaceholder(selected.code)
+						|| phonePlaceholder
+					}
+					value={formatPhoneDisplay(
+						selected.code,
+						phoneValue,
+					)}
 					aria-invalid={phoneError ? true : undefined}
 					aria-describedby={
 						phoneError ? 'phone-error' : undefined
 					}
 					onChange={(event) => {
+						const maxDigits = selected.code === 'LB'
+							? 8
+							: 15
 						const digits = event.target.value
 							.replace(/\D/g, '')
-							.slice(0, 15)
+							.slice(0, maxDigits)
 						onPhoneChange(digits)
 					}}
 					onBlur={onPhoneBlur}
@@ -163,7 +175,9 @@ export function PhoneCountryField ({
 							const isSelected =
 								country.code === selected.code
 							return (
-								<li key={country.code} role="option"
+								<li
+									key={country.code}
+									role="option"
 									aria-selected={isSelected}
 								>
 									<button
@@ -179,9 +193,11 @@ export function PhoneCountryField ({
 												: 'hover:bg-white/5',
 										].join(' ')}
 									>
-										<span aria-hidden="true">
-											{country.flag}
-										</span>
+										<CountryFlag
+											code={country.code}
+											name={country.name}
+											className="h-4 w-6"
+										/>
 										<span className="flex-1 truncate">
 											{country.name}
 										</span>

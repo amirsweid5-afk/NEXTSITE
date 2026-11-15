@@ -411,13 +411,10 @@ export function AboutHero () {
 						>
 							<div
 								className={[
-									'rounded-xl border border-orange/30',
+									'site-card rounded-xl border border-orange/30',
 									'bg-ink/85 px-3.5 py-2.5',
 									'text-xs font-medium tracking-wide',
-									'text-white shadow-[0_12px_40px_rgba(0,0,0,0.45)]',
-									'backdrop-blur-md transition',
-									'duration-300 hover:-translate-y-1',
-									'hover:border-orange hover:shadow-[0_0_24px_rgba(46,196,222,0.25)]',
+									'text-white backdrop-blur-md',
 								].join(' ')}
 							>
 								<span className="me-2 inline-block h-1.5 w-1.5 rounded-full bg-orange shadow-[0_0_8px_#2ec4de]" />

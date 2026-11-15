@@ -8,6 +8,7 @@ import { ensureAppUser } from '@/lib/auth/ensure-app-user'
 import {
 	createLocalAccount,
 	startLocalSession,
+	upsertLocalAccount,
 } from '@/lib/auth/local-accounts'
 import { isUnreachableError } from '@/lib/bookings/service-catalog'
 import { createClient } from '@/lib/supabase/server'
@@ -48,7 +49,11 @@ export async function signIn (
 				return { ok: false, error: error.message }
 			}
 		} else {
-			return finishRemoteSignUp(data, parsed.data, destination)
+			return finishRemoteSignUp(
+				data,
+				parsed.data,
+				destination,
+			)
 		}
 	} catch (err) {
 		if (!isUnreachableError(err)) {
@@ -80,32 +85,35 @@ async function finishRemoteSignUp (
 		user: { id: string, identities?: unknown[] } | null
 		session: unknown
 	},
-	input: { email: string, fullName: string },
+	input: {
+		email: string
+		fullName: string
+		password: string
+	},
 	destination: string,
 ): Promise<AuthActionResult> {
 	const createdUser = data.user
 	const isNewUser = (createdUser?.identities?.length ?? 0) > 0
 
 	if (createdUser && isNewUser) {
-		const profile = await ensureAppUser({
+		await ensureAppUser({
 			id: createdUser.id,
 			email: input.email,
 			name: input.fullName,
 		})
-
-		if (!profile.ok) {
-			return {
-				ok: false,
-				error: profile.error
-					?? 'Could not create your account. Please try again.',
-			}
-		}
 	}
+
+	const local = await upsertLocalAccount({
+		email: input.email,
+		name: input.fullName,
+		password: input.password,
+	})
+	await startLocalSession(local.userId)
 
 	if (!data.session) {
 		return {
 			ok: true,
-			needsConfirmation: true,
+			redirectTo: destination,
 		}
 	}
 

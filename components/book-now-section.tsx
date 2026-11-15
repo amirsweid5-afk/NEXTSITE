@@ -1,9 +1,14 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import {
+	useMemo,
+	useState,
+	type ChangeEvent,
+} from 'react'
 import Link from 'next/link'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
+import { ClientBookingsList } from '@/components/client-bookings-list'
 import { useContent } from '@/components/language-provider'
 import { PhoneCountryField } from '@/components/phone-country-field'
 import { createBooking } from '@/lib/bookings/create-booking'
@@ -11,7 +16,14 @@ import {
 	createBookingSchema,
 	type BookingServiceOption,
 } from '@/lib/bookings/booking-schema'
-import { minBookingDeadlineIso } from '@/lib/bookings/deadline'
+import { type ClientBooking } from '@/lib/bookings/client-booking-types'
+import {
+	formatDeadlineInput,
+	isDeadlineWarningNeeded,
+	normalizeDeadlineToIso,
+	toDeadlineDisplay,
+} from '@/lib/bookings/deadline'
+import { updateBooking } from '@/lib/bookings/update-booking'
 import { DEFAULT_PHONE_COUNTRY } from '@/lib/phone/countries'
 
 interface BookNowSectionProps {
@@ -19,6 +31,7 @@ interface BookNowSectionProps {
 	initialServiceId?: string
 	isSignedIn?: boolean
 	returnPath?: string
+	myBookings?: ClientBooking[]
 }
 
 interface BookingFormValues {
@@ -40,10 +53,15 @@ export function BookNowSection ({
 	initialServiceId = '',
 	isSignedIn = false,
 	returnPath = '/booking',
+	myBookings = [],
 }: BookNowSectionProps) {
 	const copy = useContent().booking.form
 	const [isConfirmed, setIsConfirmed] = useState(false)
 	const [saveError, setSaveError] = useState<string | null>(null)
+	const [bookings, setBookings] = useState(myBookings)
+	const [editingBookingId, setEditingBookingId] = useState<string | null>(
+		null,
+	)
 
 	const schema = useMemo(() => {
 		return createBookingSchema({
@@ -83,36 +101,148 @@ export function BookNowSection ({
 	})
 
 	const isSubmitting = form.formState.isSubmitting
-	const isValid = form.formState.isValid
 	const errors = form.formState.errors
 	const hasServices = services.length > 0
 	const canSubmit = isSignedIn && !isSubmitting
 	const authNext = encodeURIComponent(returnPath)
-	const minDeadline = minBookingDeadlineIso()
+	const deadlineValue = form.watch('deadline')
+	const showDeadlineWarning = isDeadlineWarningNeeded(deadlineValue ?? '')
+	const isEditing = editingBookingId !== null
+	const {
+		onChange: onDeadlineChange,
+		...deadlineField
+	} = form.register('deadline')
+
+	function handleDeadlineChange (
+		event: ChangeEvent<HTMLInputElement>,
+	) {
+		const next = formatDeadlineInput(event.target.value)
+		event.target.value = next
+		void onDeadlineChange(event)
+	}
+
+	function resetFormValues (values?: Partial<BookingFormValues>) {
+		form.reset({
+			fullName: values?.fullName ?? '',
+			email: values?.email ?? '',
+			countryCode: values?.countryCode
+				?? DEFAULT_PHONE_COUNTRY.code,
+			phone: values?.phone ?? '',
+			serviceId: values?.serviceId ?? '',
+			websiteDescription: values?.websiteDescription ?? '',
+			budget: values?.budget ?? '',
+			deadline: values?.deadline ?? '',
+		})
+	}
+
+	function handleEditBooking (booking: ClientBooking) {
+		setEditingBookingId(booking.bookingId)
+		setIsConfirmed(false)
+		setSaveError(null)
+		resetFormValues({
+			fullName: booking.fullName,
+			email: booking.email,
+			countryCode: booking.countryCode,
+			phone: booking.localPhone,
+			serviceId: booking.serviceId,
+			websiteDescription: booking.websiteDescription,
+			budget: booking.budget,
+			deadline: toDeadlineDisplay(booking.deadline),
+		})
+		document.getElementById('book-now-heading')
+			?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+	}
+
+	function handleCancelEdit () {
+		setEditingBookingId(null)
+		setSaveError(null)
+		resetFormValues({ serviceId: initialServiceId })
+	}
 
 	async function handleSubmit (values: BookingFormValues) {
 		if (!isSignedIn) return
+		if (isDeadlineWarningNeeded(values.deadline)) {
+			setSaveError(copy.deadlineWarning)
+			return
+		}
 		setIsConfirmed(false)
 		setSaveError(null)
 
-		const result = await createBooking(values)
+		const deadlineIso = normalizeDeadlineToIso(values.deadline)
+		if (deadlineIso === null) {
+			setSaveError(copy.deadlineError)
+			return
+		}
+		const payload = {
+			...values,
+			deadline: deadlineIso,
+		}
+
+		if (editingBookingId) {
+			const result = await updateBooking(editingBookingId, payload)
+			if (!result.ok) {
+				setSaveError(result.error ?? copy.saveError)
+				return
+			}
+
+			setBookings((current) => {
+				return current.map((booking) => {
+					if (booking.bookingId !== editingBookingId) {
+						return booking
+					}
+					const service = services.find((item) => {
+						return item.serviceId === values.serviceId
+					})
+					return {
+						...booking,
+						fullName: values.fullName,
+						email: values.email,
+						countryCode: values.countryCode,
+						localPhone: values.phone,
+						serviceId: values.serviceId,
+						serviceName: service?.name ?? booking.serviceName,
+						websiteDescription: values.websiteDescription,
+						budget: values.budget,
+						deadline: deadlineIso,
+					}
+				})
+			})
+			setEditingBookingId(null)
+			setIsConfirmed(true)
+			resetFormValues()
+			return
+		}
+
+		const result = await createBooking(payload)
 
 		if (!result.ok) {
 			setSaveError(result.error ?? copy.saveError)
 			return
 		}
 
-		setIsConfirmed(true)
-		form.reset({
-			fullName: '',
-			email: '',
-			countryCode: DEFAULT_PHONE_COUNTRY.code,
-			phone: '',
-			serviceId: '',
-			websiteDescription: '',
-			budget: '',
-			deadline: '',
+		const service = services.find((item) => {
+			return item.serviceId === values.serviceId
 		})
+		if (result.bookingId && service) {
+			setBookings((current) => [{
+				bookingId: result.bookingId as string,
+				fullName: values.fullName,
+				email: values.email,
+				phone: values.phone,
+				countryCode: values.countryCode,
+				localPhone: values.phone,
+				serviceId: values.serviceId,
+				serviceName: service.name,
+				websiteDescription: values.websiteDescription,
+				budget: values.budget,
+				deadline: deadlineIso,
+				status: 'pending',
+				createdAt: new Date().toISOString(),
+			}, ...current])
+		}
+
+		setIsConfirmed(true)
+		resetFormValues()
 	}
 
 	const inputClassName = [
@@ -143,6 +273,16 @@ export function BookNowSection ({
 				<div className="absolute -right-16 bottom-10 h-56 w-56 rounded-full bg-gold/10 blur-[90px]" />
 			</div>
 
+			{isSignedIn ? (
+				<div className="relative z-10">
+					<ClientBookingsList
+						bookings={bookings}
+						editingBookingId={editingBookingId}
+						onEdit={handleEditBooking}
+					/>
+				</div>
+			) : null}
+
 			<div className="relative z-10 mx-auto max-w-2xl px-6 sm:px-10 lg:px-12">
 				<div className="text-center">
 					<p className="text-xs font-medium uppercase tracking-[0.28em] text-orange">
@@ -156,20 +296,28 @@ export function BookNowSection ({
 							'sm:text-4xl',
 						].join(' ')}
 					>
-						{copy.title}
+						{isEditing ? copy.editBooking : copy.title}
 					</h2>
 					<p className="mt-4 text-base leading-7 text-white/65 sm:text-lg sm:leading-8">
 						{copy.description}
 					</p>
+					{isEditing ? (
+						<button
+							type="button"
+							onClick={handleCancelEdit}
+							className="mt-3 text-sm text-highlight hover:text-orange"
+						>
+							{copy.cancelEdit}
+						</button>
+					) : null}
 				</div>
 
 				<form
 					onSubmit={form.handleSubmit(handleSubmit)}
 					noValidate
 					className={[
-						'mt-12 rounded-2xl border border-white/10',
+						'site-card mt-12 rounded-2xl border border-white/10',
 						'bg-surface/80 p-6 sm:p-8',
-						'shadow-[0_20px_50px_rgba(0,0,0,0.35)]',
 					].join(' ')}
 				>
 					<div>
@@ -437,76 +585,35 @@ export function BookNowSection ({
 								className="block text-sm font-medium text-white"
 							>
 								{copy.deadline}
-								<span className="ms-2 text-white/45">
-									{copy.deadlinePlaceholder}
-								</span>
 							</label>
-							<div className="relative mt-2">
-								<input
-									id="deadline"
-									type="date"
-									min={minDeadline}
-									aria-invalid={
-										errors.deadline ? true : undefined
-									}
-									aria-describedby={
-										errors.deadline
-											? 'deadline-error'
-											: undefined
-									}
-									className={[
-										inputClassName,
-										'booking-date border-white/10 pe-12',
-										'[color-scheme:dark]',
-									].join(' ')}
-									{...form.register('deadline')}
-								/>
-								<button
-									type="button"
-									aria-label={copy.deadline}
-									onClick={() => {
-										const field = document.getElementById(
-											'deadline',
-										)
-										if (
-											field instanceof HTMLInputElement
-											&& typeof field.showPicker === 'function'
-										) {
-											field.showPicker()
-										}
-									}}
-									className={[
-										'absolute inset-y-0 end-0',
-										'flex w-12 items-center justify-center',
-										'text-white/70',
-										'focus-visible:outline-2',
-										'focus-visible:outline-offset-2',
-									].join(' ')}
-								>
-									<svg
-										aria-hidden="true"
-										viewBox="0 0 24 24"
-										fill="none"
-										className="h-4 w-4"
-									>
-										<rect
-											x="4"
-											y="5"
-											width="16"
-											height="15"
-											rx="2"
-											stroke="currentColor"
-											strokeWidth="1.5"
-										/>
-										<path
-											d="M4 10h16M8 3.5v3M16 3.5v3"
-											stroke="currentColor"
-											strokeWidth="1.5"
-											strokeLinecap="round"
-										/>
-									</svg>
-								</button>
-							</div>
+							<input
+								id="deadline"
+								type="text"
+								inputMode="numeric"
+								autoComplete="off"
+								placeholder={copy.deadlinePlaceholder}
+								aria-invalid={
+									errors.deadline
+										|| showDeadlineWarning
+										? true
+										: undefined
+								}
+								aria-describedby={
+									errors.deadline
+										|| showDeadlineWarning
+										? 'deadline-error'
+										: undefined
+								}
+								className={[
+									inputClassName,
+									'mt-2 border-white/10',
+									showDeadlineWarning
+										? 'border-orange/70'
+										: '',
+								].join(' ')}
+								{...deadlineField}
+								onChange={handleDeadlineChange}
+							/>
 							{errors.deadline ? (
 								<p
 									id="deadline-error"
@@ -515,13 +622,21 @@ export function BookNowSection ({
 								>
 									{errors.deadline.message}
 								</p>
+							) : showDeadlineWarning ? (
+								<p
+									id="deadline-error"
+									role="alert"
+									className="mt-2 text-sm text-orange"
+								>
+									{copy.deadlineWarning}
+								</p>
 							) : null}
 						</div>
 					</div>
 
 					<button
 						type="submit"
-						disabled={!canSubmit}
+						disabled={!canSubmit || showDeadlineWarning}
 						className={[
 							'mt-8 inline-flex min-h-12 w-full',
 							'items-center justify-center',
@@ -538,8 +653,16 @@ export function BookNowSection ({
 						].join(' ')}
 					>
 						{isSubmitting
-							? copy.submitting
-							: copy.submit}
+							? (
+								isEditing
+									? copy.updateSubmitting
+									: copy.submitting
+							)
+							: (
+								isEditing
+									? copy.updateSubmit
+									: copy.submit
+							)}
 					</button>
 
 					{!hasServices ? (

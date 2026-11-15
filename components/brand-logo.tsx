@@ -62,8 +62,8 @@ export function BrandLogo ({
 			{logoMark}
 			<span
 				className={[
-					'font-brand home-hero-brand',
-					'text-lg leading-none tracking-normal',
+					'text-lg font-semibold leading-none',
+					'tracking-normal',
 				].join(' ')}
 			>
 				NEXTSITE

@@ -39,7 +39,7 @@ export function HowWeWork () {
 						<li
 							key={step.step}
 							className={[
-								'rounded-2xl border border-white/10',
+								'site-card rounded-2xl border border-white/10',
 								'bg-surface/80 p-6',
 							].join(' ')}
 						>

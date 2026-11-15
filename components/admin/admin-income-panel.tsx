@@ -205,7 +205,7 @@ export function AdminIncomePanel ({
 			) : null}
 
 			{showForm ? (
-				<div className="rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5">
+				<div className="site-card rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5">
 					<h3 className="text-sm font-semibold text-white">
 						{editingId ? 'Edit income' : 'New income'}
 					</h3>

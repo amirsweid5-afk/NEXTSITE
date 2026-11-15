@@ -90,6 +90,7 @@ export interface SiteContent {
 	skipToContent: string
 	themeToggle: string
 	globeToggle: string
+	cursorToggle: string
 	nav: NavContent
 	accountPanel: AccountPanelContent
 	home: {
@@ -229,8 +230,11 @@ export interface SiteContent {
 			deadline: string
 			deadlinePlaceholder: string
 			deadlineError: string
+			deadlineWarning: string
 			submit: string
 			submitting: string
+			updateSubmit: string
+			updateSubmitting: string
 			confirmedTitle: string
 			confirmedBody: string
 			confirmedThanks: string
@@ -240,6 +244,11 @@ export interface SiteContent {
 			signInRequired: string
 			goLogin: string
 			goSignIn: string
+			myBookings: string
+			myBookingsEmpty: string
+			editBooking: string
+			cancelEdit: string
+			statusLabel: string
 		}
 	}
 	dashboard: {
@@ -347,6 +356,7 @@ const ENGLISH: SiteContent = {
 	skipToContent: 'Skip to content',
 	themeToggle: 'Toggle color theme',
 	globeToggle: 'Show or hide the background globe',
+	cursorToggle: 'Show or hide the mouse cursor effect',
 	nav: {
 		home: 'Home',
 		aboutUs: 'About Us',
@@ -751,7 +761,7 @@ const ENGLISH: SiteContent = {
 			emailPlaceholder: 'Enter your email',
 			emailError: 'Please enter a valid email.',
 			phone: 'Phone',
-			phonePlaceholder: 'Enter your phone number',
+			phonePlaceholder: '00/000/000',
 			phoneError: 'Please enter your phone number.',
 			country: 'Country code',
 			countryError: 'Please choose a country code.',
@@ -765,12 +775,16 @@ const ENGLISH: SiteContent = {
 			budget: 'Budget',
 			budgetPlaceholder: 'Optional',
 			budgetError: 'Use numbers only.',
-			deadline: 'Preferred deadline',
-			deadlinePlaceholder: '8 days from today or later',
+			deadline: 'Deadline',
+			deadlinePlaceholder: 'dd/mm/yyyy',
 			deadlineError:
-				'Choose a date at least 8 days from today.',
+				'Use dd/mm/yyyy, at least 7 days from today.',
+			deadlineWarning:
+				'You cannot book this date. Pick today plus 7 days or later.',
 			submit: 'Submit Booking',
 			submitting: 'Saving your booking...',
+			updateSubmit: 'Save Changes',
+			updateSubmitting: 'Saving your changes...',
 			confirmedTitle: 'Your project request has been received!',
 			confirmedBody:
 				'Thank you for choosing NEXTSITE. We\'ve received your project details and will review your request.',
@@ -784,6 +798,11 @@ const ENGLISH: SiteContent = {
 				'You must be signed in or logged in to book.',
 			goLogin: 'Login',
 			goSignIn: 'Register',
+			myBookings: 'Your bookings',
+			myBookingsEmpty: 'You have not sent a booking yet.',
+			editBooking: 'Edit booking',
+			cancelEdit: 'Cancel edit',
+			statusLabel: 'Status',
 		},
 	},
 	dashboard: {
@@ -911,6 +930,7 @@ const ARABIC: SiteContent = {
 	skipToContent: 'تخطّ إلى المحتوى',
 	themeToggle: 'تبديل مظهر الألوان',
 	globeToggle: 'إظهار أو إخفاء الكرة في الخلفية',
+	cursorToggle: 'إظهار أو إخفاء تأثير مؤشر الفأرة',
 	nav: {
 		home: 'الرئيسية',
 		aboutUs: 'من نحن',
@@ -1312,7 +1332,7 @@ const ARABIC: SiteContent = {
 			emailPlaceholder: 'أدخل بريدك الإلكتروني',
 			emailError: 'يرجى إدخال بريد إلكتروني صالح.',
 			phone: 'الهاتف',
-			phonePlaceholder: 'أدخل رقم هاتفك',
+			phonePlaceholder: '00/000/000',
 			phoneError: 'يرجى إدخال رقم هاتفك.',
 			country: 'رمز الدولة',
 			countryError: 'يرجى اختيار رمز الدولة.',
@@ -1326,12 +1346,16 @@ const ARABIC: SiteContent = {
 			budget: 'الميزانية',
 			budgetPlaceholder: 'اختياري',
 			budgetError: 'استخدم أرقاماً فقط.',
-			deadline: 'الموعد المفضّل',
-			deadlinePlaceholder: 'بعد 8 أيام على الأقل',
+			deadline: 'الموعد',
+			deadlinePlaceholder: 'يوم/شهر/سنة',
 			deadlineError:
-				'اختر تاريخاً يبعد 8 أيام على الأقل عن اليوم.',
+				'استخدم يوم/شهر/سنة، ويبعد 7 أيام على الأقل عن اليوم.',
+			deadlineWarning:
+				'لا يمكنك الحجز بهذا التاريخ. اختر اليوم زائد 7 أيام أو بعده.',
 			submit: 'إرسال الحجز',
 			submitting: 'جاري حفظ حجزك...',
+			updateSubmit: 'حفظ التعديلات',
+			updateSubmitting: 'جاري حفظ التعديلات...',
 			confirmedTitle: 'تم استلام طلب مشروعك!',
 			confirmedBody:
 				'شكراً لاختيارك NEXTSITE. استلمنا تفاصيل مشروعك وسنراجع طلبك.',
@@ -1345,6 +1369,11 @@ const ARABIC: SiteContent = {
 				'يجب تسجيل الدخول أو إنشاء حساب للحجز.',
 			goLogin: 'دخول',
 			goSignIn: 'سجّل',
+			myBookings: 'حجوزاتك',
+			myBookingsEmpty: 'لم ترسل أي حجز بعد.',
+			editBooking: 'تعديل الحجز',
+			cancelEdit: 'إلغاء التعديل',
+			statusLabel: 'الحالة',
 		},
 	},
 	dashboard: {

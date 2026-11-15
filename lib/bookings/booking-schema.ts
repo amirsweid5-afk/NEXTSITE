@@ -64,7 +64,10 @@ export function createBookingSchema (copy: {
 			.string()
 			.trim()
 			.refine(
-				isAllowedBookingDeadline,
+				(value) => {
+					return value === ''
+						|| isAllowedBookingDeadline(value)
+				},
 				{ message: copy.deadlineError },
 			),
 	})
@@ -89,7 +92,9 @@ export const bookingInputSchema = z.object({
 	deadline: z
 		.string()
 		.trim()
-		.refine(isAllowedBookingDeadline),
+		.refine((value) => {
+			return value === '' || isAllowedBookingDeadline(value)
+		}),
 })
 
 export type BookingInput = z.infer<typeof bookingInputSchema>

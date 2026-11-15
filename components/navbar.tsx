@@ -9,6 +9,7 @@ import {
 } from '@/components/account-drawer'
 import { BrandLogo } from '@/components/brand-logo'
 import { LanguageToggle } from '@/components/language-toggle'
+import { CursorEffectToggle } from '@/components/cursor-effect-toggle'
 import { GlobeToggle } from '@/components/globe-toggle'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { useContent } from '@/components/language-provider'
@@ -285,6 +286,7 @@ export function Navbar ({
 						) : null}
 						<div className="hidden items-center gap-2 md:flex">
 							{isSignedIn ? null : <NavAuthLinks />}
+							<CursorEffectToggle />
 							<GlobeToggle />
 							<ThemeToggle />
 						</div>
@@ -435,6 +437,7 @@ export function Navbar ({
 								{content.themeToggle}
 							</p>
 							<div className="flex items-center gap-2">
+								<CursorEffectToggle />
 								<GlobeToggle />
 								<ThemeToggle />
 							</div>

@@ -1,7 +1,6 @@
 import { Navbar } from '@/components/navbar'
 import { SiteFooter } from '@/components/site-footer'
 import { SkipToContent } from '@/components/skip-to-content'
-import { SplashCursorEffect } from '@/components/splash-cursor-effect'
 import { getCurrentProfile } from '@/lib/auth/get-current-profile'
 
 export default async function SiteLayout ({
@@ -13,7 +12,6 @@ export default async function SiteLayout ({
 
 	return (
 		<>
-			<SplashCursorEffect />
 			<SkipToContent />
 			<Navbar
 				isAdmin={profile?.isAdmin === true}

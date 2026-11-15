@@ -1,16 +1,21 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
-import { Berkshire_Swash, Cairo, Emilys_Candy } from 'next/font/google'
+import {
+	Berkshire_Swash,
+	Cairo,
+	Playfair_Display_SC,
+} from 'next/font/google'
 import { cookies } from 'next/headers'
 import { GlobeBackdrop } from '@/components/globe-backdrop'
 import { LanguageProvider } from '@/components/language-provider'
+import { SplashCursorEffect } from '@/components/splash-cursor-effect'
 import { DEFAULT_LANGUAGE, isLanguage } from '@/lib/language'
 import './globals.css'
 
-const emilysCandy = Emilys_Candy({
-	variable: '--font-emilys-candy',
+const playfairDisplaySc = Playfair_Display_SC({
+	variable: '--font-playfair-display-sc',
 	subsets: ['latin'],
-	weight: '400',
+	weight: ['400', '700', '900'],
 })
 
 const cairo = Cairo({
@@ -51,6 +56,10 @@ const BOOTSTRAP_SCRIPT = `(function () {
 		if (g === 'off') {
 			document.documentElement.setAttribute('data-globe', 'off');
 		}
+		var c = localStorage.getItem('cursor-effect');
+		if (c === 'off') {
+			document.documentElement.setAttribute('data-cursor', 'off');
+		}
 		var l = localStorage.getItem('lang');
 		if (l === 'ar' || l === 'en') {
 			document.documentElement.setAttribute('data-lang', l);
@@ -76,7 +85,7 @@ export default async function RootLayout ({
 			data-lang={language}
 			data-theme="dark"
 			suppressHydrationWarning
-			className={`${emilysCandy.variable} ${cairo.variable} ${berkshireSwash.variable} dark h-full bg-background text-foreground antialiased`}
+			className={`${playfairDisplaySc.variable} ${cairo.variable} ${berkshireSwash.variable} dark h-full bg-background text-foreground antialiased`}
 		>
 			<body className="flex min-h-full flex-col font-sans">
 				<Script
@@ -87,6 +96,7 @@ export default async function RootLayout ({
 					}}
 				/>
 				<GlobeBackdrop />
+				<SplashCursorEffect />
 				<LanguageProvider initialLanguage={language}>
 					<div className="relative z-10 flex min-h-full flex-1 flex-col">
 						{children}

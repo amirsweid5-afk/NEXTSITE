@@ -62,10 +62,10 @@
 	--color-accent: var(--accent);
 	--color-line: var(--line);
 	--color-wash: var(--wash);
-	--font-sans: var(--font-emilys-candy), serif;
-	--font-mono: var(--font-emilys-candy), serif;
-	--font-heading: var(--font-emilys-candy), serif;
-	--font-brand: var(--font-berkshire-swash), cursive;
+	--font-sans: var(--font-playfair-display-sc), ui-serif, Georgia, serif;
+	--font-mono: var(--font-playfair-display-sc), ui-serif, Georgia, serif;
+	--font-heading: var(--font-playfair-display-sc), ui-serif, Georgia, serif;
+	--font-brand: var(--font-playfair-display-sc), ui-serif, Georgia, serif;
 	--color-sidebar-ring: var(--sidebar-ring);
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -168,13 +168,13 @@ html[data-theme='light'] .admin-portal {
 }
 
 body {
-	font-family: var(--font-emilys-candy), serif;
+	font-family: var(--font-playfair-display-sc), ui-serif, Georgia, serif;
 	font-weight: 400;
 	font-style: normal;
 }
 
 html[lang='ar'] body {
-	font-family: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
+	font-family: var(--font-cairo), var(--font-playfair-display-sc), ui-serif, Georgia, serif;
 }
 
 html[lang='ar'] .uppercase {
@@ -212,6 +212,20 @@ html[lang='ar'] .uppercase {
 
 .home-hero-brand {
 	font-family: var(--font-berkshire-swash), cursive;
+}
+
+.site-card {
+	box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+	transition:
+		transform 0.3s ease-out,
+		box-shadow 0.3s ease-out,
+		border-color 0.3s ease-out;
+}
+
+.site-card:hover {
+	transform: translateY(-0.35rem);
+	border-color: color-mix(in srgb, var(--orange) 45%, transparent);
+	box-shadow: 0 22px 52px rgba(46, 196, 222, 0.14);
 }
 
 html[data-theme='light'] .home-hero-grid {
@@ -674,8 +688,8 @@ html[data-theme='light'] .globe-stage {
 	background: transparent;
 }
 
-html[data-globe='off'] .globe-stage {
-	display: none;
+html[data-globe='off'] .globe-stage canvas {
+	visibility: hidden;
 }
 
 .booking-date::-webkit-calendar-picker-indicator {
@@ -685,6 +699,50 @@ html[data-globe='off'] .globe-stage {
 
 html[data-theme='light'] .booking-date {
 	color-scheme: light;
+}
+
+@keyframes cursor-toggle-pointer {
+	0%,
+	100% {
+		transform: translate(2px, -2px) rotate(-8deg);
+	}
+	25% {
+		transform: translate(5px, 1px) rotate(4deg);
+	}
+	50% {
+		transform: translate(-1px, 4px) rotate(-2deg);
+	}
+	75% {
+		transform: translate(-4px, 0) rotate(6deg);
+	}
+}
+
+@keyframes cursor-toggle-beam {
+	0%,
+	100% {
+		transform: translate(-3px, 4px) scale(0.85);
+		opacity: 0.35;
+		box-shadow: 0 0 0 0 color-mix(in srgb, var(--highlight) 45%, transparent);
+	}
+	35% {
+		transform: translate(1px, -1px) scale(1);
+		opacity: 0.9;
+		box-shadow: 0 0 8px 1px color-mix(in srgb, var(--highlight) 55%, transparent);
+	}
+	70% {
+		transform: translate(4px, 3px) scale(0.7);
+		opacity: 0.5;
+		box-shadow: 0 0 5px 0 color-mix(in srgb, var(--highlight) 35%, transparent);
+	}
+}
+
+.cursor-toggle-pointer {
+	animation: cursor-toggle-pointer 1.8s ease-in-out infinite;
+}
+
+.cursor-toggle-beam {
+	animation: cursor-toggle-beam 1.8s ease-in-out infinite;
+	animation-delay: 0.12s;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -708,7 +766,9 @@ html[data-theme='light'] .booking-date {
 	.booking-hero-spark,
 	.booking-hero-ring,
 	.why-choose-animate,
-	.our-story-reveal {
+	.our-story-reveal,
+	.cursor-toggle-pointer,
+	.cursor-toggle-beam {
 		animation: none !important;
 		opacity: 1 !important;
 		transform: none !important;
@@ -717,6 +777,14 @@ html[data-theme='light'] .booking-date {
 
 	.home-hero-caret {
 		display: none !important;
+	}
+
+	.site-card {
+		transition: none;
+	}
+
+	.site-card:hover {
+		transform: none;
 	}
 }
 

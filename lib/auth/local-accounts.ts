@@ -151,6 +151,46 @@ export async function createLocalAccount (input: {
 }
 
 /**
+ * Creates or refreshes a local account so the session works offline.
+ */
+export async function upsertLocalAccount (input: {
+	email: string
+	name: string
+	password: string
+}): Promise<LocalProfile> {
+	const email = input.email.trim().toLowerCase()
+	const name = input.name.trim() || email.split('@')[0]
+
+	return enqueue(async () => {
+		const file = await readAccounts()
+		const existing = file.accounts.find((account) => {
+			return account.email === email
+		})
+		const salt = randomBytes(16).toString('hex')
+		const passwordHash = await hashPassword(input.password, salt)
+
+		if (existing) {
+			existing.name = name
+			existing.salt = salt
+			existing.passwordHash = passwordHash
+			await writeAccounts(file)
+			return toProfile(existing)
+		}
+
+		const account: LocalAccount = {
+			id: crypto.randomUUID(),
+			email,
+			name,
+			salt,
+			passwordHash,
+		}
+		file.accounts.push(account)
+		await writeAccounts(file)
+		return toProfile(account)
+	})
+}
+
+/**
  * Checks an email and password against local accounts.
  */
 export async function verifyLocalAccount (

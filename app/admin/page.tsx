@@ -49,7 +49,7 @@ export default async function AdminDashboardPage () {
 			</div>
 
 			<div className="grid gap-4 xl:grid-cols-[1.4fr_1fr]">
-				<section className="rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5">
+				<section className="site-card rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5">
 					<h2 className="text-sm font-semibold text-white">
 						Monthly Revenue
 					</h2>
@@ -61,7 +61,7 @@ export default async function AdminDashboardPage () {
 					</div>
 				</section>
 
-				<section className="rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5">
+				<section className="site-card rounded-2xl border border-white/10 bg-[var(--admin-surface)] p-5">
 					<h2 className="text-sm font-semibold text-white">
 						Revenue by Service
 					</h2>

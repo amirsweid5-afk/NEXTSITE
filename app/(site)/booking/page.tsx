@@ -2,6 +2,7 @@ import { BookNowSection } from '@/components/book-now-section'
 import { BookingHero } from '@/components/booking-hero'
 import { getCurrentProfile } from '@/lib/auth/get-current-profile'
 import { getBookingServices } from '@/lib/bookings/get-booking-services'
+import { getMyBookings } from '@/lib/bookings/get-my-bookings'
 
 export const metadata = {
 	title: 'Booking',
@@ -29,7 +30,10 @@ export default async function BookingPage ({
 	const returnPath = requested
 		? '/booking?service=' + encodeURIComponent(requested)
 		: '/booking'
-	const services = await getBookingServices()
+	const [services, myBookings] = await Promise.all([
+		getBookingServices(),
+		profile ? getMyBookings() : Promise.resolve([]),
+	])
 	const match = services.find((service) => service.slug === requested)
 
 	return (
@@ -40,6 +44,7 @@ export default async function BookingPage ({
 				initialServiceId={match?.serviceId ?? ''}
 				isSignedIn={profile !== null}
 				returnPath={returnPath}
+				myBookings={myBookings}
 			/>
 		</>
 	)

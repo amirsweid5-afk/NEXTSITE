@@ -14,24 +14,29 @@ import {
 import { SERVICE_CATALOG } from '@/lib/bookings/service-catalog'
 import { type BookingStatus } from '@/lib/supabase/database'
 
+export interface OfflineBooking {
+	bookingId: string
+	fullName: string
+	email: string
+	phone: string | null
+	countryCode?: string
+	localPhone?: string
+	serviceId?: string
+	serviceName: string
+	websiteDescription: string
+	budget?: string
+	deadline?: string
+	status: BookingStatus
+	createdAt: string
+	priceUsd: number
+	payments: OfflinePayment[]
+}
+
 interface OfflinePayment {
 	paymentId: string
 	amountUsd: number
 	paidAt: string
 	note: string | null
-}
-
-interface OfflineBooking {
-	bookingId: string
-	fullName: string
-	email: string
-	phone: string | null
-	serviceName: string
-	websiteDescription: string
-	status: BookingStatus
-	createdAt: string
-	priceUsd: number
-	payments: OfflinePayment[]
 }
 
 interface OfflineFile {
@@ -81,8 +86,12 @@ export async function insertOfflineBooking (input: {
 	fullName: string
 	email: string
 	phone: string
+	countryCode: string
+	localPhone: string
 	serviceId: string
 	websiteDescription: string
+	budget: string
+	deadline: string
 }): Promise<string | null> {
 	const service = SERVICE_CATALOG.find((item) => {
 		return item.serviceId === input.serviceId
@@ -92,10 +101,15 @@ export async function insertOfflineBooking (input: {
 	const booking: OfflineBooking = {
 		bookingId: crypto.randomUUID(),
 		fullName: input.fullName,
-		email: input.email,
+		email: input.email.trim().toLowerCase(),
 		phone: input.phone,
+		countryCode: input.countryCode,
+		localPhone: input.localPhone,
+		serviceId: input.serviceId,
 		serviceName: service.name,
 		websiteDescription: input.websiteDescription,
+		budget: input.budget,
+		deadline: input.deadline,
 		status: 'pending',
 		createdAt: new Date().toISOString(),
 		priceUsd: service.price,
@@ -109,6 +123,71 @@ export async function insertOfflineBooking (input: {
 	})
 
 	return booking.bookingId
+}
+
+/**
+ * Updates one offline booking owned by this email.
+ */
+export async function updateOfflineBooking (input: {
+	bookingId: string
+	email: string
+	fullName: string
+	phone: string
+	countryCode: string
+	localPhone: string
+	serviceId: string
+	websiteDescription: string
+	budget: string
+	deadline: string
+}): Promise<boolean> {
+	const service = SERVICE_CATALOG.find((item) => {
+		return item.serviceId === input.serviceId
+	})
+	if (!service) return false
+
+	const email = input.email.trim().toLowerCase()
+	let updated = false
+
+	await enqueue(async () => {
+		const bookings = await readFileBookings()
+		const index = bookings.findIndex((booking) => {
+			return booking.bookingId === input.bookingId
+				&& booking.email.toLowerCase() === email
+		})
+		if (index < 0) return
+
+		const current = bookings[index]
+		bookings[index] = {
+			...current,
+			fullName: input.fullName,
+			phone: input.phone,
+			countryCode: input.countryCode,
+			localPhone: input.localPhone,
+			serviceId: input.serviceId,
+			serviceName: service.name,
+			websiteDescription: input.websiteDescription,
+			budget: input.budget,
+			deadline: input.deadline,
+			priceUsd: service.price,
+		}
+		await writeFileBookings(bookings)
+		updated = true
+	})
+
+	return updated
+}
+
+/**
+ * Offline bookings for one client email.
+ */
+export async function listOfflineBookingsForEmail (
+	email: string,
+): Promise<OfflineBooking[]> {
+	const normalized = email.trim().toLowerCase()
+	const bookings = await readFileBookings()
+	return bookings.filter((booking) => {
+		return booking.email.toLowerCase() === normalized
+	})
 }
 
 /**

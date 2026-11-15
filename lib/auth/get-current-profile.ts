@@ -49,7 +49,7 @@ async function loadRemoteProfile (): Promise<CurrentProfile | null> {
 	])
 	const user = auth?.data.user
 
-	if (!user) return null
+	if (!user?.email) return null
 
 	const profileQuery = supabase
 		.from('users')
@@ -63,25 +63,36 @@ async function loadRemoteProfile (): Promise<CurrentProfile | null> {
 		}),
 	])
 
-	if (!profileResult || profileResult.error || !profileResult.data) {
-		return null
+	if (profileResult && !profileResult.error && profileResult.data) {
+		const profile = profileResult.data
+		if (profile.auth_user_id) {
+			return {
+				userId: profile.user_id,
+				authUserId: profile.auth_user_id,
+				name: profile.name,
+				email: profile.email,
+				phone: profile.phone ?? '',
+				avatar: readAvatar(user.user_metadata),
+				role: profile.role,
+				isAdmin: profile.role === 'admin',
+			}
+		}
 	}
 
-	const profile = profileResult.data
-
-	if (!profile.auth_user_id) {
-		return null
-	}
+	const metadataName = user.user_metadata?.name
+	const name = typeof metadataName === 'string' && metadataName !== ''
+		? metadataName
+		: user.email.split('@')[0]
 
 	return {
-		userId: profile.user_id,
-		authUserId: profile.auth_user_id,
-		name: profile.name,
-		email: profile.email,
-		phone: profile.phone ?? '',
+		userId: user.id,
+		authUserId: user.id,
+		name,
+		email: user.email,
+		phone: '',
 		avatar: readAvatar(user.user_metadata),
-		role: profile.role,
-		isAdmin: profile.role === 'admin',
+		role: 'customer',
+		isAdmin: false,
 	}
 }
 

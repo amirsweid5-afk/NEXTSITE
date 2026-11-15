@@ -146,14 +146,9 @@ export function ServicesSection () {
 							<li key={service.id}>
 								<article
 									className={[
-										'group flex h-full flex-col',
+										'site-card group flex h-full flex-col',
 										'rounded-2xl border border-white/10',
 										'bg-surface/80 p-7',
-										'shadow-[0_20px_50px_rgba(0,0,0,0.35)]',
-										'transition duration-300 ease-out',
-										'hover:-translate-y-1.5',
-										'hover:border-orange/45',
-										'hover:shadow-[0_24px_60px_rgba(46,196,222,0.12)]',
 									].join(' ')}
 								>
 									<div

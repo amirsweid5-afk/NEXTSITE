@@ -262,14 +262,10 @@ export function OurVision () {
 							>
 								<article
 									className={[
-										'group relative flex h-full',
+										'site-card group relative flex h-full',
 										'flex-col overflow-hidden',
 										'rounded-2xl border border-white/10',
 										'bg-surface/70 p-7',
-										'transition duration-300 ease-out',
-										'hover:-translate-y-1',
-										'hover:border-highlight/40',
-										'hover:shadow-[0_20px_50px_rgba(142,235,248,0.1)]',
 									].join(' ')}
 								>
 									<span

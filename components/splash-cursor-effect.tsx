@@ -50,24 +50,36 @@ function readThemeColor (): string {
  */
 export function SplashCursorEffect () {
 	const [color, setColor] = useState(FALLBACK_THEME_COLOR)
+	const [isEnabled, setIsEnabled] = useState(true)
 
 	useEffect(() => {
-		function handleThemeChange () {
+		function syncState () {
 			setColor(readThemeColor())
+			setIsEnabled(
+				document.documentElement.getAttribute('data-cursor')
+					!== 'off',
+			)
 		}
 
-		handleThemeChange()
+		syncState()
 
-		const observer = new MutationObserver(handleThemeChange)
+		const observer = new MutationObserver(syncState)
 		observer.observe(document.documentElement, {
 			attributes: true,
-			attributeFilter: ['data-theme', 'class', 'style'],
+			attributeFilter: [
+				'data-theme',
+				'data-cursor',
+				'class',
+				'style',
+			],
 		})
 
 		return () => {
 			observer.disconnect()
 		}
 	}, [])
+
+	if (!isEnabled) return null
 
 	return (
 		<SplashCursor
