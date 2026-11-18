@@ -19,6 +19,8 @@ interface BookingPageProps {
 	searchParams: Promise<{ service?: string | string[] }>
 }
 
+export const dynamic = 'force-dynamic'
+
 export default async function BookingPage ({
 	searchParams,
 }: BookingPageProps) {
@@ -43,6 +45,8 @@ export default async function BookingPage ({
 				services={services}
 				initialServiceId={match?.serviceId ?? ''}
 				isSignedIn={profile !== null}
+				accountName={profile?.name ?? ''}
+				accountEmail={profile?.email ?? ''}
 				returnPath={returnPath}
 				myBookings={myBookings}
 			/>

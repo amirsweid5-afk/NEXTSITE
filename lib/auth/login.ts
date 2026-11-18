@@ -6,10 +6,12 @@ import {
 } from '@/lib/auth/auth-schema'
 import { ensureAppUser } from '@/lib/auth/ensure-app-user'
 import {
+	setLocalAccountRole,
 	startLocalSession,
 	upsertLocalAccount,
 	verifyLocalAccount,
 } from '@/lib/auth/local-accounts'
+import { resolveUserRole } from '@/lib/auth/resolve-user-role'
 import { createClient } from '@/lib/supabase/server'
 
 /**
@@ -35,10 +37,17 @@ export async function login (
 	)
 
 	if (local) {
-		await startLocalSession(local.userId)
+		const role = await resolveUserRole(local.email)
+		const profile = role === local.role
+			? local
+			: await setLocalAccountRole(local.email, role) ?? {
+				...local,
+				role,
+			}
+		await startLocalSession(profile.userId)
 		return {
 			ok: true,
-			redirectTo: local.role === 'admin' ? '/admin' : destination,
+			redirectTo: profile.role === 'admin' ? '/admin' : destination,
 		}
 	}
 
@@ -99,10 +108,12 @@ async function finishRemoteLogin (
 		name,
 	})
 
+	const role = await resolveUserRole(user.email)
 	const local = await upsertLocalAccount({
 		email: user.email,
 		name,
 		password,
+		role,
 	})
 	await startLocalSession(local.userId)
 

@@ -1,11 +1,14 @@
 'use client'
 
 import {
+	useEffect,
 	useMemo,
 	useState,
 	type ChangeEvent,
+	type FocusEvent,
 } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import { ClientBookingsList } from '@/components/client-bookings-list'
@@ -21,8 +24,10 @@ import {
 	formatDeadlineInput,
 	isDeadlineWarningNeeded,
 	normalizeDeadlineToIso,
+	padDeadlineInput,
 	toDeadlineDisplay,
 } from '@/lib/bookings/deadline'
+import { deleteMyBooking } from '@/lib/bookings/delete-my-booking'
 import { updateBooking } from '@/lib/bookings/update-booking'
 import { useMarketingContent } from '@/hooks/use-marketing-content'
 import { DEFAULT_PHONE_COUNTRY } from '@/lib/phone/countries'
@@ -31,8 +36,14 @@ interface BookNowSectionProps {
 	services: BookingServiceOption[]
 	initialServiceId?: string
 	isSignedIn?: boolean
+	accountName?: string
+	accountEmail?: string
 	returnPath?: string
 	myBookings?: ClientBooking[]
+	hideBookingsList?: boolean
+	initialEditingBookingId?: string | null
+	onBookingsChange?: (bookings: ClientBooking[]) => void
+	onEditingChange?: (bookingId: string | null) => void
 }
 
 interface BookingFormValues {
@@ -53,18 +64,44 @@ export function BookNowSection ({
 	services,
 	initialServiceId = '',
 	isSignedIn = false,
+	accountName = '',
+	accountEmail = '',
 	returnPath = '/booking',
 	myBookings = [],
+	hideBookingsList = false,
+	initialEditingBookingId = null,
+	onBookingsChange,
+	onEditingChange,
 }: BookNowSectionProps) {
+	const router = useRouter()
 	const copy = useContent().booking.form
 	const extras = useMarketingContent().bookingExtras
 	const [isConfirmed, setIsConfirmed] = useState(false)
 	const [saveError, setSaveError] = useState<string | null>(null)
+	const serverStamp = myBookings.map((booking) => {
+		return [
+			booking.bookingId,
+			booking.status,
+			booking.websiteProgress,
+			booking.progressSetByAdmin ? '1' : '0',
+			booking.statusUpdatedAt ?? '',
+			booking.progressUpdatedAt ?? '',
+			booking.websiteDescription,
+			booking.deadline,
+			String(booking.editCount),
+		].join(':')
+	}).join('|')
+	const [seenStamp, setSeenStamp] = useState(serverStamp)
 	const [bookings, setBookings] = useState(myBookings)
 	const [budgetRangeId, setBudgetRangeId] = useState('unsure')
 	const [editingBookingId, setEditingBookingId] = useState<string | null>(
-		null,
+		initialEditingBookingId,
 	)
+	const [didOpenInitialEdit, setDidOpenInitialEdit] = useState(false)
+	if (seenStamp !== serverStamp) {
+		setSeenStamp(serverStamp)
+		setBookings(myBookings)
+	}
 
 	const schema = useMemo(() => {
 		return createBookingSchema({
@@ -92,8 +129,8 @@ export function BookNowSection ({
 		resolver: zodResolver(schema),
 		mode: 'onChange',
 		defaultValues: {
-			fullName: '',
-			email: '',
+			fullName: accountName,
+			email: accountEmail,
 			countryCode: DEFAULT_PHONE_COUNTRY.code,
 			phone: '',
 			serviceId: initialServiceId,
@@ -112,6 +149,7 @@ export function BookNowSection ({
 	const isEditing = editingBookingId !== null
 	const {
 		onChange: onDeadlineChange,
+		onBlur: onDeadlineBlur,
 		...deadlineField
 	} = form.register('deadline')
 
@@ -123,10 +161,19 @@ export function BookNowSection ({
 		void onDeadlineChange(event)
 	}
 
+	function handleDeadlineBlur (
+		event: FocusEvent<HTMLInputElement>,
+	) {
+		const next = padDeadlineInput(event.target.value)
+		event.target.value = next
+		void onDeadlineChange(event)
+		void onDeadlineBlur(event)
+	}
+
 	function resetFormValues (values?: Partial<BookingFormValues>) {
 		form.reset({
-			fullName: values?.fullName ?? '',
-			email: values?.email ?? '',
+			fullName: values?.fullName ?? accountName,
+			email: values?.email ?? accountEmail,
 			countryCode: values?.countryCode
 				?? DEFAULT_PHONE_COUNTRY.code,
 			phone: values?.phone ?? '',
@@ -136,6 +183,25 @@ export function BookNowSection ({
 			deadline: values?.deadline ?? '',
 		})
 	}
+
+	useEffect(() => {
+		onBookingsChange?.(bookings)
+	}, [bookings, onBookingsChange])
+
+	useEffect(() => {
+		onEditingChange?.(editingBookingId)
+	}, [editingBookingId, onEditingChange])
+
+	useEffect(() => {
+		if (didOpenInitialEdit) return
+		if (!initialEditingBookingId) return
+		const match = bookings.find((booking) => {
+			return booking.bookingId === initialEditingBookingId
+		})
+		if (!match) return
+		setDidOpenInitialEdit(true)
+		handleEditBooking(match)
+	}, [bookings, didOpenInitialEdit, initialEditingBookingId])
 
 	function handleEditBooking (booking: ClientBooking) {
 		setEditingBookingId(booking.bookingId)
@@ -153,6 +219,22 @@ export function BookNowSection ({
 		})
 		document.getElementById('book-now-heading')
 			?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+	}
+
+	async function handleDeleteBooking (bookingId: string) {
+		const result = await deleteMyBooking(bookingId)
+		if (!result.ok) return result
+
+		setBookings((current) => {
+			return current.filter((booking) => {
+				return booking.bookingId !== bookingId
+			})
+		})
+		if (editingBookingId === bookingId) {
+			setEditingBookingId(null)
+			resetFormValues()
+		}
+		return result
 	}
 
 	function handleCancelEdit () {
@@ -213,12 +295,16 @@ export function BookNowSection ({
 						websiteDescription: values.websiteDescription,
 						budget: values.budget,
 						deadline: deadlineIso,
+						editCount: booking.editCount + 1,
+						wasEdited: true,
+						lastEditedAt: new Date().toISOString(),
 					}
 				})
 			})
 			setEditingBookingId(null)
 			setIsConfirmed(true)
 			resetFormValues()
+			router.refresh()
 			return
 		}
 
@@ -247,12 +333,21 @@ export function BookNowSection ({
 				deadline: deadlineIso,
 				status: 'pending',
 				createdAt: new Date().toISOString(),
+				priceUsd: service.price,
+				amountPaid: 0,
+				remainingBalance: service.price,
+				paymentStatus: 'unpaid',
+				editCount: 0,
+				wasEdited: false,
+				lastEditedAt: null,
+				websiteProgress: 'not_started',
 			}, ...current])
 		}
 
 		setIsConfirmed(true)
 		setBudgetRangeId('unsure')
 		resetFormValues()
+		router.refresh()
 	}
 
 	const inputClassName = [
@@ -283,12 +378,13 @@ export function BookNowSection ({
 				<div className="absolute -right-16 bottom-10 h-56 w-56 rounded-full bg-gold/10 blur-[90px]" />
 			</div>
 
-			{isSignedIn ? (
+			{isSignedIn && !hideBookingsList ? (
 				<div className="relative z-10">
 					<ClientBookingsList
 						bookings={bookings}
 						editingBookingId={editingBookingId}
 						onEdit={handleEditBooking}
+						onDelete={handleDeleteBooking}
 					/>
 				</div>
 			) : null}
@@ -669,6 +765,7 @@ export function BookNowSection ({
 							].join(' ')}
 							{...deadlineField}
 							onChange={handleDeadlineChange}
+							onBlur={handleDeadlineBlur}
 						/>
 						{errors.deadline ? (
 							<p

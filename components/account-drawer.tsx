@@ -447,7 +447,20 @@ export function AccountDrawer ({
 											</span>
 										</Link>
 									</li>
-								) : null}
+								) : (
+									<li>
+										<Link
+											href="/dashboard"
+											onClick={onClose}
+											className={actionClass}
+										>
+											<CalendarIcon />
+											<span className="flex-1">
+												Dashboard
+											</span>
+										</Link>
+									</li>
+								)}
 								<li>
 									<button
 										type="button"

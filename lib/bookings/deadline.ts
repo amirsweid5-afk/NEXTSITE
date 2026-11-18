@@ -63,16 +63,112 @@ export function normalizeDeadlineToIso (value: string) {
 }
 
 /**
+ * Turns a single day or month from 1–9 into 01–09.
+ * Leaves 10–31 and 10–12 unchanged.
+ */
+function padDatePart (part: string) {
+	if (/^[1-9]$/.test(part)) return '0' + part
+	return part
+}
+
+/**
+ * Formats a run of digits into dd/mm/yyyy.
+ * A day of 4–9, or a month of 2–9, is padded at once
+ * because no later digit can belong to that part.
+ */
+function formatDigitRun (digits: string) {
+	if (digits.length === 0) return ''
+
+	if (digits.length === 1 && digits >= '4') {
+		return '0' + digits
+	}
+
+	const day = digits.slice(0, 2)
+	const rest = digits.slice(2)
+	if (rest.length === 0) return day
+
+	let month = rest.slice(0, 2)
+	let year = rest.slice(2)
+	if (month.length === 1 && month >= '2') {
+		year = rest.slice(1)
+		month = '0' + month
+	} else if (
+		month.length === 2
+		&& Number(month) > 12
+		&& month[0] >= '2'
+	) {
+		year = rest.slice(1, 5)
+		month = '0' + month[0]
+	}
+
+	if (year.length === 0) return `${day}/${month}`
+	return `${day}/${month}/${year.slice(0, 4)}`
+}
+
+/**
  * Formats typed digits into dd/mm/yyyy as the user enters them.
+ * A slash, or a finished 1–9 day or month, gains a leading zero.
  */
 export function formatDeadlineInput (value: string) {
-	const digits = value.replace(/\D/g, '').slice(0, 8)
-	const day = digits.slice(0, 2)
-	const month = digits.slice(2, 4)
-	const year = digits.slice(4, 8)
-	if (digits.length <= 2) return day
-	if (digits.length <= 4) return `${day}/${month}`
+	const cleaned = value.replace(/[^\d/]/g, '')
+	if (cleaned === '') return ''
+	if (!cleaned.includes('/')) {
+		return formatDigitRun(cleaned.slice(0, 8))
+	}
+
+	const segments = cleaned.split('/')
+	let day = (segments[0] ?? '').slice(0, 2)
+	let monthDigits = segments[1] ?? ''
+	let year = (segments[2] ?? '').slice(0, 4)
+	const dayIsFinished = segments.length > 1
+
+	if (
+		day.length === 1
+		&& (day >= '4' || dayIsFinished)
+	) {
+		day = padDatePart(day)
+	}
+
+	if (year === '' && monthDigits.length > 2) {
+		const head = monthDigits.slice(0, 2)
+		const headNumber = Number(head)
+		if (headNumber >= 1 && headNumber <= 12) {
+			year = monthDigits.slice(2, 6)
+			monthDigits = head
+		} else {
+			year = monthDigits.slice(1, 5)
+			monthDigits = padDatePart(monthDigits.slice(0, 1))
+		}
+	}
+
+	let month = monthDigits.slice(0, 2)
+	const monthIsFinished = segments.length > 2 || year !== ''
+	if (
+		month.length === 1
+		&& (month >= '2' || monthIsFinished)
+	) {
+		month = padDatePart(month)
+	}
+
+	if (segments.length === 1) return day
+	if (year === '') {
+		return cleaned.endsWith('/') && month === ''
+			? `${day}/`
+			: `${day}/${month}`
+	}
 	return `${day}/${month}/${year}`
+}
+
+/**
+ * Pads a finished day or month of 1–9 when the field is left.
+ */
+export function padDeadlineInput (value: string) {
+	const formatted = formatDeadlineInput(value)
+	if (formatted === '') return ''
+	const parts = formatted.split('/')
+	if (parts[0]) parts[0] = padDatePart(parts[0])
+	if (parts[1]) parts[1] = padDatePart(parts[1])
+	return parts.join('/')
 }
 
 /**

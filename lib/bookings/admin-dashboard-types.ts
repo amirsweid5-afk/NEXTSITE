@@ -1,4 +1,7 @@
 import {
+	type WebsiteProgress,
+} from '@/lib/bookings/website-progress'
+import {
 	type BookingStatus,
 	type PaymentStatus,
 } from '@/lib/supabase/database'
@@ -17,6 +20,8 @@ export interface AdminBookingCard {
 	phone: string | null
 	serviceName: string
 	websiteDescription: string
+	budget?: string
+	deadline?: string
 	status: BookingStatus
 	createdAt: string
 	priceUsd: number | null
@@ -24,6 +29,11 @@ export interface AdminBookingCard {
 	remainingBalance: number
 	paymentStatus: PaymentStatus
 	payments: AdminBookingPayment[]
+	editCount?: number
+	wasEdited?: boolean
+	lastEditedAt?: string | null
+	websiteProgress?: WebsiteProgress
+	statusUpdatedAt?: string | null
 }
 
 export interface MonthlyRevenuePoint {

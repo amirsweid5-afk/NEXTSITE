@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import {
 	bookingInputSchema,
 	type BookingInput,
@@ -10,8 +11,10 @@ import {
 	isOfflineClientError,
 	isUnreachableError,
 	isUnreachableMessage,
+	SERVICE_CATALOG,
 } from '@/lib/bookings/service-catalog'
 import { insertOfflineBooking } from '@/lib/bookings/offline-bookings'
+import { getCurrentProfile } from '@/lib/auth/get-current-profile'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 export interface CreateBookingResult {
@@ -67,10 +70,11 @@ export async function createBooking (
 
 	const controller = new AbortController()
 	const timer = setTimeout(() => controller.abort(), 4000)
+	const owner = await readBookingOwner()
 
 	try {
 		const supabase = createAdminClient(controller.signal)
-		return await saveRemoteBooking(supabase, parsed.data)
+		return await saveRemoteBooking(supabase, parsed.data, owner)
 	} catch (err) {
 		if (
 			isUnreachableError(err)
@@ -79,7 +83,7 @@ export async function createBooking (
 				&& isUnreachableMessage(err.message)
 			)
 		) {
-			return saveOfflineBooking(parsed.data)
+			return saveOfflineBooking(parsed.data, undefined, undefined, owner)
 		}
 
 		if (err instanceof Error) {
@@ -95,10 +99,31 @@ export async function createBooking (
 	}
 }
 
+interface BookingOwner {
+	ownerUserId?: string
+	ownerEmail?: string
+}
+
+/**
+ * Attaches the booking to the signed-in account, not only the form email.
+ */
+async function readBookingOwner (): Promise<BookingOwner> {
+	const profile = await getCurrentProfile()
+	if (!profile) return {}
+	return {
+		ownerUserId: profile.userId,
+		ownerEmail: profile.email.trim().toLowerCase(),
+	}
+}
+
 async function saveOfflineBooking (
 	input: BookingInput,
+	bookingId?: string,
+	priceUsd?: number,
+	owner: BookingOwner = {},
 ): Promise<CreateBookingResult> {
-	const bookingId = await insertOfflineBooking({
+	const savedId = await insertOfflineBooking({
+		bookingId,
 		fullName: input.fullName,
 		email: input.email,
 		phone: toStoredPhone(input),
@@ -108,16 +133,29 @@ async function saveOfflineBooking (
 		websiteDescription: input.websiteDescription,
 		budget: input.budget,
 		deadline: input.deadline,
+		priceUsd,
+		ownerUserId: owner.ownerUserId,
+		ownerEmail: owner.ownerEmail,
 	})
 
-	if (!bookingId) {
+	if (!savedId) {
 		return {
 			ok: false,
 			error: 'Could not save your booking.',
 		}
 	}
 
-	return { ok: true, bookingId }
+	revalidateAdminBookingPaths()
+	return { ok: true, bookingId: savedId }
+}
+
+function revalidateAdminBookingPaths () {
+	revalidatePath('/admin')
+	revalidatePath('/admin/bookings')
+	revalidatePath('/admin/client-managing')
+	revalidatePath('/admin/clients')
+	revalidatePath('/dashboard')
+	revalidatePath('/booking')
 }
 
 /**
@@ -126,6 +164,7 @@ async function saveOfflineBooking (
 async function saveRemoteBooking (
 	supabase: ReturnType<typeof createAdminClient>,
 	input: BookingInput,
+	owner: BookingOwner = {},
 ): Promise<CreateBookingResult> {
 	const fullName = input.fullName
 	const email = input.email
@@ -239,6 +278,26 @@ async function saveRemoteBooking (
 				?? 'Could not save your booking.',
 		}
 	}
+
+	const catalog = SERVICE_CATALOG.find((item) => {
+		return item.serviceId === serviceId
+	})
+	await insertOfflineBooking({
+		bookingId: booking.booking_id,
+		fullName: input.fullName,
+		email: input.email,
+		phone,
+		countryCode: input.countryCode,
+		localPhone: input.phone,
+		serviceId,
+		websiteDescription: input.websiteDescription,
+		budget: input.budget,
+		deadline: input.deadline,
+		priceUsd: Number(service.price) || catalog?.price,
+		ownerUserId: owner.ownerUserId,
+		ownerEmail: owner.ownerEmail,
+	})
+	revalidateAdminBookingPaths()
 
 	return {
 		ok: true,

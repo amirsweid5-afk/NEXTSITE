@@ -106,6 +106,7 @@
  * Digits stay on a plain bold face. Playfair Display SC
  * redraws numbers, so 0–9 (and Arabic digits) use Segoe UI
  * Bold or Arial Bold at every text weight.
+ * 85.5% matches those digits to the small-cap letter height.
  */
 @font-face {
 	font-family: "Plain Digits";
@@ -118,6 +119,7 @@
 		local("Arial Bold"),
 		local("Arial-BoldMT");
 	unicode-range: U+0030-0039, U+0660-0669, U+06F0-06F9;
+	size-adjust: 85.5%;
 }
 
 @font-face {
@@ -131,6 +133,7 @@
 		local("Arial Bold"),
 		local("Arial-BoldMT");
 	unicode-range: U+0030-0039, U+0660-0669, U+06F0-06F9;
+	size-adjust: 85.5%;
 }
 
 @font-face {
@@ -144,6 +147,7 @@
 		local("Arial Bold"),
 		local("Arial-BoldMT");
 	unicode-range: U+0030-0039, U+0660-0669, U+06F0-06F9;
+	size-adjust: 85.5%;
 }
 
 @font-face {
@@ -157,6 +161,7 @@
 		local("Arial Bold"),
 		local("Arial-BoldMT");
 	unicode-range: U+0030-0039, U+0660-0669, U+06F0-06F9;
+	size-adjust: 85.5%;
 }
 
 @font-face {
@@ -170,6 +175,7 @@
 		local("Arial Bold"),
 		local("Arial-BoldMT");
 	unicode-range: U+0030-0039, U+0660-0669, U+06F0-06F9;
+	size-adjust: 85.5%;
 }
 
 @font-face {
@@ -183,6 +189,7 @@
 		local("Arial Bold"),
 		local("Arial-BoldMT");
 	unicode-range: U+0030-0039, U+0660-0669, U+06F0-06F9;
+	size-adjust: 85.5%;
 }
 
 html {

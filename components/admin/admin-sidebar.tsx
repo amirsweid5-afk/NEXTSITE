@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
+	Bell,
 	CalendarDays,
 	ChartColumn,
 	ChevronLeft,
@@ -20,6 +21,7 @@ const ICONS: Record<string, LucideIcon> = {
 	'layout-dashboard': LayoutDashboard,
 	calendar: CalendarDays,
 	users: Users,
+	bell: Bell,
 	'folder-kanban': FolderKanban,
 	wallet: Wallet,
 	'chart-column': ChartColumn,
@@ -28,6 +30,7 @@ const ICONS: Record<string, LucideIcon> = {
 
 interface AdminSidebarProps {
 	isCollapsed: boolean
+	unreadNotifications: number
 	onToggle: () => void
 }
 
@@ -36,6 +39,7 @@ interface AdminSidebarProps {
  */
 export function AdminSidebar ({
 	isCollapsed,
+	unreadNotifications,
 	onToggle,
 }: AdminSidebarProps) {
 	const pathname = usePathname()
@@ -104,8 +108,30 @@ export function AdminSidebar ({
 									: 'text-white/60 hover:bg-white/5 hover:text-white',
 							].join(' ')}
 						>
-							{Icon ? <Icon className="h-4 w-4 shrink-0" /> : null}
-							{isCollapsed ? null : <span>{item.label}</span>}
+							<span className="relative inline-flex">
+								{Icon ? (
+									<Icon className="h-4 w-4 shrink-0" />
+								) : null}
+								{isCollapsed
+									&& item.href === '/admin/notifications'
+									&& unreadNotifications > 0 ? (
+										<NotificationCount
+											count={unreadNotifications}
+											compact
+										/>
+									) : null}
+							</span>
+							{isCollapsed ? null : (
+								<span className="min-w-0 flex-1 truncate">
+									{item.label}
+								</span>
+							)}
+							{!isCollapsed
+								&& item.href === '/admin/notifications' ? (
+									<NotificationCount
+										count={unreadNotifications}
+									/>
+								) : null}
 						</Link>
 					)
 				})}
@@ -124,5 +150,30 @@ export function AdminSidebar ({
 				</Link>
 			</div>
 		</aside>
+	)
+}
+
+function NotificationCount ({
+	count,
+	compact = false,
+}: {
+	count: number
+	compact?: boolean
+}) {
+	if (count <= 0) return null
+	const label = count > 99 ? '99+' : String(count)
+
+	return (
+		<span
+			className={[
+				'inline-flex items-center justify-center rounded-full',
+				'bg-red-500 font-bold text-white',
+				compact
+					? 'absolute -end-2 -top-2 h-4 min-w-4 px-1 text-[0.6rem]'
+					: 'h-5 min-w-5 px-1.5 text-[0.65rem]',
+			].join(' ')}
+		>
+			{label}
+		</span>
 	)
 }

@@ -194,7 +194,6 @@ export function Navbar ({
 		{ href: '/', label: content.nav.home },
 		{ href: '/about-us', label: content.nav.aboutUs },
 		{ href: '/services', label: content.nav.services },
-		{ href: '/portfolio', label: marketing.nav.portfolio },
 		{ href: '/faq', label: marketing.nav.faq },
 		{ href: '/booking', label: content.nav.booking },
 	]
@@ -210,12 +209,12 @@ export function Navbar ({
 			>
 				<div
 					className={[
-						'relative mx-auto flex h-[4.5rem]',
-						'max-w-7xl items-center px-6',
-						'sm:px-10 lg:px-12',
+						'mx-auto flex h-[4.5rem] max-w-7xl',
+						'items-center gap-3 px-4 sm:gap-4',
+						'sm:px-8 lg:px-10',
 					].join(' ')}
 				>
-					<div className="z-10 flex items-center gap-3 lg:gap-4">
+					<div className="flex shrink-0 items-center gap-3">
 						<BrandLogo />
 						<span
 							aria-hidden="true"
@@ -226,16 +225,12 @@ export function Navbar ({
 					<nav
 						id="site-nav"
 						aria-label={content.nav.primary}
-						className={[
-							'absolute left-1/2 top-1/2 hidden',
-							'-translate-x-1/2 -translate-y-1/2',
-							'px-8 md:block',
-						].join(' ')}
+						className="hidden min-w-0 flex-1 md:block"
 					>
 						<ul
 							className={[
 								'flex flex-row flex-nowrap items-center',
-								'gap-6 lg:gap-8',
+								'justify-center gap-8 lg:gap-12',
 							].join(' ')}
 						>
 							{navItems.map((item) => {
@@ -253,7 +248,7 @@ export function Navbar ({
 											className={[
 												'block whitespace-nowrap py-2',
 												'text-xs font-medium uppercase',
-												'tracking-[0.2em]',
+												'tracking-[0.16em]',
 												'focus-visible:outline-2',
 												'focus-visible:outline-offset-4',
 												isActive
@@ -269,7 +264,7 @@ export function Navbar ({
 						</ul>
 					</nav>
 
-					<div className="z-10 ms-auto flex items-center gap-2 md:gap-3">
+					<div className="ms-auto flex shrink-0 items-center gap-2 md:gap-2.5">
 						<span
 							aria-hidden="true"
 							className="hidden h-7 w-px shrink-0 bg-white/20 md:block"
@@ -284,20 +279,44 @@ export function Navbar ({
 										: undefined
 								}
 								className={[
-									'hidden min-h-10 items-center',
+									'hidden min-h-9 items-center',
 									'whitespace-nowrap rounded-full',
 									'border border-gold/50 bg-gold/15',
-									'px-4 text-[0.65rem] font-semibold',
+									'px-3 text-[0.65rem] font-semibold',
 									'uppercase tracking-[0.12em]',
 									'text-highlight transition duration-300',
 									'hover:border-gold hover:bg-gold/25',
 									'focus-visible:outline-2',
 									'focus-visible:outline-offset-4',
-									'lg:px-5 lg:text-xs lg:tracking-[0.14em]',
+									'lg:px-4 lg:text-xs',
 									'md:inline-flex',
 								].join(' ')}
 							>
 								{content.nav.dashboard}
+							</Link>
+						) : isSignedIn ? (
+							<Link
+								href="/dashboard"
+								aria-current={
+									pathname.startsWith('/dashboard')
+										? 'page'
+										: undefined
+								}
+								className={[
+									'hidden min-h-9 items-center',
+									'whitespace-nowrap rounded-full',
+									'border border-orange/40 bg-orange/10',
+									'px-3 text-[0.65rem] font-semibold',
+									'uppercase tracking-[0.12em]',
+									'text-orange transition duration-300',
+									'hover:border-orange hover:bg-orange/20',
+									'focus-visible:outline-2',
+									'focus-visible:outline-offset-4',
+									'lg:px-4 lg:text-xs',
+									'md:inline-flex',
+								].join(' ')}
+							>
+								Dashboard
 							</Link>
 						) : null}
 
@@ -307,7 +326,7 @@ export function Navbar ({
 							</div>
 						)}
 
-						<div className="hidden items-center gap-4 md:flex">
+						<div className="hidden items-center gap-2.5 md:flex">
 							<LanguageToggle />
 							<CursorEffectToggle />
 							<GlobeToggle />
@@ -471,6 +490,30 @@ export function Navbar ({
 							].join(' ')}
 						>
 							{content.nav.dashboard}
+						</Link>
+					) : isSignedIn ? (
+						<Link
+							href="/dashboard"
+							onClick={handleCloseMenu}
+							aria-current={
+								pathname.startsWith('/dashboard')
+									? 'page'
+									: undefined
+							}
+							className={[
+								'mt-auto inline-flex min-h-11',
+								'items-center justify-center',
+								'whitespace-nowrap rounded-full',
+								'border border-orange/40 bg-orange/10',
+								'px-5 text-xs font-semibold uppercase',
+								'tracking-[0.14em] text-orange',
+								'transition duration-300',
+								'hover:border-orange hover:bg-orange/20',
+								'focus-visible:outline-2',
+								'focus-visible:outline-offset-4',
+							].join(' ')}
+						>
+							Dashboard
 						</Link>
 					) : null}
 				</nav>

@@ -2,19 +2,19 @@ import { type BookingServiceOption } from '@/lib/bookings/booking-schema'
 
 export const SERVICE_CATALOG: BookingServiceOption[] = [
 	{
-		serviceId: '6f1c0a2e-7b44-4c1a-9d2e-1a0b8c7d6e51',
+		serviceId: 'e78f42ee-68d1-4bb0-aedb-4c573eeed631',
 		name: 'Landing Page',
 		price: 200,
 		slug: 'landing-page',
 	},
 	{
-		serviceId: '7a2d1b3f-8c55-4d2b-ae3f-2b1c9d8e7f62',
+		serviceId: '4b1aeb93-8f9c-4f0d-ad75-e81699c447be',
 		name: 'Static Website',
 		price: 300,
 		slug: 'static-website',
 	},
 	{
-		serviceId: '8b3e2c40-9d66-4e3c-bf40-3c2d0e9f8063',
+		serviceId: 'd2788c95-73a2-4e9c-8791-0a8d4e04053b',
 		name: 'Personal Website',
 		price: 250,
 		slug: 'personal-website',

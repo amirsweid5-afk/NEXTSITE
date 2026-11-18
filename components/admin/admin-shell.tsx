@@ -9,6 +9,7 @@ import { ADMIN_NAV_ITEMS } from '@/lib/admin/nav'
 interface AdminShellProps {
 	adminName: string
 	adminEmail: string
+	unreadNotifications: number
 	children: React.ReactNode
 }
 
@@ -18,6 +19,7 @@ interface AdminShellProps {
 export function AdminShell ({
 	adminName,
 	adminEmail,
+	unreadNotifications,
 	children,
 }: AdminShellProps) {
 	const pathname = usePathname()
@@ -40,6 +42,7 @@ export function AdminShell ({
 				<div className="sticky top-0 h-screen">
 					<AdminSidebar
 						isCollapsed={isCollapsed}
+						unreadNotifications={unreadNotifications}
 						onToggle={() => {
 							setIsCollapsed((value) => !value)
 						}}
@@ -58,6 +61,7 @@ export function AdminShell ({
 					<div className="fixed inset-y-0 start-0 z-50 lg:hidden">
 						<AdminSidebar
 							isCollapsed={false}
+							unreadNotifications={unreadNotifications}
 							onToggle={() => setIsMobileOpen(false)}
 						/>
 					</div>
@@ -69,6 +73,7 @@ export function AdminShell ({
 					title={title}
 					adminName={adminName}
 					adminEmail={adminEmail}
+					unreadNotifications={unreadNotifications}
 					onOpenMobileNav={() => setIsMobileOpen(true)}
 				/>
 				<main

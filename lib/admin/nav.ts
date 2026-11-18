@@ -5,6 +5,7 @@ export interface AdminNavItem {
 		| 'layout-dashboard'
 		| 'calendar'
 		| 'users'
+		| 'bell'
 		| 'folder-kanban'
 		| 'wallet'
 		| 'chart-column'
@@ -14,7 +15,12 @@ export interface AdminNavItem {
 export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
 	{ href: '/admin', label: 'Dashboard', icon: 'layout-dashboard' },
 	{ href: '/admin/bookings', label: 'Bookings', icon: 'calendar' },
-	{ href: '/admin/clients', label: 'Clients', icon: 'users' },
+	{
+		href: '/admin/client-managing',
+		label: 'Client Managing',
+		icon: 'users',
+	},
+	{ href: '/admin/notifications', label: 'Notifications', icon: 'bell' },
 	{ href: '/admin/projects', label: 'Projects', icon: 'folder-kanban' },
 	{ href: '/admin/revenue', label: 'Revenue', icon: 'wallet' },
 	{ href: '/admin/analytics', label: 'Analytics', icon: 'chart-column' },

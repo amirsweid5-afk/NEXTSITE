@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Menu } from 'lucide-react'
+import { Bell, Menu } from 'lucide-react'
 import { CursorEffectToggle } from '@/components/cursor-effect-toggle'
 import { GlobeToggle } from '@/components/globe-toggle'
 import { ThemeToggle } from '@/components/theme-toggle'
@@ -10,6 +10,7 @@ interface AdminTopbarProps {
 	title: string
 	adminName: string
 	adminEmail: string
+	unreadNotifications: number
 	onOpenMobileNav: () => void
 }
 
@@ -20,6 +21,7 @@ export function AdminTopbar ({
 	title,
 	adminName,
 	adminEmail,
+	unreadNotifications,
 	onOpenMobileNav,
 }: AdminTopbarProps) {
 	return (
@@ -44,6 +46,24 @@ export function AdminTopbar ({
 			</div>
 
 			<div className="flex items-center gap-3">
+				<Link
+					href="/admin/notifications"
+					aria-label={
+						unreadNotifications > 0
+							? unreadNotifications + ' unread notifications'
+							: 'Notifications'
+					}
+					className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/80 hover:border-red-400/50 hover:text-white"
+				>
+					<Bell className="h-4 w-4" />
+					{unreadNotifications > 0 ? (
+						<span className="absolute -end-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[0.6rem] font-bold text-white">
+							{unreadNotifications > 99
+								? '99+'
+								: unreadNotifications}
+						</span>
+					) : null}
+				</Link>
 				<CursorEffectToggle />
 				<GlobeToggle />
 				<ThemeToggle />

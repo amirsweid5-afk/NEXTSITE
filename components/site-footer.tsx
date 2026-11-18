@@ -65,7 +65,6 @@ export function SiteFooter () {
 	const legal = useMarketingContent().footerLegal
 	const navExtras = [
 		...copy.nav,
-		{ href: '/portfolio', label: legal.portfolio },
 		{ href: '/faq', label: legal.faq },
 	]
 

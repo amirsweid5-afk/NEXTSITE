@@ -1,12 +1,16 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import {
 	bookingInputSchema,
 	toStoredPhone,
 } from '@/lib/bookings/booking-schema'
 import { isAllowedBookingDeadline } from '@/lib/bookings/deadline'
 import { getCurrentProfile } from '@/lib/auth/get-current-profile'
-import { updateOfflineBooking } from '@/lib/bookings/offline-bookings'
+import {
+	updateOfflineBooking,
+} from '@/lib/bookings/offline-bookings'
+import { SERVICE_CATALOG } from '@/lib/bookings/service-catalog'
 import {
 	isOfflineClientError,
 	isUnreachableError,
@@ -21,6 +25,8 @@ export interface UpdateBookingResult {
 
 /**
  * Updates a booking owned by the signed-in client.
+ * Always persists offline (upsert) so edits save even when remote is missing,
+ * and notifies admin when details change.
  */
 export async function updateBooking (
 	bookingId: string,
@@ -51,28 +57,37 @@ export async function updateBooking (
 	}
 
 	const phone = toStoredPhone(parsed.data)
+	const catalog = SERVICE_CATALOG.find((item) => {
+		return item.serviceId === parsed.data.serviceId
+	})
+	const email = profile.email.trim().toLowerCase()
+
 	const offlineUpdated = await updateOfflineBooking({
 		bookingId,
-		email: profile.email,
+		email,
+		ownerUserId: profile.userId,
 		fullName: parsed.data.fullName,
 		phone,
 		countryCode: parsed.data.countryCode,
 		localPhone: parsed.data.phone,
 		serviceId: parsed.data.serviceId,
+		serviceName: catalog?.name,
 		websiteDescription: parsed.data.websiteDescription,
 		budget: parsed.data.budget,
 		deadline: parsed.data.deadline,
+		priceUsd: catalog?.price,
+		notify: true,
 	})
 
-	if (offlineUpdated) {
-		return { ok: true }
+	if (!offlineUpdated) {
+		return {
+			ok: false,
+			error: 'This booking could not be found.',
+		}
 	}
 
-	const controller = new AbortController()
-	const timer = setTimeout(() => controller.abort(), 4000)
-
 	try {
-		const supabase = createAdminClient(controller.signal)
+		const supabase = createAdminClient()
 		const { data: booking, error } = await supabase
 			.from('bookings')
 			.select(`
@@ -88,52 +103,39 @@ export async function updateBooking (
 			if (isOfflineClientError(error)) {
 				throw new Error(error.message)
 			}
-			return { ok: false, error: error.message }
-		}
+		} else {
+			const user = Array.isArray(booking?.users)
+				? booking.users[0]
+				: booking?.users
+			const ownsBooking = Boolean(
+				booking
+				&& user
+				&& user.email.toLowerCase() === email,
+			)
 
-		const user = Array.isArray(booking?.users)
-			? booking.users[0]
-			: booking?.users
-		if (
-			!booking
-			|| !user
-			|| user.email.toLowerCase() !== profile.email.toLowerCase()
-		) {
-			return {
-				ok: false,
-				error: 'This booking could not be found.',
+			if (ownsBooking) {
+				const description = buildDescription(parsed.data)
+				const { error: updateError } = await supabase
+					.from('bookings')
+					.update({
+						service_id: parsed.data.serviceId,
+						description,
+					})
+					.eq('booking_id', bookingId)
+
+				if (updateError && isOfflineClientError(updateError)) {
+					throw new Error(updateError.message)
+				}
+
+				await supabase
+					.from('users')
+					.update({
+						name: parsed.data.fullName,
+						phone,
+					})
+					.eq('email', email)
 			}
 		}
-
-		const description = buildDescription(parsed.data)
-		const { error: updateError } = await supabase
-			.from('bookings')
-			.update({
-				service_id: parsed.data.serviceId,
-				description,
-			})
-			.eq('booking_id', bookingId)
-
-		if (updateError) {
-			if (isOfflineClientError(updateError)) {
-				throw new Error(updateError.message)
-			}
-			return { ok: false, error: updateError.message }
-		}
-
-		const { error: userError } = await supabase
-			.from('users')
-			.update({
-				name: parsed.data.fullName,
-				phone,
-			})
-			.eq('email', profile.email)
-
-		if (userError && isOfflineClientError(userError)) {
-			throw new Error(userError.message)
-		}
-
-		return { ok: true }
 	} catch (err) {
 		if (
 			isUnreachableError(err)
@@ -142,22 +144,23 @@ export async function updateBooking (
 				&& isUnreachableMessage(err.message)
 			)
 		) {
-			return {
-				ok: false,
-				error:
-					'The booking could not be updated because the database could not be reached.',
-			}
+			revalidateBookingPaths()
+			return { ok: true }
 		}
-		if (err instanceof Error) {
-			return { ok: false, error: err.message }
-		}
-		return {
-			ok: false,
-			error: 'Could not update your booking.',
-		}
-	} finally {
-		clearTimeout(timer)
 	}
+
+	revalidateBookingPaths()
+	return { ok: true }
+}
+
+function revalidateBookingPaths () {
+	revalidatePath('/booking')
+	revalidatePath('/dashboard')
+	revalidatePath('/admin', 'layout')
+	revalidatePath('/admin')
+	revalidatePath('/admin/bookings')
+	revalidatePath('/admin/client-managing')
+	revalidatePath('/admin/notifications')
 }
 
 function buildDescription (input: {

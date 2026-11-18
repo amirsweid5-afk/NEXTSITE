@@ -247,8 +247,18 @@ export interface SiteContent {
 			myBookings: string
 			myBookingsEmpty: string
 			editBooking: string
+			deleteBooking: string
+			deleteBookingConfirm: string
+			deleteBookingError: string
 			cancelEdit: string
 			statusLabel: string
+			websiteIsPending: string
+			websiteIsConfirmed: string
+			websiteIsCancelled: string
+			websiteIsCompleted: string
+			progressNotStarted: string
+			progressPending: string
+			progressFinished: string
 		}
 	}
 	dashboard: {
@@ -801,8 +811,20 @@ const ENGLISH: SiteContent = {
 			myBookings: 'Your bookings',
 			myBookingsEmpty: 'You have not sent a booking yet.',
 			editBooking: 'Edit booking',
+			deleteBooking: 'Delete booking',
+			deleteBookingConfirm:
+				'Delete this booking? This cannot be undone.',
+			deleteBookingError:
+				'Could not delete this booking. Please try again.',
 			cancelEdit: 'Cancel edit',
 			statusLabel: 'Status',
+			websiteIsPending: 'Your website is pending.',
+			websiteIsConfirmed: 'Your website is confirmed.',
+			websiteIsCancelled: 'Your website is cancelled.',
+			websiteIsCompleted: 'Your website is completed.',
+			progressNotStarted: 'Your website has not started.',
+			progressPending: 'Your website is pending.',
+			progressFinished: 'Your website is finished.',
 		},
 	},
 	dashboard: {
@@ -1372,8 +1394,18 @@ const ARABIC: SiteContent = {
 			myBookings: 'حجوزاتك',
 			myBookingsEmpty: 'لم ترسل أي حجز بعد.',
 			editBooking: 'تعديل الحجز',
+			deleteBooking: 'حذف الحجز',
+			deleteBookingConfirm: 'حذف هذا الحجز؟ لا يمكن التراجع عن ذلك.',
+			deleteBookingError: 'تعذر حذف هذا الحجز. يرجى المحاولة مرة أخرى.',
 			cancelEdit: 'إلغاء التعديل',
 			statusLabel: 'الحالة',
+			websiteIsPending: 'موقعك قيد الانتظار.',
+			websiteIsConfirmed: 'موقعك مؤكد.',
+			websiteIsCancelled: 'موقعك ملغى.',
+			websiteIsCompleted: 'موقعك مكتمل.',
+			progressNotStarted: 'لم يبدأ العمل على موقعك.',
+			progressPending: 'موقعك قيد التنفيذ.',
+			progressFinished: 'موقعك منتهٍ.',
 		},
 	},
 	dashboard: {

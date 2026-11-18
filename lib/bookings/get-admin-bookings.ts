@@ -13,7 +13,7 @@ import {
 	type MonthlyRevenuePoint,
 } from '@/lib/bookings/admin-dashboard-types'
 import { listOfflineBookingCards } from '@/lib/bookings/offline-bookings'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export type {
 	AdminBookingCard,
@@ -41,9 +41,33 @@ export async function getAdminRevenueDashboard ():
 		loadRemoteBookings(),
 		listOfflineBookingCards(),
 	])
-	const seen = new Set(remote.map((booking) => booking.bookingId))
+	const offlineById = new Map(offline.map((booking) => {
+		return [booking.bookingId, booking] as const
+	}))
+	const seen = new Set<string>()
 	const bookings = [
-		...remote,
+		...remote.map((booking) => {
+			seen.add(booking.bookingId)
+			const local = offlineById.get(booking.bookingId)
+			if (!local) return booking
+			return {
+				...booking,
+				editCount: local.editCount ?? booking.editCount,
+				wasEdited: local.wasEdited === true || booking.wasEdited,
+				lastEditedAt: local.lastEditedAt ?? booking.lastEditedAt,
+				websiteProgress: local.websiteProgress
+					?? booking.websiteProgress,
+				status: local.statusUpdatedAt
+					? local.status
+					: booking.status,
+				websiteDescription: local.websiteDescription
+					|| booking.websiteDescription,
+				budget: local.budget || booking.budget,
+				deadline: local.deadline || booking.deadline,
+				fullName: local.fullName || booking.fullName,
+				serviceName: local.serviceName || booking.serviceName,
+			}
+		}),
 		...offline.filter((booking) => !seen.has(booking.bookingId)),
 	].sort((left, right) => {
 		return right.createdAt.localeCompare(left.createdAt)
@@ -60,7 +84,7 @@ export async function getAdminRevenueDashboard ():
  */
 async function loadRemoteBookings (): Promise<AdminBookingCard[]> {
 	try {
-		const supabase = await createClient()
+		const supabase = createAdminClient()
 		const query = supabase
 			.from('bookings')
 			.select(`
@@ -89,7 +113,7 @@ async function loadRemoteBookings (): Promise<AdminBookingCard[]> {
 		void pending.catch(() => undefined)
 		let timer: ReturnType<typeof setTimeout> | undefined
 		const timeout = new Promise<never>((_, reject) => {
-			timer = setTimeout(() => reject(new Error('timeout')), 800)
+			timer = setTimeout(() => reject(new Error('timeout')), 4000)
 		})
 		const { data, error } = await Promise.race([pending, timeout])
 		if (timer) clearTimeout(timer)
@@ -130,6 +154,10 @@ async function loadRemoteBookings (): Promise<AdminBookingCard[]> {
 			remainingBalance: getRemainingBalance(priceUsd, amountPaid),
 			paymentStatus: getPaymentStatus(priceUsd, amountPaid),
 			payments: paymentRows,
+			editCount: 0,
+			wasEdited: false,
+			lastEditedAt: null,
+			websiteProgress: 'not_started',
 		}]
 		})
 	} catch {

@@ -1,6 +1,10 @@
 import 'server-only'
 
-import { readLocalSession } from '@/lib/auth/local-accounts'
+import {
+	readLocalSession,
+	setLocalAccountRole,
+} from '@/lib/auth/local-accounts'
+import { resolveUserRole } from '@/lib/auth/resolve-user-role'
 import { isProfilePhoto } from '@/lib/profile-photo'
 import { createClient } from '@/lib/supabase/server'
 import { type UserRole } from '@/lib/supabase/database'
@@ -66,6 +70,9 @@ async function loadRemoteProfile (): Promise<CurrentProfile | null> {
 	if (profileResult && !profileResult.error && profileResult.data) {
 		const profile = profileResult.data
 		if (profile.auth_user_id) {
+			const role = profile.role === 'admin'
+				? 'admin'
+				: await resolveUserRole(profile.email)
 			return {
 				userId: profile.user_id,
 				authUserId: profile.auth_user_id,
@@ -73,8 +80,8 @@ async function loadRemoteProfile (): Promise<CurrentProfile | null> {
 				email: profile.email,
 				phone: profile.phone ?? '',
 				avatar: readAvatar(user.user_metadata),
-				role: profile.role,
-				isAdmin: profile.role === 'admin',
+				role,
+				isAdmin: role === 'admin',
 			}
 		}
 	}
@@ -83,6 +90,7 @@ async function loadRemoteProfile (): Promise<CurrentProfile | null> {
 	const name = typeof metadataName === 'string' && metadataName !== ''
 		? metadataName
 		: user.email.split('@')[0]
+	const role = await resolveUserRole(user.email)
 
 	return {
 		userId: user.id,
@@ -91,8 +99,8 @@ async function loadRemoteProfile (): Promise<CurrentProfile | null> {
 		email: user.email,
 		phone: '',
 		avatar: readAvatar(user.user_metadata),
-		role: 'customer',
-		isAdmin: false,
+		role,
+		isAdmin: role === 'admin',
 	}
 }
 
@@ -106,6 +114,14 @@ async function readLocalProfile (): Promise<CurrentProfile | null> {
 	const local = await readLocalSession()
 	if (!local) return null
 
+	const role = local.role === 'admin'
+		? 'admin'
+		: await resolveUserRole(local.email)
+
+	if (role !== local.role) {
+		await setLocalAccountRole(local.email, role)
+	}
+
 	return {
 		userId: local.userId,
 		authUserId: local.userId,
@@ -113,7 +129,7 @@ async function readLocalProfile (): Promise<CurrentProfile | null> {
 		email: local.email,
 		phone: local.phone,
 		avatar: local.avatar,
-		role: local.role,
-		isAdmin: local.role === 'admin',
+		role,
+		isAdmin: role === 'admin',
 	}
 }

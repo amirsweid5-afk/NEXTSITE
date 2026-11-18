@@ -157,6 +157,7 @@ export async function upsertLocalAccount (input: {
 	email: string
 	name: string
 	password: string
+	role?: 'customer' | 'admin'
 }): Promise<LocalProfile> {
 	const email = input.email.trim().toLowerCase()
 	const name = input.name.trim() || email.split('@')[0]
@@ -173,6 +174,9 @@ export async function upsertLocalAccount (input: {
 			existing.name = name
 			existing.salt = salt
 			existing.passwordHash = passwordHash
+			if (input.role === 'admin' || input.role === 'customer') {
+				existing.role = input.role
+			}
 			await writeAccounts(file)
 			return toProfile(existing)
 		}
@@ -183,8 +187,30 @@ export async function upsertLocalAccount (input: {
 			name,
 			salt,
 			passwordHash,
+			role: input.role === 'admin' ? 'admin' : 'customer',
 		}
 		file.accounts.push(account)
+		await writeAccounts(file)
+		return toProfile(account)
+	})
+}
+
+/**
+ * Updates only the stored role for a local account.
+ */
+export async function setLocalAccountRole (
+	email: string,
+	role: 'customer' | 'admin',
+): Promise<LocalProfile | null> {
+	const normalized = email.trim().toLowerCase()
+
+	return enqueue(async () => {
+		const file = await readAccounts()
+		const account = file.accounts.find((item) => {
+			return item.email === normalized
+		})
+		if (!account) return null
+		account.role = role
 		await writeAccounts(file)
 		return toProfile(account)
 	})
